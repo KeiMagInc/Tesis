@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu_Inicio.unity
     guid: 88d73de9d2c8c2d4885775accca3bb2d
   - enabled: 1
-    path: Assets/Mundo2/Scenes/Listas.unity
+    path: Assets/Niveles/Scenes/Listas.unity
     guid: ff729bda8c385934eba8987dde4ab7ec
   - enabled: 0
     path: Assets/Mundo1/Scenes/MundoArreglos.unity
