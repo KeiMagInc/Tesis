@@ -27,7 +27,6 @@ public class MenuManager : MonoBehaviour
 
     public void Jugar()
     {
-        // Para Kerlly: Asegúrate de agregar tu escena de juego en File -> Build Settings
-        SceneManager.LoadScene("MundoArreglos");
+        SceneManager.LoadScene("Listas");
     }
 }
