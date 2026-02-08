@@ -1,0 +1,37 @@
+# Unity
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+
+# Visual Studio
+/[Vv][Ss]/
+.vs/
+.vscode/
+*.csproj.user
+*.suo
+*.user
+*.userprefs
+
+# Rider
+.idea/
+
+# Mac
+.DS_Store
+
+# Archivos de usuario específicos de Unity
+*.pidb
+*.pidb.meta
+
+# Archivos de build
+*.apk
+*.aab
+*.unitypackage
+
+# --- Archivos de SO ---
+.DS_Store
+Thumbs.db
+Tesis/Assembly-CSharp.csproj

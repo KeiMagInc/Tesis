@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 3
+  tags:
+  - Nodo
+  - Balsa
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - Interactuable
+  - Water
+  - UI
+  - 'Balsa '
+  - Andy
+  - Burbuja
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Fondo
+    uniqueID: 1572340897
+    locked: 0
+  - name: Suelo
+    uniqueID: 593383267
+    locked: 0
+  - name: Personaje
+    uniqueID: 4231234255
+    locked: 0
+  - name: Techo
+    uniqueID: 456764837
+    locked: 0
+  m_RenderingLayers:
+  - Default
