@@ -9,7 +9,13 @@ EditorBuildSettings:
     path: Assets/Menu/Inicio/Menu_Inicio.unity
     guid: 88d73de9d2c8c2d4885775accca3bb2d
   - enabled: 1
-    path: Assets/Niveles/Tutorial/Listas.unity
+    path: Assets/Historia/Inicio/HistoriaInicio.unity
+    guid: 95f5055ef9ba46b4984bfb181e8dc97f
+  - enabled: 1
+    path: Assets/MapaPrincipal/MapaPrincipal.unity
+    guid: ba5ceb614ae43ee41a8e9af7faab2eb6
+  - enabled: 1
+    path: Assets/Niveles/Tutorial/TutorialListas.unity
     guid: ff729bda8c385934eba8987dde4ab7ec
   - enabled: 0
     path: Assets/Mundo1/Scenes/MundoArreglos.unity
