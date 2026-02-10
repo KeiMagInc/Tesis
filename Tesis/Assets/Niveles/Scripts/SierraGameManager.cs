@@ -31,9 +31,10 @@ public class SierraGameManager : MonoBehaviour
     public bool nivelCompletado = false;
 
     [Header("Configuración de Sonido")]
-    public AudioSource fuenteAudio; // El componente AudioSource del GameManager
-    public AudioClip sonidoAcierto; // Arrastra aquí el archivo 'acierto'
-    public AudioClip sonidoError;   // Arrastra aquí el archivo 'error'
+    public AudioSource fuenteAudio;
+    public AudioClip sonidoAcierto;
+    public AudioClip sonidoError;
+    public AudioClip sonidoVictoria; // <--- NUEVO: Arrastra aquí 'nivelCompletado'
 
     void Awake() { instancia = this; }
 
@@ -51,7 +52,6 @@ public class SierraGameManager : MonoBehaviour
 
     void Update()
     {
-        // MEJORA: Permitir al jugador saltar el tutorial presionando E
         if (enTutorialInicial && Input.GetKeyDown(KeyCode.E))
         {
             CancelInvoke("FinalizarTutorial");
@@ -63,7 +63,6 @@ public class SierraGameManager : MonoBehaviour
     {
         AndyDice("¡Hola Lupi! Kaos ha roto el camino lineal.\nEstán conectados los Tambos A - C \nInserta el Tambo B entre A y C como una lista simple.");
 
-        // 3. Buscamos el tiempo de Andy para programar el fin del tutorial
         var scriptAndy = Object.FindFirstObjectByType<Mundo2.AndyFollow>();
         float tiempoDeLectura = (scriptAndy != null) ? scriptAndy.tiempoVisible : 6.0f;
 
@@ -102,7 +101,6 @@ public class SierraGameManager : MonoBehaviour
             scriptAndy.panelDialogo.SetActive(false);
     }
 
-    // --- FUNCIÓN PARA REPRODUCIR SONIDOS ---
     private void Reproducir(AudioClip clip)
     {
         if (fuenteAudio != null && clip != null)
@@ -115,12 +113,11 @@ public class SierraGameManager : MonoBehaviour
     {
         if (nivelCompletado) return false;
 
-        // Caso: Conectar B a C
         if (origen == nodoB && destino == nodoC)
         {
             if (!origen.bloqueado)
             {
-                Reproducir(sonidoAcierto); // <--- SONIDO ACIERTO
+                Reproducir(sonidoAcierto);
                 SumarPuntos(50);
                 aciertos++;
                 origen.bloqueado = true;
@@ -130,24 +127,25 @@ public class SierraGameManager : MonoBehaviour
             }
         }
 
-        // Caso: Conectar A a B
         if (origen == nodoA && destino == nodoB)
         {
             if (nodoB.siguienteNodo == nodoC)
             {
-                Reproducir(sonidoAcierto); // <--- SONIDO ACIERTO
+                Reproducir(sonidoAcierto);
                 SumarPuntos(100);
                 aciertos++;
                 origen.bloqueado = true;
                 nivelCompletado = true;
                 AndyDice("¡Lo lograste! La ruta lineal está completa. \n¡Kaos es cada vez más pequeño!");
                 EncogerKaos();
+
+                // Programamos la aparición de la pantalla final
                 Invoke("MostrarPantallaFinal", 6f);
                 return true;
             }
             else
             {
-                Reproducir(sonidoError); // <--- SONIDO ERROR
+                Reproducir(sonidoError);
                 RestarPuntos(50);
                 fallos++;
                 AndyDice("¡Espera! Si conectas A con B ahora, perderás la referencia de C. \n¡Conecta B a C primero!");
@@ -155,8 +153,7 @@ public class SierraGameManager : MonoBehaviour
             }
         }
 
-        // Cualquier otro movimiento incorrecto
-        Reproducir(sonidoError); // <--- SONIDO ERROR
+        Reproducir(sonidoError);
         fallos++;
         if (origen == nodoC)
         {
@@ -184,6 +181,10 @@ public class SierraGameManager : MonoBehaviour
         if (panelPuntajeFinal != null)
         {
             panelPuntajeFinal.SetActive(true);
+
+            // --- NUEVO: REPRODUCIR SONIDO DE VICTORIA ---
+            Reproducir(sonidoVictoria);
+
             if (txtValorPuntaje != null) txtValorPuntaje.text = puntos.ToString();
             if (txtValorAciertos != null) txtValorAciertos.text = aciertos.ToString();
             if (txtValorFallos != null) txtValorFallos.text = fallos.ToString();

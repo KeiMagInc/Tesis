@@ -22041,6 +22041,7 @@ MonoBehaviour:
   fuenteAudio: {fileID: 219217451}
   sonidoAcierto: {fileID: 8300000, guid: 98863497d94d52b40b3ab0e2db327e07, type: 3}
   sonidoError: {fileID: 8300000, guid: 824e3d297c0e52540852102b31c7850c, type: 3}
+  sonidoVictoria: {fileID: 8300000, guid: 9585c13f96cfa464f88be829fc20bdb3, type: 3}
 --- !u!4 &219217450
 Transform:
   m_ObjectHideFlags: 0
