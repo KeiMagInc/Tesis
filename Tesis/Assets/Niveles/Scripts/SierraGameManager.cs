@@ -30,6 +30,11 @@ public class SierraGameManager : MonoBehaviour
     public int fallos = 0;
     public bool nivelCompletado = false;
 
+    [Header("Configuración de Sonido")]
+    public AudioSource fuenteAudio; // El componente AudioSource del GameManager
+    public AudioClip sonidoAcierto; // Arrastra aquí el archivo 'acierto'
+    public AudioClip sonidoError;   // Arrastra aquí el archivo 'error'
+
     void Awake() { instancia = this; }
 
     void Start()
@@ -49,8 +54,8 @@ public class SierraGameManager : MonoBehaviour
         // MEJORA: Permitir al jugador saltar el tutorial presionando E
         if (enTutorialInicial && Input.GetKeyDown(KeyCode.E))
         {
-            CancelInvoke("FinalizarTutorial"); // Cancelamos el tiempo de espera
-            FinalizarTutorial(); // Desbloqueamos inmediatamente
+            CancelInvoke("FinalizarTutorial");
+            FinalizarTutorial();
         }
     }
 
@@ -65,7 +70,6 @@ public class SierraGameManager : MonoBehaviour
         Invoke("FinalizarTutorial", tiempoDeLectura);
     }
 
-    // Modifica esta función para que sea más "insistente"
     void BloquearLupi(bool estado)
     {
         PlayerController lupi = Object.FindFirstObjectByType<PlayerController>();
@@ -77,8 +81,6 @@ public class SierraGameManager : MonoBehaviour
         }
         else
         {
-            // Si no lo encuentra a la primera, lo busca de nuevo en un instante
-            // Esto soluciona errores de carga en el Build
             StartCoroutine(ReintentarBloqueo(estado));
         }
     }
@@ -90,25 +92,35 @@ public class SierraGameManager : MonoBehaviour
         if (lupi != null) lupi.controlesBloqueados = estado;
     }
 
-    // Asegúrate de que FinalizarTutorial esté así:
     void FinalizarTutorial()
     {
         enTutorialInicial = false;
-        BloquearLupi(false); // <--- Esto DEBE ejecutarse para soltar a Lupi
+        BloquearLupi(false);
 
         var scriptAndy = Object.FindFirstObjectByType<Mundo2.AndyFollow>();
         if (scriptAndy != null && scriptAndy.panelDialogo != null)
             scriptAndy.panelDialogo.SetActive(false);
     }
 
+    // --- FUNCIÓN PARA REPRODUCIR SONIDOS ---
+    private void Reproducir(AudioClip clip)
+    {
+        if (fuenteAudio != null && clip != null)
+        {
+            fuenteAudio.PlayOneShot(clip);
+        }
+    }
+
     public bool ValidarPaso(NodoTambo origen, NodoTambo destino)
     {
         if (nivelCompletado) return false;
 
+        // Caso: Conectar B a C
         if (origen == nodoB && destino == nodoC)
         {
             if (!origen.bloqueado)
             {
+                Reproducir(sonidoAcierto); // <--- SONIDO ACIERTO
                 SumarPuntos(50);
                 aciertos++;
                 origen.bloqueado = true;
@@ -118,10 +130,12 @@ public class SierraGameManager : MonoBehaviour
             }
         }
 
+        // Caso: Conectar A a B
         if (origen == nodoA && destino == nodoB)
         {
             if (nodoB.siguienteNodo == nodoC)
             {
+                Reproducir(sonidoAcierto); // <--- SONIDO ACIERTO
                 SumarPuntos(100);
                 aciertos++;
                 origen.bloqueado = true;
@@ -133,6 +147,7 @@ public class SierraGameManager : MonoBehaviour
             }
             else
             {
+                Reproducir(sonidoError); // <--- SONIDO ERROR
                 RestarPuntos(50);
                 fallos++;
                 AndyDice("¡Espera! Si conectas A con B ahora, perderás la referencia de C. \n¡Conecta B a C primero!");
@@ -140,6 +155,8 @@ public class SierraGameManager : MonoBehaviour
             }
         }
 
+        // Cualquier otro movimiento incorrecto
+        Reproducir(sonidoError); // <--- SONIDO ERROR
         fallos++;
         if (origen == nodoC)
         {
