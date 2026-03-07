@@ -156,13 +156,13 @@ public class HistorietaManager : MonoBehaviour
                 TMP_Text tmpTextComponent = buttonSaltar.GetComponentInChildren<TMP_Text>();
                 if (tmpTextComponent != null)
                 {
-                    tmpTextComponent.text = "¡Jugar!";
+                    tmpTextComponent.text = "¡JUGAR!";
                 }
                 else
                 {
                     // Si no es TextMeshPro, intentar con Text estándar
                     Text textComponent = buttonSaltar.GetComponentInChildren<Text>();
-                    if (textComponent != null) textComponent.text = "¡Jugar!";
+                    if (textComponent != null) textComponent.text = "¡JUGAR!";
                 }
             }
             else
@@ -171,12 +171,12 @@ public class HistorietaManager : MonoBehaviour
                 TMP_Text tmpTextComponent = buttonSaltar.GetComponentInChildren<TMP_Text>();
                 if (tmpTextComponent != null)
                 {
-                    tmpTextComponent.text = "Saltar";
+                    tmpTextComponent.text = "JUGAR";
                 }
                 else
                 {
                     Text textComponent = buttonSaltar.GetComponentInChildren<Text>();
-                    if (textComponent != null) textComponent.text = "Saltar";
+                    if (textComponent != null) textComponent.text = "JUGAR";
                 }
             }
         }
