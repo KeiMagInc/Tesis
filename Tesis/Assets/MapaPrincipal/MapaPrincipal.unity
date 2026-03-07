@@ -652,7 +652,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c3a7fbb3b43284ea553347c73cbaea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nombreDeLaEscenaADirigir: TutorialListas
+  nombreDeLaEscenaADirigir: HistoriaInicio
 --- !u!1 &1144805991
 GameObject:
   m_ObjectHideFlags: 0
@@ -799,7 +799,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c3a7fbb3b43284ea553347c73cbaea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nombreDeLaEscenaADirigir: TutorialListas
+  nombreDeLaEscenaADirigir: HistoriaInicio
 --- !u!1 &1211652156
 GameObject:
   m_ObjectHideFlags: 0
@@ -1218,7 +1218,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c3a7fbb3b43284ea553347c73cbaea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nombreDeLaEscenaADirigir: TutorialListas
+  nombreDeLaEscenaADirigir: HistoriaInicio
 --- !u!1 &1541153800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1468,7 +1468,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c3a7fbb3b43284ea553347c73cbaea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nombreDeLaEscenaADirigir: TutorialListas
+  nombreDeLaEscenaADirigir: HistoriaInicio
 --- !u!1 &2049530605
 GameObject:
   m_ObjectHideFlags: 0

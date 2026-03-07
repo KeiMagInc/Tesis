@@ -29,7 +29,7 @@ public class HistorietaManager : MonoBehaviour
 
     [Header("Destino Salto")]
     [Tooltip("Nombre de la escena a cargar cuando se presione el botón 'Saltar'.")]
-    public string nombreEscenaMapa = "MapaPrincipal"; // Nombre de la escena del mapa
+    public string nombreEscenaMapa = "TutorialListas";
 
     private int paginaActual = 0; // Índice de la página actual
     private bool estaEnTransicion = false; // Para evitar clicks durante la transición

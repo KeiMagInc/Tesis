@@ -682,7 +682,7 @@ MonoBehaviour:
   buttonSiguiente: {fileID: 302597492}
   buttonSaltar: {fileID: 654847992}
   duracionTransicion: 0.5
-  nombreEscenaMapa: MapaPrincipal
+  nombreEscenaMapa: TutorialListas
 --- !u!4 &616222174
 Transform:
   m_ObjectHideFlags: 0
