@@ -534,16 +534,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f05440e6255a8ab4ead9f3d229b3e84f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  paginasHistorieta:
-  - {fileID: 2950670615974519247, guid: 2be3a161681de884daf6e355430a0791, type: 3}
-  - {fileID: -3777438771414069348, guid: 0a383e94e506bfd479789f57f68c1907, type: 3}
-  - {fileID: -7608505147920272030, guid: eeccc3c945935864aa0cd888bdd0e1a6, type: 3}
-  panelHistorieta: {fileID: 0}
-  buttonAnterior: {fileID: 0}
-  buttonSiguiente: {fileID: 0}
   buttonSaltar: {fileID: 654847992}
-  duracionTransicion: 0.5
-  nombreEscenaMapa: TutorialListas
+  buttonRegresar: {fileID: 671925661}
+  escenaSiguiente: PrimerNivel
+  escenaAnterior: MapaPrincipal
 --- !u!4 &616222174
 Transform:
   m_ObjectHideFlags: 0
