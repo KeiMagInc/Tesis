@@ -20,10 +20,10 @@ public class LupiInteraccion : MonoBehaviour
     void Update()
     {
         // Bloqueo 1: Por tutorial inicial
-        if (SierraGameManager.instancia.enTutorialInicial) return;
+        //if (SierraGameManager.instancia.enTutorialInicial) return;
 
         // Bloqueo 2: Por nivel ya completado
-        if (SierraGameManager.instancia.nivelCompletado) return;
+        //if (SierraGameManager.instancia.nivelCompletado) return;
 
         if (Input.GetKeyDown(KeyCode.E))
         {
