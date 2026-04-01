@@ -1,17 +1,27 @@
 using UnityEngine;
-using Unity.Cinemachine; // Librería nueva de Unity 6
+using Unity.Cinemachine;
 
 public class RoomCam : MonoBehaviour
 {
     [Header("Cámara de esta habitación")]
     public CinemachineCamera virtualCamera;
 
+    [Header("Texto del Letrero")]
+    [TextArea(2, 3)] // Esto hará que en el Inspector aparezca un cuadro grande para escribir
+    public string textoDeNivel;
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            // Al entrar en esta habitación, subimos la prioridad de ESTA cámara
             virtualCamera.Priority = 10;
+
+            GestorInterfazNivel gestor = Object.FindFirstObjectByType<GestorInterfazNivel>();
+            if (gestor != null)
+            {
+                // Enviamos el texto tal cual lo escribas en el Inspector
+                gestor.MostrarNombre(textoDeNivel);
+            }
         }
     }
 
@@ -19,7 +29,6 @@ public class RoomCam : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            // Al salir, bajamos la prioridad
             virtualCamera.Priority = 0;
         }
     }
