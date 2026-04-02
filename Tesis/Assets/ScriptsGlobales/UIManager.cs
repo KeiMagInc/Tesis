@@ -1,72 +1,115 @@
-using UnityEngine;
+using Mundo2;
 using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    public GameObject panelControles;
-    private CanvasGroup canvasGroup;
-    
-    [Header("Ajustes de Animación")]
-    public float duracion = 0.3f; 
-    private Coroutine animacionActual;
+    [Header("Referencias de UI")]
+    public GameObject iconoMochila;
+    public GameObject panelParcelas;
+    public GameObject panelChecklist;
+    public AndyController andy;
 
-    // Aquí guardaremos el (6, 6, 6) automáticamente
-    private Vector3 escalaOriginal;
+    [Header("Botones")]
+    public Button btnTrigo; public Button btnPapas; public Button btnZanahorias;
+    [Header("Prefabs de Siembra")]
+    public GameObject prefabTrigo; public GameObject prefabPapas; public GameObject prefabZanahorias;
+
+    [Header("Checklist")]
+    public TextMeshProUGUI[] itemsChecklist;
+
+    [Header("Configuración de Lupi")]
+    public Transform playerLupi;
+    public float distanciaParaEncajar = 3.5f;
+
+    private string[] ordenCorrecto = { "Trigo", "Papas", "Zanahoria" };
+    private int indiceProgreso = 0;
+    private CanvasGroup canvasChecklist;
 
     void Awake()
     {
-        // 1. Guardamos la escala que tú pusiste en el Inspector antes de ponerla en cero
-        escalaOriginal = panelControles.transform.localScale;
-
-        canvasGroup = panelControles.GetComponent<CanvasGroup>();
-        if (canvasGroup == null) canvasGroup = panelControles.AddComponent<CanvasGroup>();
-        
-        // 2. Ahora sí, lo ocultamos para el inicio
-        panelControles.SetActive(false);
-        canvasGroup.alpha = 0;
-        panelControles.transform.localScale = Vector3.zero;
+        canvasChecklist = panelChecklist.GetComponent<CanvasGroup>();
+        iconoMochila.SetActive(false);
+        panelParcelas.SetActive(false);
     }
 
-    public void ToggleControles()
+    public IEnumerator MostrarChecklist()
     {
-        if (animacionActual != null) StopCoroutine(animacionActual);
-
-        bool estaAbierto = panelControles.activeSelf;
-
-        if (!estaAbierto)
+        float t = 0;
+        while (t < 1)
         {
-            panelControles.SetActive(true);
-            // Animamos de 0 a la escala original (6,6,6)
-            animacionActual = StartCoroutine(AnimarPanel(0, 1, Vector3.zero, escalaOriginal));
+            t += Time.deltaTime;
+            if (canvasChecklist != null) canvasChecklist.alpha = t;
+            yield return null;
+        }
+    }
+
+    public void MostrarIconoMochila() => iconoMochila.SetActive(true);
+    public void AbrirCerrarMenuParcelas() => panelParcelas.SetActive(!panelParcelas.activeSelf);
+
+    public void SembrarTrigo() => IntentarEncajarPieza("Trigo", prefabTrigo, btnTrigo);
+    public void SembrarPapas() => IntentarEncajarPieza("Papas", prefabPapas, btnPapas);
+    public void SembrarZanahorias() => IntentarEncajarPieza("Zanahoria", prefabZanahorias, btnZanahorias);
+
+    private void IntentarEncajarPieza(string tipoBuscado, GameObject prefab, Button boton)
+    {
+        if (ordenCorrecto[indiceProgreso] != tipoBuscado)
+        {
+            andy.Decir("¡Ese no es el orden! Revisa el checklist. Toca sembrar " + ordenCorrecto[indiceProgreso]);
+            return;
+        }
+
+        ZonaPlantado[] zonas = Object.FindObjectsByType<ZonaPlantado>(FindObjectsSortMode.None);
+        ZonaPlantado zonaCorrecta = null;
+
+        foreach (ZonaPlantado z in zonas)
+        {
+            if (z.tipoDeSemillaPermitida == tipoBuscado) { zonaCorrecta = z; break; }
+        }
+
+        if (zonaCorrecta == null || zonaCorrecta.estaOcupada) return;
+
+        float dist = Vector3.Distance(playerLupi.position, zonaCorrecta.transform.position);
+
+        if (dist <= distanciaParaEncajar)
+        {
+            // ENCAJE PERFECTO: Se instancia exactamente en la posición de la zona
+            Instantiate(prefab, zonaCorrecta.transform.position, Quaternion.identity);
+            zonaCorrecta.estaOcupada = true;
+            boton.interactable = false;
+
+            // Marcar en checklist (esto llama a tu lógica de progreso)
+            MarcarTareaCompletada(indiceProgreso);
+            indiceProgreso++;
+
+            if (indiceProgreso < ordenCorrecto.Length)
+                andy.Decir("¡Muy bien! Ahora busca el sector de " + ordenCorrecto[indiceProgreso]);
+            else
+                andy.Decir("¡Excelente! Has terminado la siembra. Ahora podemos conectar el agua.");
+
+            // LA MOCHILA NO SE CIERRA SOLA (Requerimiento 2)
         }
         else
         {
-            // Animamos de la escala original (6,6,6) a 0
-            animacionActual = StartCoroutine(AnimarPanel(1, 0, escalaOriginal, Vector3.zero, true));
+            andy.Decir("Estás muy lejos del sector de " + tipoBuscado);
         }
     }
 
-    IEnumerator AnimarPanel(float alphaInicio, float alphaFin, Vector3 escalaInicio, Vector3 escalaFin, bool cerrarAlTerminar = false)
+    public void MarcarTareaCompletada(int indice)
     {
-        float tiempo = 0;
-        
-        while (tiempo < duracion)
+        if (indice < itemsChecklist.Length)
         {
-            tiempo += Time.deltaTime;
-            float progreso = tiempo / duracion;
-            float suave = Mathf.SmoothStep(0, 1, progreso);
+            // Creamos una variable para guardar el color
+            Color miColor;
 
-            canvasGroup.alpha = Mathf.Lerp(alphaInicio, alphaFin, suave);
-            panelControles.transform.localScale = Vector3.Lerp(escalaInicio, escalaFin, suave);
-            
-            yield return null;
+            // Convertimos el código Hexadecimal a un Color de Unity
+            if (ColorUtility.TryParseHtmlString("#0f5199", out miColor))
+            {
+                itemsChecklist[indice].color = miColor;
+            }
         }
-
-        canvasGroup.alpha = alphaFin;
-        panelControles.transform.localScale = escalaFin;
-
-        if (cerrarAlTerminar) panelControles.SetActive(false);
-        
-        animacionActual = null;
     }
 }
