@@ -1,6 +1,6 @@
 using UnityEngine;
 using Mundo2;
-using TMPro; // Importante para manejar el texto de la UI
+using TMPro;
 
 public class LogicaNivel1 : MonoBehaviour
 {
@@ -9,7 +9,7 @@ public class LogicaNivel1 : MonoBehaviour
     public Transform lupi;
 
     [Header("Interfaz")]
-    public TextMeshProUGUI textoPuntos; // Arrastra aquí el número '0' de tu UI
+    public TextMeshProUGUI textoPuntos;
     private int puntosTotales = 0;
 
     [Header("Puntos de Conexión")]
@@ -27,22 +27,31 @@ public class LogicaNivel1 : MonoBehaviour
     public NodoManager huertoScript;
     private int estado = 0;
 
-    void Start()
+    void OnEnable()
     {
+        // CORRECCIÓN AQUÍ: Usamos el nuevo nombre de la función del UIManager
+        UIManager ui = Object.FindFirstObjectByType<UIManager>();
+        if (ui != null) ui.OcultarInterfazNivel2Snappy();
+
         lineaAgua.positionCount = 0;
         lineaAgua.sortingOrder = 25;
-        ActualizarTextoPuntos(); // Inicializa en 0
+        ActualizarTextoPuntos();
 
         ActualizarBrillos(true, false, false, false);
-        andy.Decir("¡Lupi! El río fluye de INICIO a NULL, pero el sembrío está seco.\nPulsa 'E' en INICIO para interceptar el agua.");
+
+        if (andy != null)
+            andy.Decir("¡Lupi! El río fluye de INICIO a NULL, pero el sembrío está seco.\nPulsa 'E' en INICIO para interceptar el agua.");
     }
 
-    // Función para sumar puntos y actualizar la pantalla
+    void OnDisable()
+    {
+        ActualizarBrillos(false, false, false, false);
+    }
+
     void GanarPuntos(int cantidad)
     {
         puntosTotales += cantidad;
         ActualizarTextoPuntos();
-        // Opcional: Podrías añadir un sonido de "moneda" aquí
     }
 
     void ActualizarTextoPuntos()
@@ -99,7 +108,7 @@ public class LogicaNivel1 : MonoBehaviour
         if (estado == 0)
         {
             estado = 1;
-            GanarPuntos(10); // +10 por recoger
+            GanarPuntos(10);
             ActualizarBrillos(false, true, false, false);
             andy.Decir("¡Agua recogida! Llévala al DATO.");
         }
@@ -111,7 +120,7 @@ public class LogicaNivel1 : MonoBehaviour
         {
             estado = 2;
             huertoScript.ActivarHuerto();
-            GanarPuntos(10); // +10 por conectar dato
+            GanarPuntos(10);
             ActualizarBrillos(false, false, true, false);
             andy.Decir("¡DATO conectado!\nAhora recoge el PUNTERO en la salida.");
         }
@@ -122,7 +131,7 @@ public class LogicaNivel1 : MonoBehaviour
         if (estado == 2)
         {
             estado = 3;
-            GanarPuntos(10); // +10 por recoger puntero
+            GanarPuntos(10);
             ActualizarBrillos(false, false, false, true);
             andy.Decir("¡Bien! El PUNTERO indica el siguiente camino.\nLleva el enlace a NULL.");
         }
@@ -134,7 +143,7 @@ public class LogicaNivel1 : MonoBehaviour
         {
             estado = 4;
             huertoScript.DrenarAgua();
-            GanarPuntos(10); // +10 por finalizar lista
+            GanarPuntos(10);
             ActualizarBrillos(false, false, false, false);
             andy.Decir("¡Excelente! Has creado una LISTA SIMPLE:\nINICIO -> DATO -> PUNTERO -> NULL.");
         }

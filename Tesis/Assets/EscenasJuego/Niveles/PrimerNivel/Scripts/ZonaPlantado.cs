@@ -11,7 +11,7 @@ public class ZonaPlantado : MonoBehaviour
         if (!estaOcupada)
         {
             Gizmos.color = Color.magenta;
-            Gizmos.DrawWireCube(transform.position, new Vector3(2, 2, 0));
+            Gizmos.DrawWireCube(transform.position, new Vector3(3, 3, 0));
         }
     }
 }
