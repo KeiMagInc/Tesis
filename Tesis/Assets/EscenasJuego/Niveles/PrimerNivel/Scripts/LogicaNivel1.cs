@@ -16,7 +16,8 @@ public class LogicaNivel1 : MonoBehaviour
     public Transform puntoSalidaHead;
     public Transform puntoEntradaHuerto;
     public Transform puntoSalidaHuerto;
-    public Transform puntoNull;
+    // CAMBIO: Renombramos para ser específicos con el nuevo punto del prefab
+    public Transform puntoEntradaNull;
 
     [Header("Efectos de Brillo (Letreros)")]
     public EfectoLetrero brilloInicio;
@@ -29,7 +30,6 @@ public class LogicaNivel1 : MonoBehaviour
 
     void OnEnable()
     {
-        // CORRECCIÓN AQUÍ: Usamos el nuevo nombre de la función del UIManager
         UIManager ui = Object.FindFirstObjectByType<UIManager>();
         if (ui != null) ui.OcultarInterfazNivel2Snappy();
 
@@ -56,10 +56,7 @@ public class LogicaNivel1 : MonoBehaviour
 
     void ActualizarTextoPuntos()
     {
-        if (textoPuntos != null)
-        {
-            textoPuntos.text = puntosTotales.ToString();
-        }
+        if (textoPuntos != null) textoPuntos.text = puntosTotales.ToString();
     }
 
     void ActualizarBrillos(bool ini, bool dat, bool pun, bool nul)
@@ -98,7 +95,8 @@ public class LogicaNivel1 : MonoBehaviour
                 lineaAgua.SetPosition(0, puntoSalidaHead.position);
                 lineaAgua.SetPosition(1, puntoEntradaHuerto.position);
                 lineaAgua.SetPosition(2, puntoSalidaHuerto.position);
-                lineaAgua.SetPosition(3, puntoNull.position);
+                // CAMBIO: Ahora apunta al punto exacto de entrada del pozo
+                lineaAgua.SetPosition(3, puntoEntradaNull.position);
                 break;
         }
     }

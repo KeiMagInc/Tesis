@@ -1,250 +1,173 @@
-using UnityEngine;
 using Mundo2;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine;
 
 public class LogicaNivel2 : MonoBehaviour
 {
+    public static LogicaNivel2 instancia;
     public AndyController andy;
-    public Transform lupi;
-    public UIManager uiManager;
-
-    [Header("Interfaz")]
+    public UIManager ui;
     public TextMeshProUGUI textoPuntos;
-    private int puntosTotales = 0;
-
-    [Header("Agua")]
     public LineRenderer lineaAgua;
-    public Transform puntoHead;
-    public Transform puntoNull;
+    public Transform lupi;
 
-    [Header("Brillos Estáticos")]
+    [Header("Puntos de Conexión Fijos")]
+    public Transform puntoSalidaHead;   // Head -> PuntoSalida
+    public Transform puntoEntradaNull;  // Null -> PuntoEntrada
+
+    [Header("Efectos Brillo")]
     public EfectoLetrero brilloHead;
     public EfectoLetrero brilloNull;
 
-    private List<Transform> nodosConectados = new List<Transform>();
-    private bool cargandoEnlace = false;
-    private EfectoLetrero brilloActivo;
+    private int puntos = 0;
+    private int fase = 0; // 0: Trigo, 1: Papa, 2: Calabaza
+    private bool cargandoAgua = false;
+    private int pasoConexion = 0; // 0: Head, 1: Dato, 2: Puntero, 3: Null
 
-    // Static para que si sales del nivel y vuelves, el juego recuerde que ya viste la intro
-    private static bool introVista = false;
+    // Guardamos las posiciones para la línea
+    private Vector3 posOrigen;
+    private Vector3 posDestinoFija;
+
+    void Awake() => instancia = this;
 
     void OnEnable()
     {
-        // Configuramos la línea
         lineaAgua.positionCount = 0;
-        lineaAgua.sortingOrder = 25;
-        ActualizarTextoPuntos();
-
-        if (!introVista)
-        {
-            StartCoroutine(SecuenciaNarrativa());
-        }
-        else
-        {
-            // Si ya vio la intro y regresa, mostramos la UI de golpe (sin esperas)
-            uiManager.MostrarInterfazNivel2Snappy();
-
-            // Reactivamos el brillo donde se quedó (por defecto Head si no empezó)
-            if (nodosConectados.Count == 0 && brilloHead != null)
-            {
-                brilloHead.SetEncendido(true);
-                brilloActivo = brilloHead;
-            }
-        }
+        ActualizarPuntos();
+        StartCoroutine(IntroNivel2());
     }
 
-    void OnDisable()
+    IEnumerator IntroNivel2()
     {
-        // Al salir del nivel (desactivado por RoomCam), ocultamos todo el Nivel 2
-        if (uiManager != null)
-        {
-            uiManager.OcultarInterfazNivel2Snappy();
-        }
-        ApagarBrilloActual();
-    }
-
-    IEnumerator SecuenciaNarrativa()
-    {
-        // 1. Espera inicial para el cartel de "Nivel 2"
-        yield return new WaitForSeconds(1.5f);
-
-        // 2. Andy introduce el objetivo
-        andy.Decir("¡Lupi! El Valle necesita recuperar sus huertos.");
-        yield return new WaitForSeconds(2.5f);
-
-        andy.Decir("Mira a tu izquierda y revisa tu mochila, ahí están las semillas.");
-
-        // 3. Aparece TODA la interfaz (Checklist y Mochila) al mismo tiempo con Fade
-        // Usamos la función de UIManager que hace el fundido de ambos grupos
-        yield return StartCoroutine(uiManager.FadeNivel2UI(1f, 1.5f));
+        yield return new WaitForSeconds(1f);
+        andy.Decir("¡Lupi! Abre tu mochila.");
+        yield return ui.AparecerSuave(ui.groupIconoMochila);
+        yield return new WaitUntil(() => ui.panelParcelas.activeSelf);
 
         yield return new WaitForSeconds(1f);
-        andy.Decir("Siembra el Trigo en el primer pantano para empezar la lista.");
-
-        // 4. Activamos el primer brillo para guiar al jugador
-        if (brilloHead != null)
-        {
-            brilloHead.SetEncendido(true);
-            brilloActivo = brilloHead;
-        }
-
-        introVista = true;
+        andy.Decir("Revisa la lista de tareas.");
+        yield return ui.AparecerSuave(ui.groupChecklist);
+        yield return new WaitForSeconds(3f);
+        ProximoPasoSiembra();
     }
 
-    void Update()
+    void ProximoPasoSiembra()
     {
-        DibujarManguera();
+        string[] nombres = { "Trigo", "Papa", "Calabaza" };
+        andy.Decir("Ahora siembra el " + nombres[fase] + ".");
+        ui.SetSemillaPalpitar(nombres[fase]);
+        pasoConexion = 0;
+        lineaAgua.positionCount = 0; // Limpiamos la manguera para el nuevo producto
     }
 
-    void DibujarManguera()
+    public void AvanceSiembraExitosa()
     {
-        if (nodosConectados.Count == 0 && !cargandoEnlace) return;
-
-        int totalPuntos = nodosConectados.Count + (cargandoEnlace ? 1 : 0);
-        lineaAgua.positionCount = totalPuntos;
-
-        for (int i = 0; i < nodosConectados.Count; i++)
-        {
-            lineaAgua.SetPosition(i, nodosConectados[i].position);
-        }
-
-        if (cargandoEnlace)
-        {
-            lineaAgua.SetPosition(totalPuntos - 1, lupi.position);
-        }
+        ui.SetSemillaPalpitar("");
+        andy.Decir("¡Bien! Recoge agua del INICIO (Head).");
+        if (brilloHead) brilloHead.SetEncendido(true);
+        pasoConexion = 0;
     }
 
     public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
     {
+
         // 1. RECOGER DEL INICIO (HEAD)
-        if (tipo == "Head" && !cargandoEnlace && nodosConectados.Count == 0)
+        if (tipo == "Head" && pasoConexion == 0 && !cargandoAgua)
         {
-            // Verificamos si ya sembró algo en el UIManager
-            if (uiManager.indiceProgreso == 0)
+            cargandoAgua = true;
+            posOrigen = puntoSalidaHead.position;
+            lineaAgua.positionCount = 2;
+            lineaAgua.SetPosition(0, posOrigen);
+
+            if (brilloHead) brilloHead.SetEncendido(false);
+            andy.Decir("¡Agua recogida! Llévala al DATO del huerto.");
+        }
+
+        // 2. CONECTAR AL DATO (ENTRADA)
+        else if (tipo == "EntradaHuerto" && pasoConexion == 0 && cargandoAgua)
+        {
+            NodoManager manager = objetoTocado.GetComponentInParent<NodoManager>();
+            if (manager != null)
             {
-                andy.Decir("¡Lupi! Primero debes sembrar al menos un huerto.");
-                return;
-            }
+                cargandoAgua = false;
+                posDestinoFija = manager.puntoEntrada.position;
+                lineaAgua.SetPosition(1, posDestinoFija); // Anclamos la línea al punto
 
-            cargandoEnlace = true;
-            nodosConectados.Add(puntoHead);
-            GanarPuntos(10);
-            andy.Decir("¡Enlace HEAD recogido! Llévalo al DATO del primer huerto.");
+                manager.ActivarHuerto(); // Inundación
+                SumarPuntos(10);
+                pasoConexion = 1;
 
-            EncenderBrilloEnObjeto(objetoTocado, false);
-            PasarBrilloAHuertoProximo("Dato");
-        }
-
-        // 2. CONECTAR A ENTRADA (DATO)
-        else if (tipo == "EntradaHuerto" && cargandoEnlace)
-        {
-            cargandoEnlace = false;
-            nodosConectados.Add(objetoTocado.transform.Find("PuntoEntrada"));
-            objetoTocado.GetComponentInParent<NodoManager>().ActivarHuerto();
-            GanarPuntos(10);
-            andy.Decir("Dato guardado. Ahora recoge el PUNTERO de este huerto.");
-
-            EncenderBrilloEnObjeto(objetoTocado, false);
-            EncenderBrilloEnObjeto(objetoTocado.transform.parent.gameObject, true, "Puntero");
-        }
-
-        // 3. RECOGER DE SALIDA (PUNTERO)
-        else if (tipo == "SalidaHuerto" && !cargandoEnlace)
-        {
-            cargandoEnlace = true;
-            nodosConectados.Add(objetoTocado.transform.Find("PuntoSalida"));
-            GanarPuntos(10);
-            andy.Decir("Puntero activo. Conéctalo al siguiente DATO o al NULL.");
-
-            EncenderBrilloEnObjeto(objetoTocado, false);
-
-            if (nodosConectados.Count >= 6)
-                EncenderBrilloNull(true);
-            else
-                PasarBrilloAHuertoProximo("Dato");
-        }
-
-        // 4. CERRAR EN NULL
-        else if (tipo == "Null" && cargandoEnlace)
-        {
-            if (uiManager.indiceProgreso < 3)
-            {
-                andy.Decir("¡Espera! La lista debe tener los 3 datos antes del NULL.");
-                return;
-            }
-            cargandoEnlace = false;
-            nodosConectados.Add(puntoNull);
-            GanarPuntos(20);
-            EncenderBrilloNull(false);
-            VictoriaFinal();
-        }
-    }
-
-    // --- SISTEMA DE BRILLOS ---
-
-    void ApagarBrilloActual()
-    {
-        if (brilloActivo != null) brilloActivo.SetEncendido(false);
-    }
-
-    void EncenderBrilloEnObjeto(GameObject padre, bool estado, string nombreHijo = "")
-    {
-        ApagarBrilloActual();
-        if (padre == null) return;
-
-        EfectoLetrero[] todos = padre.GetComponentsInChildren<EfectoLetrero>();
-        foreach (var b in todos)
-        {
-            if (nombreHijo == "" || b.gameObject.name.Contains(nombreHijo))
-            {
-                b.SetEncendido(estado);
-                if (estado) brilloActivo = b;
-                break;
+                andy.Decir("¡Inundado! Ahora recoge el PUNTERO.");
+                EncenderBrilloHijo(manager.gameObject, "Puntero", true);
             }
         }
-    }
 
-    void EncenderBrilloNull(bool estado)
-    {
-        ApagarBrilloActual();
-        if (brilloNull != null)
+        // 3. RECOGER DEL PUNTERO (SALIDA)
+        else if (tipo == "SalidaHuerto" && pasoConexion == 1 && !cargandoAgua)
         {
-            brilloNull.SetEncendido(estado);
-            if (estado) brilloActivo = brilloNull;
+            NodoManager manager = objetoTocado.GetComponentInParent<NodoManager>();
+            if (manager != null)
+            {
+                cargandoAgua = true;
+                // La línea ahora tiene 4 puntos para mostrar el camino completo
+                lineaAgua.positionCount = 4;
+                lineaAgua.SetPosition(2, manager.puntoSalida.position);
+                posOrigen = manager.puntoSalida.position;
+
+                EncenderBrilloHijo(manager.gameObject, "Puntero", false);
+                pasoConexion = 2;
+
+                andy.Decir("¡Enlace recogido! Llévalo al pozo NULL.");
+                if (brilloNull) brilloNull.SetEncendido(true);
+            }
+        }
+
+        // 4. CONECTAR A NULL (FIN)
+        else if (tipo == "Null" && pasoConexion == 2 && cargandoAgua)
+        {
+            cargandoAgua = false;
+            lineaAgua.SetPosition(3, puntoEntradaNull.position); // Anclamos al pozo
+
+            SumarPuntos(10);
+            if (brilloNull) brilloNull.SetEncendido(false);
+
+            ui.MarcarTareaCompletada(fase);
+            fase++;
+
+            if (fase < 3) StartCoroutine(EsperarSiguiente());
+            else andy.Decir("¡Excelente! Has restaurado todo el sistema de riego.");
         }
     }
 
-    void PasarBrilloAHuertoProximo(string tipoLetrero)
+    IEnumerator EsperarSiguiente()
     {
-        NodoManager[] huertos = Object.FindObjectsByType<NodoManager>(FindObjectsSortMode.None);
-        foreach (var h in huertos)
-        {
-            bool yaTieneAgua = false;
-            Transform puntoEntrada = h.transform.Find("PuntoEntrada");
-            foreach (var t in nodosConectados)
-            {
-                if (t == puntoEntrada) { yaTieneAgua = true; break; }
-            }
+        andy.Decir("¡Lista conectada correctamente!");
+        yield return new WaitForSeconds(3.5f);
+        ProximoPasoSiembra();
+    }
 
-            if (!yaTieneAgua)
-            {
-                EncenderBrilloEnObjeto(h.gameObject, true, tipoLetrero);
-                return;
-            }
+    void Update()
+    {
+        if (cargandoAgua)
+        {
+            // Mientras Lupi camina, el último punto de la línea la sigue a ella
+            int ultimoIndice = lineaAgua.positionCount - 1;
+            lineaAgua.SetPosition(ultimoIndice, lupi.position);
         }
     }
-    public void ResetearConexionesAgua()
+
+    void EncenderBrilloHijo(GameObject raiz, string nombre, bool estado)
     {
-        nodosConectados.Clear();
-        cargandoEnlace = false;
-        lineaAgua.positionCount = 0;
-        ApagarBrilloActual();
-        if (brilloHead != null) brilloHead.SetEncendido(true);
+        if (raiz == null) return;
+        EfectoLetrero[] brillos = raiz.GetComponentsInChildren<EfectoLetrero>(true);
+        foreach (var b in brillos)
+        {
+            if (b.gameObject.name.ToLower().Contains(nombre.ToLower())) b.SetEncendido(estado);
+        }
     }
 
-    void GanarPuntos(int cantidad) { puntosTotales += cantidad; ActualizarTextoPuntos(); }
-    void ActualizarTextoPuntos() { if (textoPuntos != null) textoPuntos.text = puntosTotales.ToString(); }
-    void VictoriaFinal() => andy.Decir("¡Increíble! Has creado una lista enlazada conectada a NULL.");
+    void SumarPuntos(int cant) { puntos += cant; if (textoPuntos) textoPuntos.text = puntos.ToString(); }
+    void ActualizarPuntos() { if (textoPuntos) textoPuntos.text = puntos.ToString(); }
 }

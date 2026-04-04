@@ -1,6 +1,5 @@
 using Mundo2;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,193 +9,137 @@ public class UIManager : MonoBehaviour
     [Header("Referencias de UI")]
     public CanvasGroup groupChecklist;
     public CanvasGroup groupIconoMochila;
-    public GameObject panelParcelas; // Este es el que contiene los productos
+    public GameObject panelParcelas; // Asegúrate de arrastrar el objeto "Parcelas" aquí
     public AndyController andy;
 
     [Header("Botones y Prefabs")]
-    public Button btnTrigo; public Button btnPapas; public Button btnZanahorias;
-    public GameObject prefabTrigo; public GameObject prefabPapas; public GameObject prefabZanahorias;
+    public Button btnTrigo; public Button btnPapa; public Button btnCalabaza;
+    public GameObject prefabTrigo; public GameObject prefabPapa; public GameObject prefabCalabaza;
 
     [Header("Checklist")]
-    public TextMeshProUGUI[] itemsChecklist;
+    public TextMeshProUGUI[] itemsChecklist; // Arrastra los 3 textos del checklist aquí (Trigo, Papa, Calabaza)
 
     [Header("Configuración Lupi")]
     public Transform playerLupi;
     public float distanciaParaEncajar = 3.5f;
 
-    [Header("Ajustes de Palpitar")]
-    public float velocidadPalpitar = 5f;
-    public float amplitudPalpitar = 0.15f;
-
-    private string[] ordenCorrecto = { "Trigo", "Papas", "Zanahorias" };
-    public int indiceProgreso = 0;
-    private bool modoLibre = false;
-
-    private List<GameObject> huertosInstanciados = new List<GameObject>();
-
-    private Color colorNegro = Color.black;
-    private Color colorVerdeMilitar;
+    private string semillaActiva = "";
 
     void Awake()
     {
-        ColorUtility.TryParseHtmlString("#028A0F", out colorVerdeMilitar);
-
         ConfigurarUI(0, false);
         if (panelParcelas != null) panelParcelas.SetActive(false);
-
-        foreach (var item in itemsChecklist)
-        {
-            item.color = colorNegro;
-        }
     }
 
     void Update()
     {
-        if (panelParcelas != null && panelParcelas.activeSelf) AplicarEfectoPalpitar();
+        AplicarPalpitoSemilla();
     }
 
-    private void AplicarEfectoPalpitar()
+    public IEnumerator AparecerSuave(CanvasGroup grupo)
     {
-        float calculoEscala = 1f + Mathf.Sin(Time.time * velocidadPalpitar) * amplitudPalpitar;
-        Vector3 escalaNueva = new Vector3(calculoEscala, calculoEscala, 1f);
-
-        btnTrigo.transform.localScale = Vector3.one;
-        btnPapas.transform.localScale = Vector3.one;
-        btnZanahorias.transform.localScale = Vector3.one;
-
-        if (!modoLibre)
+        float t = 0;
+        while (t < 1)
         {
-            if (indiceProgreso == 0 && btnTrigo.interactable) btnTrigo.transform.localScale = escalaNueva;
-            else if (indiceProgreso == 1 && btnPapas.interactable) btnPapas.transform.localScale = escalaNueva;
-            else if (indiceProgreso == 2 && btnZanahorias.interactable) btnZanahorias.transform.localScale = escalaNueva;
+            t += Time.deltaTime * 2f;
+            grupo.alpha = t;
+            yield return null;
         }
-        else
-        {
-            if (btnTrigo.interactable) btnTrigo.transform.localScale = escalaNueva;
-            if (btnPapas.interactable) btnPapas.transform.localScale = escalaNueva;
-            if (btnZanahorias.interactable) btnZanahorias.transform.localScale = escalaNueva;
-        }
+        grupo.alpha = 1;
+        grupo.interactable = true;
+        grupo.blocksRaycasts = true;
     }
 
-    private void IntentarEncajarPieza(string tipoBuscado, GameObject prefab, Button boton)
+    private void AplicarPalpitoSemilla()
     {
-        if (!modoLibre && ordenCorrecto[indiceProgreso] != tipoBuscado)
-        {
-            andy.Decir("¡Aún no, Lupi! Primero insertemos el " + ordenCorrecto[indiceProgreso]);
-            return;
-        }
-
-        ZonaPlantado[] zonas = Object.FindObjectsByType<ZonaPlantado>(FindObjectsSortMode.None);
-        ZonaPlantado zonaDestino = null;
-
-        foreach (ZonaPlantado z in zonas)
-            if (z.tipoDeSemillaPermitida == tipoBuscado && !z.estaOcupada) { zonaDestino = z; break; }
-
-        if (zonaDestino == null) return;
-
-        if (Vector3.Distance(playerLupi.position, zonaDestino.transform.position) <= distanciaParaEncajar)
-        {
-            GameObject nuevoHuerto = Instantiate(prefab, zonaDestino.transform.position, Quaternion.identity);
-            huertosInstanciados.Add(nuevoHuerto);
-
-            zonaDestino.estaOcupada = true;
-            boton.interactable = false;
-            boton.transform.localScale = Vector3.one;
-
-            if (!modoLibre)
-            {
-                AvanzarTutorial();
-            }
-            else
-            {
-                int idx = System.Array.IndexOf(ordenCorrecto, tipoBuscado);
-                MarcarTareaCompletada(idx);
-                andy.Decir("¡Bien! Has sembrado " + tipoBuscado + " en modo libre.");
-            }
-        }
-        else andy.Decir("Estás muy lejos del sector de " + tipoBuscado);
+        float pulse = 1f + Mathf.Sin(Time.time * 6f) * 0.12f;
+        btnTrigo.transform.localScale = (semillaActiva == "Trigo" && btnTrigo.interactable) ? new Vector3(pulse, pulse, 1) : Vector3.one;
+        btnPapa.transform.localScale = (semillaActiva == "Papa" && btnPapa.interactable) ? new Vector3(pulse, pulse, 1) : Vector3.one;
+        btnCalabaza.transform.localScale = (semillaActiva == "Calabaza" && btnCalabaza.interactable) ? new Vector3(pulse, pulse, 1) : Vector3.one;
     }
 
-    private void AvanzarTutorial()
+    // --- FUNCIÓN PARA LA MOCHILA ---
+    public void AbrirCerrarMenuParcelas()
     {
-        MarcarTareaCompletada(indiceProgreso);
-        indiceProgreso++;
-        if (indiceProgreso == 1) andy.Decir("¡Muy bien! Ahora inserta las Papas en el segundo pantano.");
-        else if (indiceProgreso == 2) andy.Decir("¡Eso es! Termina el tutorial con la Zanahoria.");
-        else if (indiceProgreso == 3) StartCoroutine(ActivarModoLibre());
-    }
-
-    IEnumerator ActivarModoLibre()
-    {
-        andy.Decir("¡Perfecto! Ya entiendes la creación secuencial.");
-        yield return new WaitForSeconds(3f);
-
-        andy.Decir("Ahora borraré los cultivos. Pruébalo de nuevo, pero ¡en el orden que tú quieras!");
-
-        LimpiarSembríos();
-
-        yield return new WaitForSeconds(1.5f);
-        modoLibre = true;
-
-        btnTrigo.interactable = true;
-        btnPapas.interactable = true;
-        btnZanahorias.interactable = true;
-    }
-
-    private void LimpiarSembríos()
-    {
-        foreach (GameObject go in huertosInstanciados)
+        if (panelParcelas != null)
         {
-            if (go != null) Destroy(go);
-        }
-        huertosInstanciados.Clear();
-
-        ZonaPlantado[] zonas = Object.FindObjectsByType<ZonaPlantado>(FindObjectsSortMode.None);
-        foreach (var z in zonas) z.estaOcupada = false;
-
-        foreach (var item in itemsChecklist)
-        {
-            item.color = colorNegro;
-            item.text = item.text.Replace("[OK] ", "");
+            panelParcelas.SetActive(!panelParcelas.activeSelf);
         }
     }
 
+    // --- LÓGICA DEL CHECKLIST ---
     public void MarcarTareaCompletada(int indice)
     {
         if (indice >= 0 && indice < itemsChecklist.Length)
         {
-            itemsChecklist[indice].color = colorVerdeMilitar;
-            if (!itemsChecklist[indice].text.StartsWith("[OK]"))
-                itemsChecklist[indice].text = "[OK] " + itemsChecklist[indice].text;
+            string textoOriginal = itemsChecklist[indice].text.ToLower(); // Forzamos minúsculas
+            if (!textoOriginal.StartsWith("[ok]"))
+            {
+                itemsChecklist[indice].text = "[OK] " + textoOriginal;
+                itemsChecklist[indice].color = new Color(0.1f, 0.5f, 0.1f); // Un verde bonito
+            }
         }
     }
 
-    public void SembrarTrigo() => IntentarEncajarPieza("Trigo", prefabTrigo, btnTrigo);
-    public void SembrarPapas() => IntentarEncajarPieza("Papas", prefabPapas, btnPapas);
-    public void SembrarZanahorias() => IntentarEncajarPieza("Zanahorias", prefabZanahorias, btnZanahorias);
+    public void SetSemillaPalpitar(string tipo) => semillaActiva = tipo;
 
-    private void ConfigurarUI(float alpha, bool interactuable)
+    public void IntentarSembrar(string tipo)
     {
-        if (groupChecklist != null) { groupChecklist.alpha = alpha; groupChecklist.interactable = interactuable; groupChecklist.blocksRaycasts = interactuable; }
-        if (groupIconoMochila != null) { groupIconoMochila.alpha = alpha; groupIconoMochila.interactable = interactuable; groupIconoMochila.blocksRaycasts = interactuable; }
+        if (tipo != semillaActiva) { andy.Decir("¡Usa el " + semillaActiva + " primero!"); return; }
+
+        ZonaPlantado[] zonas = Object.FindObjectsByType<ZonaPlantado>(FindObjectsSortMode.None);
+        foreach (var z in zonas)
+        {
+            if (z.tipoDeSemillaPermitida == tipo && !z.estaOcupada)
+            {
+                if (Vector3.Distance(playerLupi.position, z.transform.position) <= distanciaParaEncajar)
+                {
+
+                    // 1. Instanciar el vegetal (Trigo, Papa o Calabaza)
+                    Instantiate(ObtenerPrefab(tipo), z.transform.position, Quaternion.identity);
+
+                    // 2. Marcar como ocupada
+                    z.estaOcupada = true;
+
+                    // 3. ¡NUEVO!: Desactivar el collider de la zona para que Lupi pueda entrar
+                    z.DesactivarColision();
+
+                    // 4. UI y Progresión
+                    DesactivarBoton(tipo);
+                    LogicaNivel2.instancia.AvanceSiembraExitosa();
+                }
+                else
+                {
+                    andy.Decir("Acércate a la parcela de " + tipo);
+                }
+                return;
+            }
+        }
     }
 
-    public IEnumerator FadeNivel2UI(float targetAlpha, float duration)
+    private GameObject ObtenerPrefab(string t) => t == "Trigo" ? prefabTrigo : t == "Papa" ? prefabPapa : prefabCalabaza;
+
+    private void DesactivarBoton(string t)
     {
-        float startAlpha = groupChecklist.alpha;
-        float time = 0;
-        while (time < duration) { time += Time.deltaTime; ConfigurarUI(Mathf.Lerp(startAlpha, targetAlpha, time / duration), false); yield return null; }
-        ConfigurarUI(targetAlpha, targetAlpha > 0);
+        if (t == "Trigo") { btnTrigo.interactable = false; btnTrigo.transform.localScale = Vector3.one; }
+        else if (t == "Papa") { btnPapa.interactable = false; btnPapa.transform.localScale = Vector3.one; }
+        else { btnCalabaza.interactable = false; btnCalabaza.transform.localScale = Vector3.one; }
     }
 
-    public void AbrirCerrarMenuParcelas() => panelParcelas.SetActive(!panelParcelas.activeSelf);
+    public void ConfigurarUI(float alpha, bool interact)
+    {
+        if (groupChecklist) { groupChecklist.alpha = alpha; groupChecklist.interactable = interact; groupChecklist.blocksRaycasts = interact; }
+        if (groupIconoMochila) { groupIconoMochila.alpha = alpha; groupIconoMochila.interactable = interact; groupIconoMochila.blocksRaycasts = interact; }
+    }
 
-    // CORRECCIÓN AQUÍ: Desactivamos el panelParcelas al ocultar la interfaz
+    public void MostrarInterfazNivel2Snappy() => ConfigurarUI(1, true);
     public void OcultarInterfazNivel2Snappy()
     {
         ConfigurarUI(0, false);
         if (panelParcelas != null) panelParcelas.SetActive(false);
     }
 
-    public void MostrarInterfazNivel2Snappy() => ConfigurarUI(1, true);
+    public void SembrarTrigo() => IntentarSembrar("Trigo");
+    public void SembrarPapa() => IntentarSembrar("Papa");
+    public void SembrarCalabaza() => IntentarSembrar("Calabaza");
 }
