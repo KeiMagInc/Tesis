@@ -21,121 +21,90 @@ public class UIManager : MonoBehaviour
 
     [Header("Configuración Lupi")]
     public Transform playerLupi;
-    public float distanciaParaEncajar = 3.5f;
+    public float distanciaParaEncajar = 5.0f;
 
     private string semillaActiva = "";
-    private Color colorVerdeMilitar; 
+    private Color colorVerdeMilitar;
 
     void Awake()
     {
         ColorUtility.TryParseHtmlString("#028A0F", out colorVerdeMilitar);
-
         ConfigurarUI(0, false);
         if (panelParcelas != null) panelParcelas.SetActive(false);
     }
 
-    void Update()
-    {
-        AplicarPalpitoSemilla();
-    }
+    void Update() { AplicarPalpitoSemilla(); }
 
-    // --- CORRECCIÓN AQUÍ: MAYÚSCULA AL INICIO Y [OK] AL FINAL ---
     public void MarcarTareaCompletada(int indice)
     {
         if (indice >= 0 && indice < itemsChecklist.Length)
         {
-            string textoBase = itemsChecklist[indice].text;
+            string textoBase = itemsChecklist[indice].text.Trim().ToLower().Replace(" [ok]", "");
+            if (string.IsNullOrEmpty(textoBase)) return;
+            string textoFormateado = char.ToUpper(textoBase[0]) + textoBase.Substring(1) + " [ok]";
+            itemsChecklist[indice].text = textoFormateado;
+            itemsChecklist[indice].color = colorVerdeMilitar;
+        }
+    }
 
-            // Verificamos que no tenga ya el [OK]
-            if (!textoBase.ToLower().Contains("[OK]"))
+    public void IntentarSembrar(string tipo)
+    {
+        if (tipo != semillaActiva) { andy.Decir("¡Usa el " + semillaActiva + " primero!"); return; }
+
+        // Buscamos todas las zonas
+        ZonaPlantado[] zonas = Object.FindObjectsByType<ZonaPlantado>(FindObjectsSortMode.None);
+        ZonaPlantado zonaMasCercana = null;
+        float menorDistancia = float.MaxValue;
+
+        foreach (var z in zonas)
+        {
+            // Solo consideramos zonas del tipo correcto que no estén ocupadas
+            if (z.tipoDeSemillaPermitida == tipo && !z.estaOcupada)
             {
-                // 1. Convertimos todo a minúsculas primero
-                string todoMinuscula = textoBase.ToLower();
-                
-                // 2. Tomamos la primera letra, la hacemos Mayúscula y sumamos el resto
-                string textoFormateado = char.ToUpper(todoMinuscula[0]) + todoMinuscula.Substring(1);
+                // Calculamos distancia solo en X e Y (ignora Z)
+                float dist = Vector2.Distance(playerLupi.position, z.transform.position);
+                if (dist < menorDistancia)
+                {
+                    menorDistancia = dist;
+                    zonaMasCercana = z;
+                }
+            }
+        }
 
-                // 3. Añadimos el [OK] y el color verde militar
-                itemsChecklist[indice].text = textoFormateado + " [OK]";
-                itemsChecklist[indice].color = colorVerdeMilitar;
+        // Si encontramos la zona y está dentro del rango
+        if (zonaMasCercana != null)
+        {
+            if (menorDistancia <= distanciaParaEncajar)
+            {
+                Instantiate(ObtenerPrefab(tipo), zonaMasCercana.transform.position, Quaternion.identity);
+                zonaMasCercana.estaOcupada = true;
+                zonaMasCercana.DesactivarColision();
+                DesactivarBoton(tipo);
+                if (LogicaNivel2.instancia != null) LogicaNivel2.instancia.AvanceSiembraExitosa();
+            }
+            else
+            {
+                andy.Decir("Acércate más a la parcela de " + tipo);
             }
         }
     }
 
-    public IEnumerator AparecerSuave(CanvasGroup grupo)
-    {
-        float t = 0;
-        while (t < 1)
-        {
-            t += Time.deltaTime * 2f;
-            grupo.alpha = t;
-            yield return null;
-        }
-        grupo.alpha = 1;
-        grupo.interactable = true;
-        grupo.blocksRaycasts = true;
-    }
-
     private void AplicarPalpitoSemilla()
     {
+        if (btnTrigo == null || btnPapa == null || btnCalabaza == null) return;
         float pulse = 1f + Mathf.Sin(Time.time * 6f) * 0.12f;
         btnTrigo.transform.localScale = (semillaActiva == "Trigo" && btnTrigo.interactable) ? new Vector3(pulse, pulse, 1) : Vector3.one;
         btnPapa.transform.localScale = (semillaActiva == "Papa" && btnPapa.interactable) ? new Vector3(pulse, pulse, 1) : Vector3.one;
         btnCalabaza.transform.localScale = (semillaActiva == "Calabaza" && btnCalabaza.interactable) ? new Vector3(pulse, pulse, 1) : Vector3.one;
     }
 
-    public void AbrirCerrarMenuParcelas()
-    {
-        if (panelParcelas != null) panelParcelas.SetActive(!panelParcelas.activeSelf);
-    }
-
+    public void AbrirCerrarMenuParcelas() => panelParcelas.SetActive(!panelParcelas.activeSelf);
     public void SetSemillaPalpitar(string tipo) => semillaActiva = tipo;
-
-    public void IntentarSembrar(string tipo)
-    {
-        if (tipo != semillaActiva) { andy.Decir("¡Usa el " + semillaActiva + " primero!"); return; }
-
-        ZonaPlantado[] zonas = Object.FindObjectsByType<ZonaPlantado>(FindObjectsSortMode.None);
-        foreach (var z in zonas)
-        {
-            if (z.tipoDeSemillaPermitida == tipo && !z.estaOcupada)
-            {
-                if (Vector3.Distance(playerLupi.position, z.transform.position) <= distanciaParaEncajar)
-                {
-                    Instantiate(ObtenerPrefab(tipo), z.transform.position, Quaternion.identity);
-                    z.estaOcupada = true;
-                    z.DesactivarColision();
-                    DesactivarBoton(tipo);
-                    LogicaNivel2.instancia.AvanceSiembraExitosa();
-                }
-                else andy.Decir("Acércate a la parcela de " + tipo);
-                return;
-            }
-        }
-    }
-
     private GameObject ObtenerPrefab(string t) => t == "Trigo" ? prefabTrigo : t == "Papa" ? prefabPapa : prefabCalabaza;
-
-    private void DesactivarBoton(string t)
-    {
-        if (t == "Trigo") { btnTrigo.interactable = false; btnTrigo.transform.localScale = Vector3.one; }
-        else if (t == "Papa") { btnPapa.interactable = false; btnPapa.transform.localScale = Vector3.one; }
-        else { btnCalabaza.interactable = false; btnCalabaza.transform.localScale = Vector3.one; }
-    }
-
-    public void ConfigurarUI(float alpha, bool interact)
-    {
-        if (groupChecklist) { groupChecklist.alpha = alpha; groupChecklist.interactable = interact; groupChecklist.blocksRaycasts = interact; }
-        if (groupIconoMochila) { groupIconoMochila.alpha = alpha; groupIconoMochila.interactable = interact; groupIconoMochila.blocksRaycasts = interact; }
-    }
-
-    public void MostrarInterfazNivel2Snappy() => ConfigurarUI(1, true);
-    public void OcultarInterfazNivel2Snappy()
-    {
-        ConfigurarUI(0, false);
-        if (panelParcelas != null) panelParcelas.SetActive(false);
-    }
-
+    private void DesactivarBoton(string t) { if (t == "Trigo") btnTrigo.interactable = false; else if (t == "Papa") btnPapa.interactable = false; else btnCalabaza.interactable = false; }
+    public void ConfigurarUI(float alpha, bool interact) { groupChecklist.alpha = alpha; groupChecklist.interactable = interact; groupChecklist.blocksRaycasts = interact; groupIconoMochila.alpha = alpha; groupIconoMochila.interactable = interact; groupIconoMochila.blocksRaycasts = interact; }
+    public IEnumerator AparecerSuave(CanvasGroup grupo) { float t = 0; while (t < 1) { t += Time.deltaTime * 2f; grupo.alpha = t; yield return null; } grupo.alpha = 1; grupo.interactable = true; grupo.blocksRaycasts = true; }
+    public void OcultarInterfazNivel2Snappy() { ConfigurarUI(0, false); if (panelParcelas != null) panelParcelas.SetActive(false); }
     public void SembrarTrigo() => IntentarSembrar("Trigo");
     public void SembrarPapa() => IntentarSembrar("Papa");
     public void SembrarCalabaza() => IntentarSembrar("Calabaza");

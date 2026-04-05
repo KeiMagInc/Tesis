@@ -12,12 +12,11 @@ public class LogicaNivel1 : MonoBehaviour
     public TextMeshProUGUI textoPuntos;
     private int puntosTotales = 0;
 
-    [Header("Puntos de Conexión")]
-    public Transform puntoSalidaHead;
-    public Transform puntoEntradaHuerto;
-    public Transform puntoSalidaHuerto;
-    // CAMBIO: Renombramos para ser específicos con el nuevo punto del prefab
-    public Transform puntoEntradaNull;
+    [Header("Puntos de Conexión (Anatomía Cairo)")]
+    public Transform puntoSalidaHead;    // Variable P
+    public Transform puntoEntradaHuerto; // Campo INFO
+    public Transform puntoSalidaHuerto;  // Campo LIGA
+    public Transform puntoEntradaNull;   // Valor NIL
 
     [Header("Efectos de Brillo (Letreros)")]
     public EfectoLetrero brilloInicio;
@@ -40,7 +39,7 @@ public class LogicaNivel1 : MonoBehaviour
         ActualizarBrillos(true, false, false, false);
 
         if (andy != null)
-            andy.Decir("¡Lupi! El río fluye de INICIO a NULL, pero el sembrío está seco.\nPulsa 'E' en INICIO para interceptar el agua.");
+            andy.Decir("¡Lupi! El río fluye de P (Inicio) a NULL.\nUsa 'E' en INICIO para obtener la dirección del primer nodo.");
     }
 
     void OnDisable()
@@ -48,54 +47,35 @@ public class LogicaNivel1 : MonoBehaviour
         ActualizarBrillos(false, false, false, false);
     }
 
-    void GanarPuntos(int cantidad)
-    {
-        puntosTotales += cantidad;
-        ActualizarTextoPuntos();
-    }
-
-    void ActualizarTextoPuntos()
-    {
-        if (textoPuntos != null) textoPuntos.text = puntosTotales.ToString();
-    }
-
-    void ActualizarBrillos(bool ini, bool dat, bool pun, bool nul)
-    {
-        if (brilloInicio) brilloInicio.SetEncendido(ini);
-        if (brilloDato) brilloDato.SetEncendido(dat);
-        if (brilloPuntero) brilloPuntero.SetEncendido(pun);
-        if (brilloNull) brilloNull.SetEncendido(nul);
-    }
-
     void Update()
     {
         if (lupi == null) return;
 
+        // Visualización del flujo de memoria dinámica
         switch (estado)
         {
-            case 1:
+            case 1: // P apuntando a Lupi
                 lineaAgua.positionCount = 2;
                 lineaAgua.SetPosition(0, puntoSalidaHead.position);
                 lineaAgua.SetPosition(1, lupi.position);
                 break;
-            case 2:
+            case 2: // P -> primer nodo (INFO)
                 lineaAgua.positionCount = 2;
                 lineaAgua.SetPosition(0, puntoSalidaHead.position);
                 lineaAgua.SetPosition(1, puntoEntradaHuerto.position);
                 break;
-            case 3:
+            case 3: // P -> Nodo.INFO y Nodo.LIGA -> Lupi
                 lineaAgua.positionCount = 4;
                 lineaAgua.SetPosition(0, puntoSalidaHead.position);
                 lineaAgua.SetPosition(1, puntoEntradaHuerto.position);
                 lineaAgua.SetPosition(2, puntoSalidaHuerto.position);
                 lineaAgua.SetPosition(3, lupi.position);
                 break;
-            case 4:
+            case 4: // Estructura Completa: P -> INFO -> LIGA -> NIL
                 lineaAgua.positionCount = 4;
                 lineaAgua.SetPosition(0, puntoSalidaHead.position);
                 lineaAgua.SetPosition(1, puntoEntradaHuerto.position);
                 lineaAgua.SetPosition(2, puntoSalidaHuerto.position);
-                // CAMBIO: Ahora apunta al punto exacto de entrada del pozo
                 lineaAgua.SetPosition(3, puntoEntradaNull.position);
                 break;
         }
@@ -108,7 +88,7 @@ public class LogicaNivel1 : MonoBehaviour
             estado = 1;
             GanarPuntos(10);
             ActualizarBrillos(false, true, false, false);
-            andy.Decir("¡Agua recogida! Llévala al DATO.");
+            andy.Decir("¡Dirección obtenida de P! Llévala al campo DATO del huerto.");
         }
     }
 
@@ -120,7 +100,7 @@ public class LogicaNivel1 : MonoBehaviour
             huertoScript.ActivarHuerto();
             GanarPuntos(10);
             ActualizarBrillos(false, false, true, false);
-            andy.Decir("¡DATO conectado!\nAhora recoge el PUNTERO en la salida.");
+            andy.Decir("¡Campo INFO asignado!\nAhora activa el campo PUNTERO para ver el enlace.");
         }
     }
 
@@ -131,7 +111,7 @@ public class LogicaNivel1 : MonoBehaviour
             estado = 3;
             GanarPuntos(10);
             ActualizarBrillos(false, false, false, true);
-            andy.Decir("¡Bien! El PUNTERO indica el siguiente camino.\nLleva el enlace a NULL.");
+            andy.Decir("¡Campo PUNTERO activo! Como es el último nodo, debe apuntar a NULL (Null).");
         }
     }
 
@@ -143,7 +123,18 @@ public class LogicaNivel1 : MonoBehaviour
             huertoScript.DrenarAgua();
             GanarPuntos(10);
             ActualizarBrillos(false, false, false, false);
-            andy.Decir("¡Excelente! Has creado una LISTA SIMPLE:\nINICIO -> DATO -> PUNTERO -> NULL.");
+            andy.Decir("¡Excelente! Has creado la estructura básica según Cairo:\nVariable P -> INFO -> LIGA -> NULL.");
         }
+    }
+
+    // Funciones de soporte
+    void GanarPuntos(int cant) { puntosTotales += cant; ActualizarTextoPuntos(); }
+    void ActualizarTextoPuntos() { if (textoPuntos != null) textoPuntos.text = puntosTotales.ToString(); }
+    void ActualizarBrillos(bool ini, bool dat, bool pun, bool nul)
+    {
+        if (brilloInicio) brilloInicio.SetEncendido(ini);
+        if (brilloDato) brilloDato.SetEncendido(dat);
+        if (brilloPuntero) brilloPuntero.SetEncendido(pun);
+        if (brilloNull) brilloNull.SetEncendido(nul);
     }
 }
