@@ -2,139 +2,157 @@ using UnityEngine;
 using Mundo2;
 using TMPro;
 
-public class LogicaNivel1 : MonoBehaviour
+public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
 {
+    public static LogicaNivel1 instancia;
     public AndyController andy;
     public LineRenderer lineaAgua;
     public Transform lupi;
 
     [Header("Interfaz")]
     public TextMeshProUGUI textoPuntos;
-    private int puntosTotales = 0;
 
-    [Header("Puntos de Conexión (Anatomía Cairo)")]
-    public Transform puntoSalidaHead;    // Variable P
-    public Transform puntoEntradaHuerto; // Campo INFO
-    public Transform puntoSalidaHuerto;  // Campo LIGA
-    public Transform puntoEntradaNull;   // Valor NIL
+    [Header("Puntos de Conexión")]
+    public Transform puntoSalidaHead;
+    public Transform puntoEntradaHuerto;
+    public Transform puntoSalidaHuerto;
+    public Transform puntoEntradaNull;
 
-    [Header("Efectos de Brillo (Letreros)")]
+    [Header("Efectos")]
     public EfectoLetrero brilloInicio;
     public EfectoLetrero brilloDato;
     public EfectoLetrero brilloPuntero;
     public EfectoLetrero brilloNull;
 
-    public NodoManager huertoScript;
+    public NodoManager huertoScript; // El nodo estático del nivel 1
     private int estado = 0;
+
+    void Awake() => instancia = this;
 
     void OnEnable()
     {
-        UIManager ui = Object.FindFirstObjectByType<UIManager>();
-        if (ui != null) ui.OcultarInterfazNivel2Snappy();
+        if (UIManager.instancia != null)
+        {
+            UIManager.instancia.logicaActiva = this;
+            UIManager.instancia.MostrarInterfaz(false); // Oculta mochila en N1
+        }
 
-        lineaAgua.positionCount = 0;
-        lineaAgua.sortingOrder = 25;
-        ActualizarTextoPuntos();
+        // RESET TOTAL AL ENTRAR
+        ResetearNivel();
+    }
 
+    public void ResetearNivel()
+    {
+        estado = 0;
+
+        // 1. Limpiar la línea azul
+        if (lineaAgua != null) lineaAgua.positionCount = 0;
+
+        // 2. Resetear el nodo (Agua desaparece y sembríos secos)
+        if (huertoScript != null)
+        {
+            huertoScript.ResetearNodo();
+        }
+
+        // 3. Resetear brillos de letreros
         ActualizarBrillos(true, false, false, false);
 
+        // 4. Repetir diálogo de Andy
         if (andy != null)
-            andy.Decir("¡Lupi! El río fluye de P (Inicio) a NULL.\nUsa 'E' en INICIO para obtener la dirección del primer nodo.");
-    }
-
-    void OnDisable()
-    {
-        ActualizarBrillos(false, false, false, false);
-    }
-
-    void Update()
-    {
-        if (lupi == null) return;
-
-        // Visualización del flujo de memoria dinámica
-        switch (estado)
         {
-            case 1: // P apuntando a Lupi
-                lineaAgua.positionCount = 2;
-                lineaAgua.SetPosition(0, puntoSalidaHead.position);
-                lineaAgua.SetPosition(1, lupi.position);
-                break;
-            case 2: // P -> primer nodo (INFO)
-                lineaAgua.positionCount = 2;
-                lineaAgua.SetPosition(0, puntoSalidaHead.position);
-                lineaAgua.SetPosition(1, puntoEntradaHuerto.position);
-                break;
-            case 3: // P -> Nodo.INFO y Nodo.LIGA -> Lupi
-                lineaAgua.positionCount = 4;
-                lineaAgua.SetPosition(0, puntoSalidaHead.position);
-                lineaAgua.SetPosition(1, puntoEntradaHuerto.position);
-                lineaAgua.SetPosition(2, puntoSalidaHuerto.position);
-                lineaAgua.SetPosition(3, lupi.position);
-                break;
-            case 4: // Estructura Completa: P -> INFO -> LIGA -> NIL
-                lineaAgua.positionCount = 4;
-                lineaAgua.SetPosition(0, puntoSalidaHead.position);
-                lineaAgua.SetPosition(1, puntoEntradaHuerto.position);
-                lineaAgua.SetPosition(2, puntoSalidaHuerto.position);
-                lineaAgua.SetPosition(3, puntoEntradaNull.position);
-                break;
+            andy.Decir("¡Lupi! El río fluye de P (Inicio) a NULL.\nUsa 'E' en INICIO para obtener la dirección.");
+        }
+
+        ActualizarPuntos();
+    }
+
+    public void AvanceSiembraExitosa() { } // No se usa en N1
+
+    public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
+    {
+        switch (tipo)
+        {
+            case "Head": AccionHead(); break;
+            case "EntradaHuerto": AccionHuertoEntrada(); break;
+            case "SalidaHuerto": AccionHuertoSalida(); break;
+            case "Null": AccionNull(); break;
         }
     }
 
-    public void AccionHead()
+    // Lógica de estados...
+    void AccionHead()
     {
         if (estado == 0)
         {
-            estado = 1;
-            GanarPuntos(10);
+            estado = 1; GanarPuntos(10);
             ActualizarBrillos(false, true, false, false);
-            andy.Decir("¡Dirección obtenida de P! Llévala al campo DATO del huerto.");
+            andy.Decir("¡Dirección obtenida de P! Llévala al campo DATO.");
         }
     }
 
-    public void AccionHuertoEntrada()
+    void AccionHuertoEntrada()
     {
         if (estado == 1)
         {
             estado = 2;
-            huertoScript.ActivarHuerto();
+            if (huertoScript) huertoScript.ActivarHuerto();
             GanarPuntos(10);
             ActualizarBrillos(false, false, true, false);
-            andy.Decir("¡Campo INFO asignado!\nAhora activa el campo PUNTERO para ver el enlace.");
+            andy.Decir("¡Campo INFO asignado! Activa el PUNTERO.");
         }
     }
 
-    public void AccionHuertoSalida()
+    void AccionHuertoSalida()
     {
         if (estado == 2)
         {
-            estado = 3;
-            GanarPuntos(10);
+            estado = 3; GanarPuntos(10);
             ActualizarBrillos(false, false, false, true);
-            andy.Decir("¡Campo PUNTERO activo! Como es el último nodo, debe apuntar a NULL (Null).");
+            andy.Decir("Apunta a NULL.");
         }
     }
 
-    public void AccionNull()
+    void AccionNull()
     {
         if (estado == 3)
         {
             estado = 4;
-            huertoScript.DrenarAgua();
+            if (huertoScript) huertoScript.DrenarAgua();
             GanarPuntos(10);
             ActualizarBrillos(false, false, false, false);
-            andy.Decir("¡Excelente! Has creado la estructura básica según Cairo:\nVariable P -> INFO -> LIGA -> NULL.");
+            andy.Decir("¡Excelente! Estructura básica creada.");
         }
     }
 
-    // Funciones de soporte
-    void GanarPuntos(int cant) { puntosTotales += cant; ActualizarTextoPuntos(); }
-    void ActualizarTextoPuntos() { if (textoPuntos != null) textoPuntos.text = puntosTotales.ToString(); }
+    void GanarPuntos(int cant)
+    {
+        UIManager.puntosGlobales += cant;
+        ActualizarPuntos();
+    }
+
+    void ActualizarPuntos()
+    {
+        if (textoPuntos != null) textoPuntos.text = UIManager.puntosGlobales.ToString();
+    }
+
     void ActualizarBrillos(bool ini, bool dat, bool pun, bool nul)
     {
         if (brilloInicio) brilloInicio.SetEncendido(ini);
         if (brilloDato) brilloDato.SetEncendido(dat);
         if (brilloPuntero) brilloPuntero.SetEncendido(pun);
         if (brilloNull) brilloNull.SetEncendido(nul);
+    }
+
+    void Update()
+    {
+        if (lupi == null || lineaAgua == null) return;
+        switch (estado)
+        {
+            case 1: lineaAgua.positionCount = 2; lineaAgua.SetPosition(0, puntoSalidaHead.position); lineaAgua.SetPosition(1, lupi.position); break;
+            case 2: lineaAgua.positionCount = 2; lineaAgua.SetPosition(0, puntoSalidaHead.position); lineaAgua.SetPosition(1, puntoEntradaHuerto.position); break;
+            case 3: lineaAgua.positionCount = 4; lineaAgua.SetPosition(0, puntoSalidaHead.position); lineaAgua.SetPosition(1, puntoEntradaHuerto.position); lineaAgua.SetPosition(2, puntoSalidaHuerto.position); lineaAgua.SetPosition(3, lupi.position); break;
+            case 4: lineaAgua.positionCount = 4; lineaAgua.SetPosition(0, puntoSalidaHead.position); lineaAgua.SetPosition(1, puntoEntradaHuerto.position); lineaAgua.SetPosition(2, puntoSalidaHuerto.position); lineaAgua.SetPosition(3, puntoEntradaNull.position); break;
+            default: lineaAgua.positionCount = 0; break;
+        }
     }
 }

@@ -11,11 +11,12 @@ public class TriggerHuerto : MonoBehaviour
     {
         if (estaCerca && Input.GetKeyDown(KeyCode.E))
         {
-            LogicaNivel1 l1 = Object.FindFirstObjectByType<LogicaNivel1>();
-            if (l1 != null) l1.AccionHuertoEntrada();
-
-            LogicaNivel2 l2 = Object.FindFirstObjectByType<LogicaNivel2>();
-            if (l2 != null) l2.AccionEnLetrero("EntradaHuerto", this.gameObject);
+            // CAMBIO CLAVE: Debe decir .instancia (sin el UI al final)
+            if (UIManager.instancia != null && UIManager.instancia.logicaActiva != null)
+            {
+                UIManager.instancia.logicaActiva.AccionEnLetrero("EntradaHuerto", gameObject);
+                // Cambia "Head" por "EntradaHuerto", "SalidaHuerto" o "Null" según el trigger
+            }
         }
     }
 }

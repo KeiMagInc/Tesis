@@ -4,223 +4,272 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class LogicaNivel3 : MonoBehaviour
+public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
 {
     public static LogicaNivel3 instancia;
     public AndyController andy;
-    public UIManager ui;
     public TextMeshProUGUI textoPuntos;
     public LineRenderer lineaAgua;
     public Transform lupi;
 
-    [Header("Puntos de Conexión Fijos")]
+    [Header("Prefabs Específicos Nivel 3")]
+    public GameObject prefabPapaN3;      // Fase 0
+    public GameObject prefabTrigoN3;     // Fase 1
+    public GameObject prefabCalabazaN3;  // Fase 2
+
+    [Header("Conexiones y Brillos Fijos")]
     public Transform puntoSalidaHead;
     public Transform puntoEntradaNull;
-
-    [Header("Efectos Brillo")]
     public EfectoLetrero brilloHead;
     public EfectoLetrero brilloNull;
 
-    private int puntos = 0;
     private int fase = 0;
+    private int pasoConexion = 0; // 0: Buscando Dato, 1: En Dato (esperando click en Puntero), 2: Buscando Siguiente
     private bool cargandoAgua = false;
-    private int pasoConexion = 0;
 
-    private Vector3 posOrigen;
     private NodoManager managerActual;
-    private NodoManager managerAnterior; // En Cairo, esto representa la dirección que tenía P antes de insertar
+    private NodoManager managerAnterior;
+
+    private List<Vector3> puntosCadenaFija = new List<Vector3>();
+    private string[] nombresNodos = { "Papa", "Trigo", "Calabaza" };
 
     void Awake() => instancia = this;
 
     void OnEnable()
     {
-        lineaAgua.positionCount = 0;
+        instancia = this;
+        UIManager.instancia.logicaActiva = this;
+        UIManager.instancia.SetPrefabs(prefabTrigoN3, prefabPapaN3, prefabCalabazaN3);
+
+        ResetearNivel();
+
+        UIManager.instancia.MostrarMochilaSolo(false);
+        UIManager.instancia.MostrarChecklistSolo(false);
+        UIManager.instancia.ConfigurarTextosChecklist("Derecha: sembrar papa", "Centro: sembrar trigo", "Izquierda: sembrar calabaza");
+
         ActualizarPuntos();
-        StartCoroutine(IntroNivel3());
+        StartCoroutine(Intro());
     }
 
-    IEnumerator IntroNivel3()
+    public void ResetearNivel()
     {
+        fase = 0; pasoConexion = 0; cargandoAgua = false;
+        lineaAgua.positionCount = 0;
+        puntosCadenaFija.Clear();
+        managerAnterior = null;
+        managerActual = null;
+
+        if (UIManager.instancia != null) UIManager.instancia.ResetBotones();
+        ApagarBrillosGlobales();
+
+        NodoManager[] nodosViejos = Object.FindObjectsByType<NodoManager>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var n in nodosViejos)
+        {
+            n.gameObject.name = "DESTRUIDO_VIEJO";
+            n.gameObject.tag = "Untagged";
+            Destroy(n.gameObject);
+        }
+
+        ZonaPlantado[] zonas = Object.FindObjectsByType<ZonaPlantado>(FindObjectsSortMode.None);
+        foreach (var z in zonas) z.ResetearZona();
+    }
+
+    IEnumerator Intro()
+    {
+        yield return new WaitForSeconds(0.5f);
+        andy.Decir("Algoritmo 5.1: CREA_INICIO. Las nuevas plantas van al principio.");
+        UIManager.instancia.MostrarMochilaSolo(true);
+        yield return new WaitUntil(() => UIManager.instancia.panelParcelas.activeSelf);
+        UIManager.instancia.MostrarChecklistSolo(true);
         yield return new WaitForSeconds(1f);
-        andy.Decir("¡Lupi! Hoy aplicaremos el algoritmo 'Crea_inicio' del libro de Cairo.");
-        yield return new WaitForSeconds(3.5f);
-        andy.Decir("Cada nuevo huerto será la nueva cabecera y apuntará al anterior.");
-
-        yield return ui.AparecerSuave(ui.groupIconoMochila);
-        yield return new WaitUntil(() => ui.panelParcelas.activeSelf);
-
-        yield return ui.AparecerSuave(ui.groupChecklist);
-        yield return new WaitForSeconds(3f);
-
-        ProximoPasoSiembra();
+        ProximoPaso();
     }
 
-    void ProximoPasoSiembra()
+    void ProximoPaso()
     {
-        string[] nombres = { "Trigo", "Papa", "Calabaza" };
-        if (fase > 0)
-            andy.Decir("Inserta la " + nombres[fase] + ". ¡Ella será el nuevo inicio de la lista!");
-        else
-            andy.Decir("Siembra el " + nombres[fase] + " para empezar.");
-
-        ui.SetSemillaPalpitar(nombres[fase]);
+        andy.Decir("Siembra " + nombresNodos[fase]);
+        UIManager.instancia.SetSemillaPalpitar(nombresNodos[fase]);
         pasoConexion = 0;
+        managerActual = null;
     }
 
     public void AvanceSiembraExitosa()
     {
-        ui.SetSemillaPalpitar("");
-        // Según Cairo: Creamos el nodo y ahora asignamos la dirección de la cabecera P
-        andy.Decir("¡Huerto listo! Recoge la dirección del Inicio (Variable P).");
-        if (brilloHead) brilloHead.SetEncendido(true);
-        pasoConexion = 0;
+        UIManager.instancia.SetSemillaPalpitar("");
+        StartCoroutine(EsperarYAsignarNodo());
+    }
+
+    IEnumerator EsperarYAsignarNodo()
+    {
+        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForFixedUpdate();
+
+        managerActual = BuscarNuevoNodoEnEscena();
+
+        if (managerActual != null)
+        {
+            andy.Decir("El INICIO (P) debe apuntar a la " + nombresNodos[fase] + ". Toca P.");
+            brilloHead.SetEncendido(true);
+        }
     }
 
     public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
     {
-        // 1. RECOGER (HEAD o PUNTERO)
-        if ((tipo == "Head" || tipo == "SalidaHuerto") && !cargandoAgua)
+        if (managerActual == null && tipo != "Head") return;
+
+        // 1. CLICK EN INICIO (P)
+        if (tipo == "Head" && pasoConexion == 0 && !cargandoAgua)
         {
-            if (tipo == "Head" && pasoConexion == 0)
+            brilloHead.SetEncendido(false);
+            cargandoAgua = true;
+            EncenderBrilloEnNodo(managerActual.gameObject, "Dato", true);
+            andy.Decir("Lleva P al DATO de la " + nombresNodos[fase]);
+        }
+
+        // 2. CLICK EN DATO (INFO)
+        else if (tipo == "EntradaHuerto" && cargandoAgua && pasoConexion == 0)
+        {
+            if (objetoTocado.GetComponentInParent<NodoManager>() != managerActual) return;
+
+            EncenderBrilloEnNodo(managerActual.gameObject, "Dato", false);
+            managerActual.ActivarHuerto();
+            SumarPuntos(10);
+            cargandoAgua = false;
+            pasoConexion = 1; // Ahora la manguera se quedará pegada aquí
+
+            EncenderBrilloEnNodo(managerActual.gameObject, "Puntero", true);
+            andy.Decir("Ahora activa su PUNTERO (LIGA).");
+        }
+
+        // 3. CLICK EN PUNTERO (LIGA)
+        else if (tipo == "SalidaHuerto" && pasoConexion == 1)
+        {
+            if (objetoTocado.GetComponentInParent<NodoManager>() != managerActual) return;
+
+            EncenderBrilloEnNodo(managerActual.gameObject, "Puntero", false);
+            cargandoAgua = true;
+            pasoConexion = 2;
+
+            if (fase == 0)
             {
-                cargandoAgua = true;
-                posOrigen = puntoSalidaHead.position;
-                lineaAgua.positionCount = 2; // P -> Lupi
-                lineaAgua.SetPosition(0, posOrigen);
-
-                if (brilloHead) brilloHead.SetEncendido(false);
-                andy.Decir("Conecta el Inicio al campo INFO (Dato) del nuevo huerto.");
-
-                GameObject huerto = BuscarHuertoPorFase();
-                EncenderBrilloHijo(huerto, "Dato", true);
+                brilloNull.SetEncendido(true);
+                andy.Decir("Como es la primera, apunta a NIL.");
             }
-            else if (tipo == "SalidaHuerto" && pasoConexion == 1)
+            else
             {
-                NodoManager manager = objetoTocado.GetComponentInParent<NodoManager>();
-                if (manager == managerActual)
+                EncenderBrilloEnNodo(managerAnterior.gameObject, "Dato", true);
+                andy.Decir("Apunta al dato de la " + nombresNodos[fase - 1]);
+            }
+        }
+
+        // 4. CIERRE (NIL O NODO ANTERIOR)
+        else if (pasoConexion == 2 && cargandoAgua)
+        {
+            if (tipo == "Null" && fase == 0)
+            {
+                brilloNull.SetEncendido(false);
+                FinalizarNodo(puntoEntradaNull.position);
+            }
+            else if (tipo == "EntradaHuerto" && fase > 0)
+            {
+                if (objetoTocado.GetComponentInParent<NodoManager>() == managerAnterior)
                 {
-                    cargandoAgua = true;
-                    posOrigen = manager.puntoSalida.position;
-                    // Mantenemos la conexión Head->Dato y ahora Puntero->Lupi
-                    lineaAgua.positionCount = 4;
-                    lineaAgua.SetPosition(2, posOrigen);
-
-                    EncenderBrilloHijo(manager.gameObject, "Puntero", false);
-
-                    if (fase == 0)
-                    {
-                        andy.Decir("Es el único nodo. Apunta su campo LIGA (Puntero) a NIL (Null).");
-                        if (brilloNull) brilloNull.SetEncendido(true);
-                    }
-                    else
-                    {
-                        andy.Decir("¡Algoritmo 5.1! Apunta el campo LIGA al nodo que antes era el primero.");
-                        EncenderBrilloHijo(managerAnterior.gameObject, "Dato", true);
-                    }
-                    pasoConexion = 2;
+                    EncenderBrilloEnNodo(managerAnterior.gameObject, "Dato", false);
+                    FinalizarNodo(managerAnterior.puntoEntrada.position);
                 }
             }
         }
-
-        // 2. CONECTAR AL DATO (ENTRADA)
-        else if (tipo == "EntradaHuerto" && cargandoAgua)
-        {
-            NodoManager managerTocado = objetoTocado.GetComponentInParent<NodoManager>();
-
-            // Conectando el Inicio al nuevo nodo actual
-            if (pasoConexion == 0 && managerTocado.gameObject.name.Contains(ObtenerNombreFase()))
-            {
-                cargandoAgua = false;
-                managerActual = managerTocado;
-                lineaAgua.SetPosition(1, managerActual.puntoEntrada.position);
-
-                managerActual.ActivarHuerto(); // INFO asignada
-                SumarPuntos(10);
-                pasoConexion = 1;
-
-                EncenderBrilloHijo(managerActual.gameObject, "Dato", false);
-                andy.Decir("¡INFO asignada! Ahora activa su campo LIGA (Puntero).");
-                EncenderBrilloHijo(managerActual.gameObject, "Puntero", true);
-            }
-            // Algoritmo 5.1: Q->LIGA = P (Conectar nuevo al viejo inicio)
-            else if (pasoConexion == 2 && managerTocado == managerAnterior)
-            {
-                cargandoAgua = false;
-                lineaAgua.SetPosition(3, managerAnterior.puntoEntrada.position);
-
-                SumarPuntos(10);
-                EncenderBrilloHijo(managerAnterior.gameObject, "Dato", false);
-                FinalizarFase();
-            }
-        }
-
-        // 3. CONECTAR A NULL (SOLO PARA EL PRIMER ELEMENTO DE LA HISTORIA)
-        else if (tipo == "Null" && cargandoAgua && pasoConexion == 2 && fase == 0)
-        {
-            cargandoAgua = false;
-            lineaAgua.SetPosition(3, puntoEntradaNull.position);
-            if (managerActual != null) managerActual.DrenarAgua();
-
-            SumarPuntos(10);
-            if (brilloNull) brilloNull.SetEncendido(false);
-            FinalizarFase();
-        }
     }
 
-    void FinalizarFase()
+    void FinalizarNodo(Vector3 puntoFinalConexion)
     {
-        ui.MarcarTareaCompletada(fase);
-        managerAnterior = managerActual; // El nodo que acabamos de poner se vuelve el "anterior" para el siguiente
+        cargandoAgua = false;
+        SumarPuntos(10);
+        managerActual.DrenarAgua();
+        UIManager.instancia.MarcarTareaCompletada(fase);
+
+        // Reconstrucción de la cadena: NuevoNodo -> CadenaAnterior
+        List<Vector3> nuevaCadena = new List<Vector3>();
+        nuevaCadena.Add(managerActual.puntoEntrada.position);
+        nuevaCadena.Add(managerActual.puntoSalida.position);
+
+        if (fase == 0) nuevaCadena.Add(puntoEntradaNull.position);
+        else nuevaCadena.AddRange(puntosCadenaFija);
+
+        puntosCadenaFija = nuevaCadena;
+        managerAnterior = managerActual;
         fase++;
 
         if (fase < 3) StartCoroutine(EsperarSiguiente());
-        else andy.Decir("¡Felicidades! Has creado una lista usando inserción al inicio.");
+        else andy.Decir("¡Lista completada al inicio exitosamente!");
     }
 
-    void Update()
+    void Update() => ActualizarVisualManguera();
+
+    void ActualizarVisualManguera()
     {
-        if (cargandoAgua)
+        // Si no hay nada que dibujar, salimos
+        if (managerActual == null && puntosCadenaFija.Count == 0)
         {
-            int ultimoIndice = lineaAgua.positionCount - 1;
-            lineaAgua.SetPosition(ultimoIndice, lupi.position);
+            lineaAgua.positionCount = 0;
+            return;
         }
-    }
 
-    // --- Métodos de búsqueda (iguales a tu lógica) ---
-    string ObtenerNombreFase()
-    {
-        string[] nombres = { "Trigo", "Papa", "Calabaza" };
-        return nombres[fase];
-    }
+        List<Vector3> puntosTemporales = new List<Vector3>();
+        puntosTemporales.Add(puntoSalidaHead.position);
 
-    GameObject BuscarHuertoPorFase()
-    {
-        NodoManager[] todos = Object.FindObjectsByType<NodoManager>(FindObjectsSortMode.None);
-        foreach (var n in todos)
+        // Lógica de construcción de puntos según el estado
+        if (pasoConexion == 0)
         {
-            if (n.gameObject.name.ToLower().Contains(ObtenerNombreFase().ToLower())) return n.gameObject;
+            if (cargandoAgua) puntosTemporales.Add(lupi.position);
+        }
+        else if (pasoConexion == 1)
+        {
+            // El agua ya llegó al dato, se queda pegada ahí aunque no estemos arrastrando
+            puntosTemporales.Add(managerActual.puntoEntrada.position);
+        }
+        else if (pasoConexion == 2)
+        {
+            // El agua pasa por el nuevo nodo y sale hacia Lupi o el final
+            puntosTemporales.Add(managerActual.puntoEntrada.position);
+            puntosTemporales.Add(managerActual.puntoSalida.position);
+            if (cargandoAgua) puntosTemporales.Add(lupi.position);
+        }
+
+        // Siempre añadimos la cadena que ya estaba construida al final
+        puntosTemporales.AddRange(puntosCadenaFija);
+
+        // Aplicamos al LineRenderer
+        lineaAgua.positionCount = puntosTemporales.Count;
+        lineaAgua.SetPositions(puntosTemporales.ToArray());
+    }
+
+    NodoManager BuscarNuevoNodoEnEscena()
+    {
+        string nombreBuscado = nombresNodos[fase].ToLower();
+        NodoManager[] todos = Object.FindObjectsByType<NodoManager>(FindObjectsSortMode.None);
+        foreach (var nm in todos)
+        {
+            if (nm != null && nm.gameObject.name != "DESTRUIDO_VIEJO" &&
+                nm.gameObject.name.ToLower().Contains(nombreBuscado) && nm != managerAnterior)
+                return nm;
         }
         return null;
     }
 
-    void EncenderBrilloHijo(GameObject raiz, string nombre, bool estado)
+    void EncenderBrilloEnNodo(GameObject nodo, string parte, bool encender)
     {
-        if (raiz == null) return;
-        EfectoLetrero[] brillos = raiz.GetComponentsInChildren<EfectoLetrero>(true);
-        foreach (var b in brillos)
-        {
-            if (b.gameObject.name.ToLower().Contains(nombre.ToLower())) b.SetEncendido(estado);
-        }
+        if (nodo == null) return;
+        foreach (var b in nodo.GetComponentsInChildren<EfectoLetrero>(true))
+            if (b.gameObject.name.ToUpper().Contains(parte.ToUpper())) b.SetEncendido(encender);
     }
 
-    IEnumerator EsperarSiguiente()
+    void SumarPuntos(int cant) { UIManager.puntosGlobales += cant; ActualizarPuntos(); }
+    void ActualizarPuntos() { if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString(); }
+    void ApagarBrillosGlobales()
     {
-        andy.Decir("¡Enlace completado!");
-        yield return new WaitForSeconds(3f);
-        // NOTA: No borramos la línea para que el estudiante vea cómo se conectan los huertos
-        ProximoPasoSiembra();
+        if (brilloHead) brilloHead.SetEncendido(false);
+        if (brilloNull) brilloNull.SetEncendido(false);
     }
-
-    void SumarPuntos(int cant) { puntos += cant; if (textoPuntos) textoPuntos.text = puntos.ToString(); }
-    void ActualizarPuntos() { if (textoPuntos) textoPuntos.text = puntos.ToString(); }
+    IEnumerator EsperarSiguiente() { yield return new WaitForSeconds(2f); ProximoPaso(); }
 }

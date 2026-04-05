@@ -11,13 +11,12 @@ public class TriggerHead : MonoBehaviour
     {
         if (estaCerca && Input.GetKeyDown(KeyCode.E))
         {
-            // Intenta encontrar la lógica del Nivel 1
-            LogicaNivel1 l1 = Object.FindFirstObjectByType<LogicaNivel1>();
-            if (l1 != null) l1.AccionHead();
-
-            // Intenta encontrar la lógica del Nivel 2
-            LogicaNivel2 l2 = Object.FindFirstObjectByType<LogicaNivel2>();
-            if (l2 != null) l2.AccionEnLetrero("Head");
+            // CAMBIO CLAVE: Debe decir .instancia (sin el UI al final)
+            if (UIManager.instancia != null && UIManager.instancia.logicaActiva != null)
+            {
+                UIManager.instancia.logicaActiva.AccionEnLetrero("Head", gameObject);
+                // Cambia "Head" por "EntradaHuerto", "SalidaHuerto" o "Null" según el trigger
+            }
         }
     }
 }
