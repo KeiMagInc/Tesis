@@ -48587,6 +48587,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5139564812811999178, guid: bfece54757cd41842a3c985150368365, type: 3}
   m_PrefabInstance: {fileID: 575836143}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &595870816 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5140937685323964650, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+  m_PrefabInstance: {fileID: 1265494905}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &596413147
 GameObject:
   m_ObjectHideFlags: 0
@@ -51520,6 +51531,17 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 5, y: 5}
   m_EdgeRadius: 0
+--- !u!114 &1131962516 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6011285520602270788, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+  m_PrefabInstance: {fileID: 1265494905}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1133196638 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5462677158706622310, guid: bfece54757cd41842a3c985150368365, type: 3}
@@ -71369,15 +71391,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1366122969537112110, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_text
-      value: 'Centro: parcela de papas'
+      value: 'Centro: sembrar papas'
       objectReference: {fileID: 0}
     - target: {fileID: 1366122969537112110, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_fontSize
-      value: 22.7
+      value: 21.37
       objectReference: {fileID: 0}
     - target: {fileID: 1366122969537112110, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_fontSizeBase
-      value: 22.7
+      value: 21.37
       objectReference: {fileID: 0}
     - target: {fileID: 2080455474224472897, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_SizeDelta.x
@@ -71465,27 +71487,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5140937685323964650, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_text
-      value: 'Derecha: parcela de trigo'
+      value: 'Derecha: sembrar trigo'
       objectReference: {fileID: 0}
     - target: {fileID: 5140937685323964650, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_fontSize
-      value: 22.7
+      value: 21.37
       objectReference: {fileID: 0}
     - target: {fileID: 5140937685323964650, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_fontSizeBase
-      value: 22.7
+      value: 21.37
       objectReference: {fileID: 0}
     - target: {fileID: 6011285520602270788, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_text
-      value: 'Izquierda: parcela de calabazas'
+      value: 'Izquierda: sembrar calabazas'
       objectReference: {fileID: 0}
     - target: {fileID: 6011285520602270788, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_fontSize
-      value: 22.7
+      value: 21.37
       objectReference: {fileID: 0}
     - target: {fileID: 6011285520602270788, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_fontSizeBase
-      value: 22.7
+      value: 21.37
       objectReference: {fileID: 0}
     - target: {fileID: 6011285520602270788, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_enableAutoSizing
@@ -71493,7 +71515,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6168197099399102507, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_Alpha
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6644564093316313226, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_SizeDelta.x
@@ -71639,8 +71661,7 @@ PrefabInstance:
       propertyPath: prefabZanahorias
       value: 
       objectReference: {fileID: 839396964857267429, guid: 02863e209bb5ef34db6da53ce0b7f8bb, type: 3}
-    m_RemovedComponents:
-    - {fileID: 8589779038167551316, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -71676,9 +71697,12 @@ MonoBehaviour:
   btnPapa: {fileID: 1085492718}
   btnCalabaza: {fileID: 1894616716}
   prefabTrigo: {fileID: 839396964857267429, guid: 02863e209bb5ef34db6da53ce0b7f8bb, type: 3}
-  prefabPapa: {fileID: 839396964857267429, guid: 02863e209bb5ef34db6da53ce0b7f8bb, type: 3}
-  prefabCalabaza: {fileID: 839396964857267429, guid: 02863e209bb5ef34db6da53ce0b7f8bb, type: 3}
-  itemsChecklist: []
+  prefabPapa: {fileID: 839396964857267429, guid: 70d9e59793a7f0b42b93c51ff0ddfcda, type: 3}
+  prefabCalabaza: {fileID: 839396964857267429, guid: fef5901b75869e34fba6193b2305eb0e, type: 3}
+  itemsChecklist:
+  - {fileID: 595870816}
+  - {fileID: 1886690771}
+  - {fileID: 1131962516}
   playerLupi: {fileID: 191083641}
   distanciaParaEncajar: 3.5
 --- !u!4 &1312583796 stripped
@@ -74353,6 +74377,17 @@ MonoBehaviour:
   panelDialogo: {fileID: 249468135}
   textoMensaje: {fileID: 477818415}
   tiempoVisible: 4
+--- !u!114 &1886690771 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1366122969537112110, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+  m_PrefabInstance: {fileID: 1265494905}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1894616716 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8514544348411615620, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
@@ -74950,15 +74985,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4455870877701808282, guid: bfece54757cd41842a3c985150368365, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1.9666666
+      value: 1.7
       objectReference: {fileID: 0}
     - target: {fileID: 5139564812811999178, guid: bfece54757cd41842a3c985150368365, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9.696
+      value: -9.7
       objectReference: {fileID: 0}
     - target: {fileID: 5139564812811999178, guid: bfece54757cd41842a3c985150368365, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.737
+      value: -4.7
       objectReference: {fileID: 0}
     - target: {fileID: 5139564812811999178, guid: bfece54757cd41842a3c985150368365, type: 3}
       propertyPath: m_LocalPosition.z
@@ -75005,8 +75040,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7289214832277513966, guid: bfece54757cd41842a3c985150368365, type: 3}
+      propertyPath: m_Size.x
+      value: 1.6633334
+      objectReference: {fileID: 0}
+    - target: {fileID: 7289214832277513966, guid: bfece54757cd41842a3c985150368365, type: 3}
       propertyPath: m_Offset.x
-      value: 0
+      value: 0.16666666
       objectReference: {fileID: 0}
     - target: {fileID: 7289214832277513966, guid: bfece54757cd41842a3c985150368365, type: 3}
       propertyPath: m_Offset.y

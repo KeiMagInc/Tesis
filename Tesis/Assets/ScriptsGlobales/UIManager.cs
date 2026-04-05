@@ -9,7 +9,7 @@ public class UIManager : MonoBehaviour
     [Header("Referencias de UI")]
     public CanvasGroup groupChecklist;
     public CanvasGroup groupIconoMochila;
-    public GameObject panelParcelas; // Asegúrate de arrastrar el objeto "Parcelas" aquí
+    public GameObject panelParcelas;
     public AndyController andy;
 
     [Header("Botones y Prefabs")]
@@ -17,16 +17,19 @@ public class UIManager : MonoBehaviour
     public GameObject prefabTrigo; public GameObject prefabPapa; public GameObject prefabCalabaza;
 
     [Header("Checklist")]
-    public TextMeshProUGUI[] itemsChecklist; // Arrastra los 3 textos del checklist aquí (Trigo, Papa, Calabaza)
+    public TextMeshProUGUI[] itemsChecklist;
 
     [Header("Configuración Lupi")]
     public Transform playerLupi;
     public float distanciaParaEncajar = 3.5f;
 
     private string semillaActiva = "";
+    private Color colorVerdeMilitar; 
 
     void Awake()
     {
+        ColorUtility.TryParseHtmlString("#028A0F", out colorVerdeMilitar);
+
         ConfigurarUI(0, false);
         if (panelParcelas != null) panelParcelas.SetActive(false);
     }
@@ -34,6 +37,29 @@ public class UIManager : MonoBehaviour
     void Update()
     {
         AplicarPalpitoSemilla();
+    }
+
+    // --- CORRECCIÓN AQUÍ: MAYÚSCULA AL INICIO Y [OK] AL FINAL ---
+    public void MarcarTareaCompletada(int indice)
+    {
+        if (indice >= 0 && indice < itemsChecklist.Length)
+        {
+            string textoBase = itemsChecklist[indice].text;
+
+            // Verificamos que no tenga ya el [OK]
+            if (!textoBase.ToLower().Contains("[OK]"))
+            {
+                // 1. Convertimos todo a minúsculas primero
+                string todoMinuscula = textoBase.ToLower();
+                
+                // 2. Tomamos la primera letra, la hacemos Mayúscula y sumamos el resto
+                string textoFormateado = char.ToUpper(todoMinuscula[0]) + todoMinuscula.Substring(1);
+
+                // 3. Añadimos el [OK] y el color verde militar
+                itemsChecklist[indice].text = textoFormateado + " [OK]";
+                itemsChecklist[indice].color = colorVerdeMilitar;
+            }
+        }
     }
 
     public IEnumerator AparecerSuave(CanvasGroup grupo)
@@ -58,27 +84,9 @@ public class UIManager : MonoBehaviour
         btnCalabaza.transform.localScale = (semillaActiva == "Calabaza" && btnCalabaza.interactable) ? new Vector3(pulse, pulse, 1) : Vector3.one;
     }
 
-    // --- FUNCIÓN PARA LA MOCHILA ---
     public void AbrirCerrarMenuParcelas()
     {
-        if (panelParcelas != null)
-        {
-            panelParcelas.SetActive(!panelParcelas.activeSelf);
-        }
-    }
-
-    // --- LÓGICA DEL CHECKLIST ---
-    public void MarcarTareaCompletada(int indice)
-    {
-        if (indice >= 0 && indice < itemsChecklist.Length)
-        {
-            string textoOriginal = itemsChecklist[indice].text.ToLower(); // Forzamos minúsculas
-            if (!textoOriginal.StartsWith("[ok]"))
-            {
-                itemsChecklist[indice].text = "[OK] " + textoOriginal;
-                itemsChecklist[indice].color = new Color(0.1f, 0.5f, 0.1f); // Un verde bonito
-            }
-        }
+        if (panelParcelas != null) panelParcelas.SetActive(!panelParcelas.activeSelf);
     }
 
     public void SetSemillaPalpitar(string tipo) => semillaActiva = tipo;
@@ -94,24 +102,13 @@ public class UIManager : MonoBehaviour
             {
                 if (Vector3.Distance(playerLupi.position, z.transform.position) <= distanciaParaEncajar)
                 {
-
-                    // 1. Instanciar el vegetal (Trigo, Papa o Calabaza)
                     Instantiate(ObtenerPrefab(tipo), z.transform.position, Quaternion.identity);
-
-                    // 2. Marcar como ocupada
                     z.estaOcupada = true;
-
-                    // 3. ¡NUEVO!: Desactivar el collider de la zona para que Lupi pueda entrar
                     z.DesactivarColision();
-
-                    // 4. UI y Progresión
                     DesactivarBoton(tipo);
                     LogicaNivel2.instancia.AvanceSiembraExitosa();
                 }
-                else
-                {
-                    andy.Decir("Acércate a la parcela de " + tipo);
-                }
+                else andy.Decir("Acércate a la parcela de " + tipo);
                 return;
             }
         }

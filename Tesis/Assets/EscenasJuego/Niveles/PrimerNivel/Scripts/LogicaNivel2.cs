@@ -14,21 +14,23 @@ public class LogicaNivel2 : MonoBehaviour
     public Transform lupi;
 
     [Header("Puntos de Conexión Fijos")]
-    public Transform puntoSalidaHead;   // Head -> PuntoSalida
-    public Transform puntoEntradaNull;  // Null -> PuntoEntrada
+    public Transform puntoSalidaHead;
+    public Transform puntoEntradaNull;
 
     [Header("Efectos Brillo")]
     public EfectoLetrero brilloHead;
     public EfectoLetrero brilloNull;
 
     private int puntos = 0;
-    private int fase = 0; // 0: Trigo, 1: Papa, 2: Calabaza
+    private int fase = 0;
     private bool cargandoAgua = false;
-    private int pasoConexion = 0; // 0: Head, 1: Dato, 2: Puntero, 3: Null
+    private int pasoConexion = 0;
 
-    // Guardamos las posiciones para la línea
     private Vector3 posOrigen;
     private Vector3 posDestinoFija;
+
+    // Guardamos el manager actual para poder estabilizar el agua al final
+    private NodoManager managerActual;
 
     void Awake() => instancia = this;
 
@@ -59,7 +61,7 @@ public class LogicaNivel2 : MonoBehaviour
         andy.Decir("Ahora siembra el " + nombres[fase] + ".");
         ui.SetSemillaPalpitar(nombres[fase]);
         pasoConexion = 0;
-        lineaAgua.positionCount = 0; // Limpiamos la manguera para el nuevo producto
+        lineaAgua.positionCount = 0;
     }
 
     public void AvanceSiembraExitosa()
@@ -72,7 +74,6 @@ public class LogicaNivel2 : MonoBehaviour
 
     public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
     {
-
         // 1. RECOGER DEL INICIO (HEAD)
         if (tipo == "Head" && pasoConexion == 0 && !cargandoAgua)
         {
@@ -83,40 +84,45 @@ public class LogicaNivel2 : MonoBehaviour
 
             if (brilloHead) brilloHead.SetEncendido(false);
             andy.Decir("¡Agua recogida! Llévala al DATO del huerto.");
+
+            // --- CORRECCIÓN: Encender el palpito de DATO del huerto actual ---
+            GameObject huerto = BuscarHuertoPorFase();
+            EncenderBrilloHijo(huerto, "Dato", true);
         }
 
         // 2. CONECTAR AL DATO (ENTRADA)
         else if (tipo == "EntradaHuerto" && pasoConexion == 0 && cargandoAgua)
         {
-            NodoManager manager = objetoTocado.GetComponentInParent<NodoManager>();
-            if (manager != null)
+            managerActual = objetoTocado.GetComponentInParent<NodoManager>();
+            if (managerActual != null)
             {
                 cargandoAgua = false;
-                posDestinoFija = manager.puntoEntrada.position;
-                lineaAgua.SetPosition(1, posDestinoFija); // Anclamos la línea al punto
+                posDestinoFija = managerActual.puntoEntrada.position;
+                lineaAgua.SetPosition(1, posDestinoFija);
 
-                manager.ActivarHuerto(); // Inundación
+                managerActual.ActivarHuerto(); // Inundación (crecimiento)
                 SumarPuntos(10);
                 pasoConexion = 1;
 
+                // Apagar DATO y encender PUNTERO
+                EncenderBrilloHijo(managerActual.gameObject, "Dato", false);
                 andy.Decir("¡Inundado! Ahora recoge el PUNTERO.");
-                EncenderBrilloHijo(manager.gameObject, "Puntero", true);
+                EncenderBrilloHijo(managerActual.gameObject, "Puntero", true);
             }
         }
 
         // 3. RECOGER DEL PUNTERO (SALIDA)
         else if (tipo == "SalidaHuerto" && pasoConexion == 1 && !cargandoAgua)
         {
-            NodoManager manager = objetoTocado.GetComponentInParent<NodoManager>();
-            if (manager != null)
+            managerActual = objetoTocado.GetComponentInParent<NodoManager>();
+            if (managerActual != null)
             {
                 cargandoAgua = true;
-                // La línea ahora tiene 4 puntos para mostrar el camino completo
                 lineaAgua.positionCount = 4;
-                lineaAgua.SetPosition(2, manager.puntoSalida.position);
-                posOrigen = manager.puntoSalida.position;
+                lineaAgua.SetPosition(2, managerActual.puntoSalida.position);
+                posOrigen = managerActual.puntoSalida.position;
 
-                EncenderBrilloHijo(manager.gameObject, "Puntero", false);
+                EncenderBrilloHijo(managerActual.gameObject, "Puntero", false);
                 pasoConexion = 2;
 
                 andy.Decir("¡Enlace recogido! Llévalo al pozo NULL.");
@@ -128,7 +134,10 @@ public class LogicaNivel2 : MonoBehaviour
         else if (tipo == "Null" && pasoConexion == 2 && cargandoAgua)
         {
             cargandoAgua = false;
-            lineaAgua.SetPosition(3, puntoEntradaNull.position); // Anclamos al pozo
+            lineaAgua.SetPosition(3, puntoEntradaNull.position);
+
+            // --- CORRECCIÓN: El agua vuelve a su tamaño normal ---
+            if (managerActual != null) managerActual.DrenarAgua();
 
             SumarPuntos(10);
             if (brilloNull) brilloNull.SetEncendido(false);
@@ -139,6 +148,20 @@ public class LogicaNivel2 : MonoBehaviour
             if (fase < 3) StartCoroutine(EsperarSiguiente());
             else andy.Decir("¡Excelente! Has restaurado todo el sistema de riego.");
         }
+    }
+
+    // Busca el objeto del huerto que corresponde a lo que estamos sembrando
+    GameObject BuscarHuertoPorFase()
+    {
+        string[] nombres = { "Trigo", "Papa", "Calabaza" };
+        string buscado = nombres[fase];
+
+        NodoManager[] todos = Object.FindObjectsByType<NodoManager>(FindObjectsSortMode.None);
+        foreach (var n in todos)
+        {
+            if (n.gameObject.name.Contains(buscado)) return n.gameObject;
+        }
+        return null;
     }
 
     IEnumerator EsperarSiguiente()
@@ -152,7 +175,6 @@ public class LogicaNivel2 : MonoBehaviour
     {
         if (cargandoAgua)
         {
-            // Mientras Lupi camina, el último punto de la línea la sigue a ella
             int ultimoIndice = lineaAgua.positionCount - 1;
             lineaAgua.SetPosition(ultimoIndice, lupi.position);
         }
