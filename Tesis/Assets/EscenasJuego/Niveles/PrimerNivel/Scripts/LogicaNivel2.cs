@@ -79,9 +79,18 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
 
     void ProximoPaso()
     {
+        // Cambiamos el orden para que coincida con el Checklist si es necesario, 
+        // pero lo importante es que el string sea exacto: "Trigo", "Papa", "Calabaza"
         string[] nombres = { "Trigo", "Calabaza", "Papa" };
-        andy.Decir("Siembra el " + nombres[fase]);
-        UIManager.instancia.SetSemillaPalpitar(nombres[fase]);
+
+        string semillaActual = nombres[fase];
+
+        // Primero activamos el palpito en la UI
+        UIManager.instancia.SetSemillaPalpitar(semillaActual);
+
+        // Luego Andy habla
+        andy.Decir("Siembra el " + semillaActual);
+
         pasoConexion = 0;
         lineaAgua.positionCount = 0;
     }

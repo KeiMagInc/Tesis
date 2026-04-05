@@ -6,6 +6,11 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    // Añade estas variables privadas para guardar las escalas originales de los botones
+    private Vector3 escalaOriginalTrigo;
+    private Vector3 escalaOriginalPapa;
+    private Vector3 escalaOriginalCalabaza;
+
     public static UIManager instancia;
     public ILogicaNivel logicaActiva;
     public static int puntosGlobales = 0;
@@ -41,9 +46,13 @@ public class UIManager : MonoBehaviour
         instancia = this;
         ColorUtility.TryParseHtmlString("#028A0F", out colorVerdeMilitar);
 
-        // GUARDAMOS LAS DIMENSIONES QUE PUSISTE EN EL INSPECTOR
         escalaMochilaOriginal = groupIconoMochila.transform.localScale;
         escalaChecklistOriginal = groupChecklist.transform.localScale;
+
+        // GUARDAMOS LAS ESCALAS ORIGINALES DE LOS BOTONES
+        if (btnTrigo) escalaOriginalTrigo = btnTrigo.transform.localScale;
+        if (btnPapa) escalaOriginalPapa = btnPapa.transform.localScale;
+        if (btnCalabaza) escalaOriginalCalabaza = btnCalabaza.transform.localScale;
     }
 
     public void SetPrefabs(GameObject trigo, GameObject papa, GameObject calabaza)
@@ -144,10 +153,22 @@ public class UIManager : MonoBehaviour
 
     private void AplicarPalpitoSemilla()
     {
+        if (string.IsNullOrEmpty(semillaActiva)) return;
+
         float pulse = 1f + Mathf.Sin(Time.time * 6f) * 0.12f;
-        if (btnTrigo != null && btnTrigo.interactable) btnTrigo.transform.localScale = (semillaActiva == "Trigo") ? Vector3.one * pulse : Vector3.one;
-        if (btnPapa != null && btnPapa.interactable) btnPapa.transform.localScale = (semillaActiva == "Papa") ? Vector3.one * pulse : Vector3.one;
-        if (btnCalabaza != null && btnCalabaza.interactable) btnCalabaza.transform.localScale = (semillaActiva == "Calabaza") ? Vector3.one * pulse : Vector3.one;
+
+        // Usamos Equals con OrdinalIgnoreCase para evitar errores de dedo con las mayúsculas
+        if (btnTrigo != null && btnTrigo.interactable)
+            btnTrigo.transform.localScale = semillaActiva.Equals("Trigo", System.StringComparison.OrdinalIgnoreCase)
+                ? escalaOriginalTrigo * pulse : escalaOriginalTrigo;
+
+        if (btnPapa != null && btnPapa.interactable)
+            btnPapa.transform.localScale = semillaActiva.Equals("Papa", System.StringComparison.OrdinalIgnoreCase)
+                ? escalaOriginalPapa * pulse : escalaOriginalPapa;
+
+        if (btnCalabaza != null && btnCalabaza.interactable)
+            btnCalabaza.transform.localScale = semillaActiva.Equals("Calabaza", System.StringComparison.OrdinalIgnoreCase)
+                ? escalaOriginalCalabaza * pulse : escalaOriginalCalabaza;
     }
 
     public void IntentarSembrar(string tipo)

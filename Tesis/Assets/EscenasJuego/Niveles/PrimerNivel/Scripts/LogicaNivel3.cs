@@ -9,7 +9,8 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     public static LogicaNivel3 instancia;
     public AndyController andy;
     public TextMeshProUGUI textoPuntos;
-    public LineRenderer lineaAgua;
+    public LineRenderer lineaAgua;      // La línea que manejas con Lupi
+    public LineRenderer lineaFija;      // La cadena que ya está terminada
     public Transform lupi;
 
     [Header("Prefabs Específicos Nivel 3")]
@@ -37,6 +38,14 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
 
     void OnEnable()
     {
+        // 1. BUSCAR Y DESACTIVAR EL NIVEL 1 SI EXISTE
+        LogicaNivel1 nivel1 = Object.FindAnyObjectByType<LogicaNivel1>();
+        if (nivel1 != null)
+        {
+            // Desactivamos el objeto completo para que sus Update/OnEnable no corran
+            nivel1.gameObject.SetActive(false);
+        }
+
         instancia = this;
         UIManager.instancia.logicaActiva = this;
         UIManager.instancia.SetPrefabs(prefabTrigoN3, prefabPapaN3, prefabCalabazaN3);
@@ -55,6 +64,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     {
         fase = 0; pasoConexion = 0; cargandoAgua = false;
         lineaAgua.positionCount = 0;
+        lineaFija.positionCount = 0;
         puntosCadenaFija.Clear();
         managerAnterior = null;
         managerActual = null;
@@ -188,15 +198,22 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         managerActual.DrenarAgua();
         UIManager.instancia.MarcarTareaCompletada(fase);
 
-        // Reconstrucción de la cadena: NuevoNodo -> CadenaAnterior
-        List<Vector3> nuevaCadena = new List<Vector3>();
-        nuevaCadena.Add(managerActual.puntoEntrada.position);
-        nuevaCadena.Add(managerActual.puntoSalida.position);
+        // 1. Construimos la ruta de ESTE nodo específico
+        List<Vector3> rutaNodoActual = new List<Vector3>();
+        rutaNodoActual.Add(managerActual.puntoEntrada.position);
+        rutaNodoActual.Add(managerActual.puntoSalida.position);
 
-        if (fase == 0) nuevaCadena.Add(puntoEntradaNull.position);
-        else nuevaCadena.AddRange(puntosCadenaFija);
+        // 2. Si es el primero, apunta a Null. Si no, une con lo que ya había.
+        if (fase == 0) rutaNodoActual.Add(puntoEntradaNull.position);
+        else rutaNodoActual.AddRange(puntosCadenaFija);
 
-        puntosCadenaFija = nuevaCadena;
+        // 3. Guardamos esto como la nueva "Cadena Fija"
+        puntosCadenaFija = rutaNodoActual;
+
+        // 4. ACTUALIZAMOS LA LÍNEA VISUAL ESTÁTICA
+        lineaFija.positionCount = puntosCadenaFija.Count;
+        lineaFija.SetPositions(puntosCadenaFija.ToArray());
+
         managerAnterior = managerActual;
         fase++;
 
@@ -208,40 +225,64 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
 
     void ActualizarVisualManguera()
     {
-        // Si no hay nada que dibujar, salimos
-        if (managerActual == null && puntosCadenaFija.Count == 0)
+        // 1. DIBUJO DE LA LÍNEA ACTIVA (Inicio -> Nodo Nuevo -> Lupi)
+        List<Vector3> puntosActivos = new List<Vector3>();
+        puntosActivos.Add(puntoSalidaHead.position);
+
+        if (managerActual != null)
         {
-            lineaAgua.positionCount = 0;
-            return;
+            // Caso: Estamos operando con un nodo nuevo recién sembrado
+            if (pasoConexion == 0)
+            {
+                if (cargandoAgua)
+                {
+                    // Estamos moviendo el puntero INICIO con Lupi
+                    puntosActivos.Add(lupi.position);
+                }
+                else if (managerAnterior != null)
+                {
+                    // SOLUCIÓN: Si aún no tocamos el INICIO, mantenemos la conexión 
+                    // con la planta que actualmente es la cabeza de la lista.
+                    puntosActivos.Add(managerAnterior.puntoEntrada.position);
+                }
+            }
+            else if (pasoConexion == 1)
+            {
+                // El Inicio ya está conectado al Dato del nuevo nodo
+                puntosActivos.Add(managerActual.puntoEntrada.position);
+            }
+            else if (pasoConexion == 2)
+            {
+                // El flujo pasa por el nuevo nodo y el puntero busca a quién apuntar
+                puntosActivos.Add(managerActual.puntoEntrada.position);
+                puntosActivos.Add(managerActual.puntoSalida.position);
+
+                if (cargandoAgua)
+                {
+                    puntosActivos.Add(lupi.position);
+                }
+                else
+                {
+                    // Conexión finalizada antes de pasar a la siguiente fase
+                    puntosActivos.AddRange(puntosCadenaFija);
+                }
+            }
+        }
+        else if (managerAnterior != null)
+        {
+            // Estado de espera entre siembras: mantiene el Inicio conectado a la cabeza actual
+            puntosActivos.Add(managerAnterior.puntoEntrada.position);
         }
 
-        List<Vector3> puntosTemporales = new List<Vector3>();
-        puntosTemporales.Add(puntoSalidaHead.position);
+        lineaAgua.positionCount = puntosActivos.Count;
+        lineaAgua.SetPositions(puntosActivos.ToArray());
 
-        // Lógica de construcción de puntos según el estado
-        if (pasoConexion == 0)
+        // 2. DIBUJO DE LA LÍNEA FIJA (La cadena de nodos ya establecida)
+        if (puntosCadenaFija.Count > 0)
         {
-            if (cargandoAgua) puntosTemporales.Add(lupi.position);
+            lineaFija.positionCount = puntosCadenaFija.Count;
+            lineaFija.SetPositions(puntosCadenaFija.ToArray());
         }
-        else if (pasoConexion == 1)
-        {
-            // El agua ya llegó al dato, se queda pegada ahí aunque no estemos arrastrando
-            puntosTemporales.Add(managerActual.puntoEntrada.position);
-        }
-        else if (pasoConexion == 2)
-        {
-            // El agua pasa por el nuevo nodo y sale hacia Lupi o el final
-            puntosTemporales.Add(managerActual.puntoEntrada.position);
-            puntosTemporales.Add(managerActual.puntoSalida.position);
-            if (cargandoAgua) puntosTemporales.Add(lupi.position);
-        }
-
-        // Siempre añadimos la cadena que ya estaba construida al final
-        puntosTemporales.AddRange(puntosCadenaFija);
-
-        // Aplicamos al LineRenderer
-        lineaAgua.positionCount = puntosTemporales.Count;
-        lineaAgua.SetPositions(puntosTemporales.ToArray());
     }
 
     NodoManager BuscarNuevoNodoEnEscena()
@@ -268,8 +309,12 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     void ActualizarPuntos() { if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString(); }
     void ApagarBrillosGlobales()
     {
-        if (brilloHead) brilloHead.SetEncendido(false);
-        if (brilloNull) brilloNull.SetEncendido(false);
+        // Busca TODOS los letreros con brillo en la jerarquía y los apaga
+        EfectoLetrero[] todos = Object.FindObjectsByType<EfectoLetrero>(FindObjectsSortMode.None);
+        foreach (var b in todos)
+        {
+            b.SetEncendido(false);
+        }
     }
     IEnumerator EsperarSiguiente() { yield return new WaitForSeconds(2f); ProximoPaso(); }
 }
