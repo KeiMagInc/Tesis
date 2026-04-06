@@ -13,7 +13,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     public LineRenderer lineaFija;
     public Transform lupi;
 
-    private enum ModoOperacion { InsertarInicio, InsertarFinal }
+    private enum ModoOperacion { InsertarInicio, InsertarFinal, EliminarInicio, EliminarFinal }
     private ModoOperacion modoActual = ModoOperacion.InsertarInicio;
 
     [Header("Prefabs Específicos Nivel 3")]
@@ -33,6 +33,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
 
     private NodoManager managerActual;
     private NodoManager managerAnterior;
+    private List<NodoManager> listaNodos = new List<NodoManager>(); // Lista para rastrear el orden actual
 
     private List<Vector3> puntosCadenaFija = new List<Vector3>();
     private string[] nombresNodosInicio = { "Papa", "Trigo", "Calabaza" };
@@ -53,23 +54,22 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         StartCoroutine(Intro());
     }
 
-    // INTERFAZ: Este reset ahora siempre vuelve al inicio del Nivel 3 (Algoritmo 5.1)
     public void ResetearNivel()
     {
-        modoActual = ModoOperacion.InsertarInicio; // Forzamos el regreso al primer algoritmo
+        modoActual = ModoOperacion.InsertarInicio;
         fase = 0;
         pasoConexion = 0;
         cargandoAgua = false;
         lineaAgua.positionCount = 0;
         lineaFija.positionCount = 0;
         puntosCadenaFija.Clear();
+        listaNodos.Clear();
         managerAnterior = null;
         managerActual = null;
 
         if (UIManager.instancia != null)
         {
             UIManager.instancia.ResetBotones();
-            // CORRECCIÓN DE TEXTO: Orden solicitado para el inicio
             UIManager.instancia.ConfigurarTextosChecklist("Derecha: sembrar papa", "Centro: sembrar trigo", "Izquierda: sembrar calabaza");
         }
 
@@ -77,13 +77,13 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         ApagarBrillosGlobales();
     }
 
-    // Función interna para no perder el "modoActual" durante la transición fluida
     void LimpiarEscenaParaSiguienteAlgoritmo()
     {
         fase = 0; pasoConexion = 0; cargandoAgua = false;
         lineaAgua.positionCount = 0;
         lineaFija.positionCount = 0;
         puntosCadenaFija.Clear();
+        listaNodos.Clear();
         managerAnterior = null;
         managerActual = null;
         if (UIManager.instancia != null) UIManager.instancia.ResetBotones();
@@ -102,24 +102,40 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     IEnumerator Intro()
     {
         yield return new WaitForSeconds(0.5f);
-        if (modoActual == ModoOperacion.InsertarInicio)
-            andy.Decir("Algoritmo 5.1: CREA_INICIO. Las nuevas plantas van al principio.");
-        else
-            andy.Decir("Algoritmo 5.2: CREA_FINAL. Las nuevas plantas van al final.");
+        switch (modoActual)
+        {
+            case ModoOperacion.InsertarInicio: andy.Decir("Algoritmo 5.1: CREA_INICIO. Las nuevas plantas van al principio."); break;
+            case ModoOperacion.InsertarFinal: andy.Decir("Algoritmo 5.2: CREA_FINAL. Las nuevas plantas van al final."); break;
+            case ModoOperacion.EliminarInicio: andy.Decir("Algoritmo 5.9: ELIMINA_INICIO. Vamos a quitar la primera planta."); break;
+        }
 
-        UIManager.instancia.MostrarMochilaSolo(true);
-        yield return new WaitUntil(() => UIManager.instancia.panelParcelas.activeSelf);
+        UIManager.instancia.MostrarMochilaSolo(modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal);
+        yield return new WaitUntil(() => UIManager.instancia.panelParcelas.activeSelf || modoActual >= ModoOperacion.EliminarInicio);
         UIManager.instancia.MostrarChecklistSolo(true);
         ProximoPaso();
     }
 
     void ProximoPaso()
     {
-        string[] nombres = (modoActual == ModoOperacion.InsertarInicio) ? nombresNodosInicio : nombresNodosFinal;
-        if (fase < nombres.Length)
+        if (modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal)
         {
-            andy.Decir("Siembra " + nombres[fase]);
-            UIManager.instancia.SetSemillaPalpitar(nombres[fase]);
+            string[] nombres = (modoActual == ModoOperacion.InsertarInicio) ? nombresNodosInicio : nombresNodosFinal;
+            if (fase < nombres.Length)
+            {
+                andy.Decir("Siembra " + nombres[fase]);
+                UIManager.instancia.SetSemillaPalpitar(nombres[fase]);
+            }
+        }
+        else if (modoActual == ModoOperacion.EliminarInicio)
+        {
+            andy.Decir("Toca INICIO para desconectar la Calabaza y conectarla al Trigo.");
+            brilloHead.SetEncendido(true);
+        }
+        else if (modoActual == ModoOperacion.EliminarFinal)
+        {
+            andy.Decir("Toca el puntero del Trigo para desconectar la Papa y enviarlo a NIL.");
+            // El Trigo es el índice 1 en la lista original [Calabaza, Trigo, Papa]
+            EncenderBrilloEnNodo(listaNodos[1].gameObject, "Puntero", true);
         }
         pasoConexion = 0;
         managerActual = null;
@@ -154,10 +170,114 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
 
     public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
     {
-        if (managerActual == null) return;
-        if (modoActual == ModoOperacion.InsertarInicio) LogicaInsertarInicio(tipo, objetoTocado);
-        else LogicaInsertarFinal(tipo, objetoTocado);
+        switch (modoActual)
+        {
+            case ModoOperacion.InsertarInicio: LogicaInsertarInicio(tipo, objetoTocado); break;
+            case ModoOperacion.InsertarFinal: LogicaInsertarFinal(tipo, objetoTocado); break;
+            case ModoOperacion.EliminarInicio: LogicaEliminarInicio(tipo, objetoTocado); break;
+            case ModoOperacion.EliminarFinal: LogicaEliminarFinal(tipo, objetoTocado); break;
+        }
     }
+
+    // --- LÓGICAS DE ELIMINACIÓN ---
+
+    void LogicaEliminarInicio(string tipo, GameObject objetoTocado)
+    {
+        // Conectar Head -> Trigo (listaNodos[1])
+        if (tipo == "Head" && !cargandoAgua)
+        {
+            brilloHead.SetEncendido(false);
+            cargandoAgua = true;
+            andy.Decir("Ahora conéctalo a la entrada del Trigo.");
+            EncenderBrilloEnNodo(listaNodos[1].gameObject, "Dato", true);
+        }
+        else if (tipo == "EntradaHuerto" && cargandoAgua)
+        {
+            if (objetoTocado.GetComponentInParent<NodoManager>() == listaNodos[1])
+            {
+                cargandoAgua = false;
+                EncenderBrilloEnNodo(listaNodos[1].gameObject, "Dato", false);
+                StartCoroutine(SecuenciaEliminacionExitosa(0)); // Elimina Calabaza
+            }
+        }
+    }
+
+    void LogicaEliminarFinal(string tipo, GameObject objetoTocado)
+    {
+        // Conectar Trigo (listaNodos[1]) -> NIL
+        if (tipo == "SalidaHuerto" && !cargandoAgua)
+        {
+            if (objetoTocado.GetComponentInParent<NodoManager>() == listaNodos[1])
+            {
+                EncenderBrilloEnNodo(listaNodos[1].gameObject, "Puntero", false);
+                cargandoAgua = true;
+                brilloNull.SetEncendido(true);
+                andy.Decir("Lleva el puntero a NIL.");
+            }
+        }
+        else if (tipo == "Null" && cargandoAgua)
+        {
+            cargandoAgua = false;
+            brilloNull.SetEncendido(false);
+            StartCoroutine(SecuenciaEliminacionExitosa(2)); // Elimina Papa (que estaba en el índice 2 original)
+        }
+    }
+
+    IEnumerator SecuenciaEliminacionExitosa(int indiceNodo)
+    {
+        SumarPuntos(20);
+        NodoManager nodoAEliminar = listaNodos[indiceNodo];
+
+        // Efecto visual solicitado: agua reduce, planta se seca, nodo desaparece
+        nodoAEliminar.IniciarSecuenciaEliminacion();
+
+        yield return new WaitForSeconds(1.5f);
+
+        // Actualizar la línea fija para saltarse el nodo eliminado
+        ActualizarLineaFijaPostEliminacion();
+
+        UIManager.instancia.MarcarTareaCompletada(fase);
+        fase++;
+
+        if (modoActual == ModoOperacion.EliminarInicio)
+        {
+            andy.Decir("¡Calabaza eliminada! Ahora el último paso.");
+            yield return new WaitForSeconds(2f);
+            modoActual = ModoOperacion.EliminarFinal;
+            ProximoPaso();
+        }
+        else
+        {
+            andy.Decir("¡Excelente! Has completado todas las operaciones de Cairo.");
+        }
+    }
+
+    void ActualizarLineaFijaPostEliminacion()
+    {
+        puntosCadenaFija.Clear();
+        if (modoActual == ModoOperacion.EliminarInicio)
+        {
+            // Nueva ruta: Head -> Trigo -> Papa -> Null
+            puntosCadenaFija.Add(puntoSalidaHead.position);
+            puntosCadenaFija.Add(listaNodos[1].puntoEntrada.position);
+            puntosCadenaFija.Add(listaNodos[1].puntoSalida.position);
+            puntosCadenaFija.Add(listaNodos[2].puntoEntrada.position);
+            puntosCadenaFija.Add(listaNodos[2].puntoSalida.position);
+            puntosCadenaFija.Add(puntoEntradaNull.position);
+        }
+        else
+        {
+            // Nueva ruta final: Head -> Trigo -> Null
+            puntosCadenaFija.Add(puntoSalidaHead.position);
+            puntosCadenaFija.Add(listaNodos[1].puntoEntrada.position);
+            puntosCadenaFija.Add(listaNodos[1].puntoSalida.position);
+            puntosCadenaFija.Add(puntoEntradaNull.position);
+        }
+        lineaFija.positionCount = puntosCadenaFija.Count;
+        lineaFija.SetPositions(puntosCadenaFija.ToArray());
+    }
+
+    // --- LÓGICAS DE INSERCIÓN (EXISTENTES) ---
 
     void LogicaInsertarInicio(string tipo, GameObject objetoTocado)
     {
@@ -226,6 +346,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
 
         if (modoActual == ModoOperacion.InsertarInicio)
         {
+            listaNodos.Insert(0, managerActual);
             List<Vector3> nuevaRuta = new List<Vector3>() { managerActual.puntoEntrada.position, managerActual.puntoSalida.position };
             if (fase == 0) nuevaRuta.Add(puntoEntradaNull.position);
             else nuevaRuta.AddRange(puntosCadenaFija);
@@ -233,6 +354,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         }
         else
         {
+            listaNodos.Add(managerActual);
             if (fase == 0) puntosCadenaFija = new List<Vector3>() { puntoSalidaHead.position, managerActual.puntoEntrada.position, managerActual.puntoSalida.position, puntoEntradaNull.position };
             else
             {
@@ -257,17 +379,22 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         if (modoActual == ModoOperacion.InsertarInicio)
         {
             andy.Decir("¡Excelente! Has dominado la inserción al INICIO.");
-            yield return new WaitForSeconds(3f);
-            andy.Decir("Ahora aprenderemos el Algoritmo 5.2: CREA_FINAL.");
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(2.5f);
             modoActual = ModoOperacion.InsertarFinal;
-
-            LimpiarEscenaParaSiguienteAlgoritmo(); // Limpiamos sin resetear el ModoActual
-
+            LimpiarEscenaParaSiguienteAlgoritmo();
             UIManager.instancia.ConfigurarTextosChecklist("Izquierda: sembrar calabaza", "Centro: sembrar trigo", "Derecha: sembrar papa");
             StartCoroutine(Intro());
         }
-        else andy.Decir("¡Felicidades! Dominas las inserciones de Cairo.");
+        else if (modoActual == ModoOperacion.InsertarFinal)
+        {
+            andy.Decir("¡Muy bien! Lista creada por el final.");
+            yield return new WaitForSeconds(2.5f);
+            modoActual = ModoOperacion.EliminarInicio;
+            fase = 0; // Reset fase para el checklist de eliminación
+            UIManager.instancia.ResetBotones();
+            UIManager.instancia.ConfigurarTextosChecklist("Eliminar las calabazas", "Eliminar las papas", "");
+            StartCoroutine(Intro());
+        }
     }
 
     void Update() => ActualizarVisualManguera();
@@ -287,7 +414,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             }
             else if (managerAnterior != null) puntosActivos.Add(managerAnterior.puntoEntrada.position);
         }
-        else
+        else if (modoActual == ModoOperacion.InsertarFinal)
         {
             if (managerActual != null)
             {
@@ -297,6 +424,16 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 else if (pasoConexion == 1) puntosActivos.Add(managerActual.puntoEntrada.position);
                 else if (pasoConexion == 2) { puntosActivos.Add(managerActual.puntoEntrada.position); puntosActivos.Add(managerActual.puntoSalida.position); if (cargandoAgua) puntosActivos.Add(lupi.position); }
             }
+        }
+        else if (modoActual == ModoOperacion.EliminarInicio)
+        {
+            puntosActivos.Add(puntoSalidaHead.position);
+            if (cargandoAgua) puntosActivos.Add(lupi.position);
+        }
+        else if (modoActual == ModoOperacion.EliminarFinal)
+        {
+            puntosActivos.Add(listaNodos[1].puntoSalida.position);
+            if (cargandoAgua) puntosActivos.Add(lupi.position);
         }
 
         lineaAgua.positionCount = puntosActivos.Count;
@@ -309,7 +446,10 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         if (fase >= nombres.Length) return null;
         string buscado = nombres[fase].ToLower();
         foreach (var nm in Object.FindObjectsByType<NodoManager>(FindObjectsSortMode.None))
-            if (nm.gameObject.name.ToLower().Contains(buscado) && nm != managerAnterior) return nm;
+        {
+            // Validamos que no esté ya en nuestra lista de control para no confundir nodos viejos
+            if (nm.gameObject.name.ToLower().Contains(buscado) && !listaNodos.Contains(nm)) return nm;
+        }
         return null;
     }
 
