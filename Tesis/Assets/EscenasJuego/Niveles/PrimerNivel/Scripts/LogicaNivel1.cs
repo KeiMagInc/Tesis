@@ -24,49 +24,55 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     public EfectoLetrero brilloPuntero;
     public EfectoLetrero brilloNull;
 
-    public NodoManager huertoScript; // El nodo estático del nivel 1
+    public NodoManager huertoScript;
     private int estado = 0;
 
     void Awake() => instancia = this;
 
+    // ESTO SE EJECUTA AL ENTRAR AL NIVEL 1
     void OnEnable()
     {
         if (UIManager.instancia != null)
         {
             UIManager.instancia.logicaActiva = this;
-            UIManager.instancia.MostrarInterfaz(false); // Oculta mochila en N1
+            UIManager.instancia.MostrarInterfaz(false);
         }
 
-        // RESET TOTAL AL ENTRAR
         ResetearNivel();
+    }
+
+    // ESTO SE EJECUTA AL SALIR DEL NIVEL 1 (Cuando se activa el Nivel 2 o 3)
+    // Agregamos esta función para que el Nivel 1 se limpie solo al cerrarse
+    void OnDisable()
+    {
+        ResetearNivelSilencioso();
     }
 
     public void ResetearNivel()
     {
         estado = 0;
-
-        // 1. Limpiar la línea azul
         if (lineaAgua != null) lineaAgua.positionCount = 0;
+        if (huertoScript != null) huertoScript.ResetearNodo();
 
-        // 2. Resetear el nodo (Agua desaparece y sembríos secos)
-        if (huertoScript != null)
-        {
-            huertoScript.ResetearNodo();
-        }
-
-        // 3. Resetear brillos de letreros
         ActualizarBrillos(true, false, false, false);
 
-        // 4. Repetir diálogo de Andy
         if (andy != null)
         {
             andy.Decir("¡Lupi! El río fluye de P (Inicio) a NULL.\nUsa 'E' en INICIO para obtener la dirección.");
         }
-
         ActualizarPuntos();
     }
 
-    public void AvanceSiembraExitosa() { } // No se usa en N1
+    // Nueva función para limpiar el nivel sin que Andy hable (útil al salir)
+    public void ResetearNivelSilencioso()
+    {
+        estado = 0;
+        if (lineaAgua != null) lineaAgua.positionCount = 0;
+        if (huertoScript != null) huertoScript.ResetearNodo();
+        ActualizarBrillos(false, false, false, false);
+    }
+
+    public void AvanceSiembraExitosa() { }
 
     public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
     {
@@ -79,7 +85,6 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         }
     }
 
-    // Lógica de estados...
     void AccionHead()
     {
         if (estado == 0)

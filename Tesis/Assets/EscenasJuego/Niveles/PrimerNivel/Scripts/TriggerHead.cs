@@ -15,7 +15,6 @@ public class TriggerHead : MonoBehaviour
             if (UIManager.instancia != null && UIManager.instancia.logicaActiva != null)
             {
                 UIManager.instancia.logicaActiva.AccionEnLetrero("Head", gameObject);
-                // Cambia "Head" por "EntradaHuerto", "SalidaHuerto" o "Null" según el trigger
             }
         }
     }

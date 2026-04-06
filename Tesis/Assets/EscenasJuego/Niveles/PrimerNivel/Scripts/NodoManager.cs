@@ -8,10 +8,10 @@ public class NodoManager : MonoBehaviour
     public Transform puntoSalida;
     [Header("Ajustes de Velocidad de Eliminación")]
     [Tooltip("Velocidad de reducción del agua (cuadro azul)")]
-    public float velocidadAguaEliminar = 3.0f;
+    public float velocidadAguaEliminar = 4.0f;
 
     [Tooltip("Velocidad con la que el nodo completo se encoge al final")]
-    public float velocidadEncogidoFinal = 4.0f;
+    public float velocidadEncogidoFinal = 5.0f;
 
     [Header("Efecto de Agua")]
     public GameObject cuadroAgua;
