@@ -4,6 +4,11 @@ using TMPro;
 
 public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Sprites UI Originales")]
+    public Sprite spriteTrigo;
+    public Sprite spritePapa;
+    public Sprite spriteCalabaza;
+
     public static LogicaNivel1 instancia;
     public AndyController andy;
     public LineRenderer lineaAgua;
@@ -36,8 +41,14 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         {
             UIManager.instancia.logicaActiva = this;
             UIManager.instancia.MostrarInterfaz(false);
-        }
 
+            // RESETEAR ICONOS A LOS ORIGINALES
+            UIManager.instancia.ConfigurarBotonesUI(
+                spriteTrigo, "Trigo",
+                spritePapa, "Papa",
+                spriteCalabaza, "Calabaza"
+            );
+        }
         ResetearNivel();
     }
 

@@ -6,6 +6,11 @@ using UnityEngine;
 
 public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Sprites UI Originales")]
+    public Sprite spriteTrigo;
+    public Sprite spritePapa;
+    public Sprite spriteCalabaza;
+
     public static LogicaNivel3 instancia;
     public AndyController andy;
     public TextMeshProUGUI textoPuntos;
@@ -50,7 +55,13 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         UIManager.instancia.logicaActiva = this;
         UIManager.instancia.SetPrefabs(prefabTrigoN3, prefabPapaN3, prefabCalabazaN3);
 
-        // Al iniciar el nivel, ocultamos todo para el primer "pop"
+        // RESETEAR ICONOS A LOS ORIGINALES
+        UIManager.instancia.ConfigurarBotonesUI(
+            spriteTrigo, "Trigo",
+            spritePapa, "Papa",
+            spriteCalabaza, "Calabaza"
+        );
+
         UIManager.instancia.MostrarMochilaSolo(false);
         UIManager.instancia.MostrarChecklistSolo(false);
 

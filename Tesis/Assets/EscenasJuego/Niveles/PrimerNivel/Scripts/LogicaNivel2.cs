@@ -5,6 +5,12 @@ using UnityEngine;
 
 public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Sprites UI Originales")]
+    public Sprite spriteTrigo;
+    public Sprite spritePapa;
+    public Sprite spriteCalabaza;
+    private string[] nombresNodos = { "Trigo", "Calabaza", "Papa" };
+
     public static LogicaNivel2 instancia;
     public AndyController andy;
     public TextMeshProUGUI textoPuntos;
@@ -31,15 +37,27 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
 
     void OnEnable()
     {
+        // 1. Verificamos que el UIManager exista antes de pedirle cosas
+        if (UIManager.instancia == null) return;
+
         UIManager.instancia.logicaActiva = this;
         UIManager.instancia.SetPrefabs(prefabTrigoN2, prefabPapaN2, prefabCalabazaN2);
+
+        // RESETEAR ICONOS A LOS ORIGINALES
+        UIManager.instancia.ConfigurarBotonesUI(
+            spriteTrigo, "Trigo",
+            spritePapa, "Papa",
+            spriteCalabaza, "Calabaza"
+        );
+
         ResetearNivel();
 
-        // OCULTAMOS TODO AL INICIO
+        // Ocultamos elementos de UI al iniciar la zona
         UIManager.instancia.MostrarMochilaSolo(false);
         UIManager.instancia.MostrarChecklistSolo(false);
 
-        UIManager.instancia.ConfigurarTextosChecklist("Derecha: sembrar trigo", "Centro: sembrar papas", "Izquierda: sembrar calabazas");
+        UIManager.instancia.ConfigurarTextosChecklist("Izquierda: sembrar trigo", "Centro: sembrar papas", "Derecha: sembrar calabazas");
+
         ActualizarPuntos();
         StartCoroutine(Intro());
     }
@@ -79,18 +97,10 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
 
     void ProximoPaso()
     {
-        // Cambiamos el orden para que coincida con el Checklist si es necesario, 
-        // pero lo importante es que el string sea exacto: "Trigo", "Papa", "Calabaza"
-        string[] nombres = { "Trigo", "Calabaza", "Papa" };
-
-        string semillaActual = nombres[fase];
-
-        // Primero activamos el palpito en la UI
+        if (fase >= nombresNodos.Length) return;
+        string semillaActual = nombresNodos[fase];
         UIManager.instancia.SetSemillaPalpitar(semillaActual);
-
-        // Luego Andy habla
         andy.Decir("Siembra el " + semillaActual);
-
         pasoConexion = 0;
         lineaAgua.positionCount = 0;
     }
@@ -147,7 +157,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
             brilloNull.SetEncendido(false);
 
             int[] mapping = { 0, 2, 1 };
-            UIManager.instancia.MarcarTareaCompletada(mapping[fase]);
+            UIManager.instancia.MarcarTareaCompletada(fase);
 
             fase++;
             if (fase < 3) StartCoroutine(EsperarSiguiente());
@@ -162,10 +172,12 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
 
     GameObject BuscarHuerto()
     {
-        string buscado = (new string[] { "Trigo", "Calabaza", "Papa" })[fase].ToLower();
+        string buscado = nombresNodos[fase].ToLower();
         foreach (var n in Object.FindObjectsByType<NodoManager>(FindObjectsSortMode.None))
         {
-            if (n.gameObject.name.ToLower().Contains(buscado)) return n.gameObject;
+            // Solo devuelve el objeto si es un CLON (sembrado en este nivel)
+            if (n.gameObject.name.ToLower().Contains(buscado) && n.gameObject.name.Contains("(Clone)"))
+                return n.gameObject;
         }
         return null;
     }
@@ -174,7 +186,11 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     {
         if (!r) return;
         foreach (var b in r.GetComponentsInChildren<EfectoLetrero>(true))
-            if (b.gameObject.name.Contains(n)) b.SetEncendido(e);
+        {
+            // Convierte ambos a Mayúsculas para que "dato" y "Dato" sean lo mismo
+            if (b.gameObject.name.ToUpper().Contains(n.ToUpper()))
+                b.SetEncendido(e);
+        }
     }
 
     void ApagarBrillos() { if (brilloHead) brilloHead.SetEncendido(false); if (brilloNull) brilloNull.SetEncendido(false); }
