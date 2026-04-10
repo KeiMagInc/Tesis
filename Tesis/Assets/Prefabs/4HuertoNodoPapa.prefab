@@ -178,7 +178,7 @@ GameObject:
   - component: {fileID: 9328321732198063}
   - component: {fileID: 3129169062535770140}
   m_Layer: 0
-  m_Name: HuertoNodoPapaN4C
+  m_Name: 4HuertoNodoPapa
   m_TagString: Planta
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -273,8 +273,8 @@ MonoBehaviour:
   escalaNormal: {x: 2.5, y: 2.5, z: 0}
   velocidadEscala: 0.7
   retrasoEntreSembrios: 0.3
-  spriteSeco: {fileID: 4378049581531813254, guid: cbc21c51be2f305408febc872344eb88, type: 3}
-  spriteVivo: {fileID: 6075094999978065127, guid: dc201ca03aed7df4eb60708518c4c8a8, type: 3}
+  spriteSeco: {fileID: 2382208071769853359, guid: ae3d64d5427b9994eac1b88a8d48604a, type: 3}
+  spriteVivo: {fileID: -1840190759907527076, guid: 1e7ce091677f6f045bd54fc9cee3c726, type: 3}
 --- !u!114 &3129169062535770140
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -34,21 +34,17 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
 
     void Awake() => instancia = this;
 
-    // ESTO SE EJECUTA AL ENTRAR AL NIVEL 1
     void OnEnable()
     {
-        if (UIManager.instancia != null)
-        {
-            UIManager.instancia.logicaActiva = this;
-            UIManager.instancia.MostrarInterfaz(false);
+        if (UIManager.instancia == null) return;
 
-            // RESETEAR ICONOS A LOS ORIGINALES
-            UIManager.instancia.ConfigurarBotonesUI(
-                spriteTrigo, "Trigo",
-                spritePapa, "Papa",
-                spriteCalabaza, "Calabaza"
-            );
-        }
+        UIManager.instancia.logicaActiva = this;
+
+        // OCULTAR TODO AL EMPEZAR
+        UIManager.instancia.MostrarMochilaSolo(false);
+        UIManager.instancia.MostrarChecklistSolo(false);
+        UIManager.instancia.panelParcelas.SetActive(false);
+
         ResetearNivel();
     }
 

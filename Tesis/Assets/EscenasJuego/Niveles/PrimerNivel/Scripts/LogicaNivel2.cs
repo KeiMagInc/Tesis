@@ -37,26 +37,29 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
 
     void OnEnable()
     {
-        // 1. Verificamos que el UIManager exista antes de pedirle cosas
         if (UIManager.instancia == null) return;
-
         UIManager.instancia.logicaActiva = this;
-        UIManager.instancia.SetPrefabs(prefabTrigoN2, prefabPapaN2, prefabCalabazaN2);
 
-        // RESETEAR ICONOS A LOS ORIGINALES
+        // 1. Configuramos los prefabs
+        UIManager.instancia.SetPrefabs(prefabTrigoN2, prefabCalabazaN2, prefabPapaN2);
+
+        // 2. Configuramos los botones (Mismo orden que nombresNodos)
         UIManager.instancia.ConfigurarBotonesUI(
             spriteTrigo, "Trigo",
-            spritePapa, "Papa",
-            spriteCalabaza, "Calabaza"
+            spriteCalabaza, "Calabaza",
+            spritePapa, "Papa"
         );
 
         ResetearNivel();
-
-        // Ocultamos elementos de UI al iniciar la zona
         UIManager.instancia.MostrarMochilaSolo(false);
         UIManager.instancia.MostrarChecklistSolo(false);
 
-        UIManager.instancia.ConfigurarTextosChecklist("Izquierda: sembrar trigo", "Centro: sembrar papas", "Derecha: sembrar calabazas");
+        // 3. ¡IMPORTANTE! El orden aquí DEBE coincidir con nombresNodos = { "Trigo", "Calabaza", "Papa" }
+        UIManager.instancia.ConfigurarTextosChecklist(
+            "Izquierda: sembrar trigo",      // Índice 0
+            "Derecha: sembrar calabaza",     // Índice 1
+            "Centro: sembrar papa"           // Índice 2
+        );
 
         ActualizarPuntos();
         StartCoroutine(Intro());

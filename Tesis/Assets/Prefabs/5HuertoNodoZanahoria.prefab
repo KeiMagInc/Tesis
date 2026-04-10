@@ -178,7 +178,7 @@ GameObject:
   - component: {fileID: 9328321732198063}
   - component: {fileID: 3129169062535770140}
   m_Layer: 0
-  m_Name: HuertoNodoZanahoriaN4D
+  m_Name: 5HuertoNodoZanahoria
   m_TagString: Planta
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

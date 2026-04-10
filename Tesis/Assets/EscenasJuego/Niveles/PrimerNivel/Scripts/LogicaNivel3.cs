@@ -41,30 +41,32 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     private List<NodoManager> listaNodos = new List<NodoManager>();
 
     private List<Vector3> puntosCadenaFija = new List<Vector3>();
+
+    // ORDEN PARA INSERTAR INICIO: Derecha -> Centro -> Izquierda
     private string[] nombresNodosInicio = { "Papa", "Trigo", "Calabaza" };
+
+    // ORDEN PARA INSERTAR FINAL: Izquierda -> Centro -> Derecha
     private string[] nombresNodosFinal = { "Calabaza", "Trigo", "Papa" };
 
     void Awake() => instancia = this;
 
     void OnEnable()
     {
-        LogicaNivel1 nivel1 = Object.FindAnyObjectByType<LogicaNivel1>();
-        if (nivel1 != null) nivel1.gameObject.SetActive(false);
-
-        instancia = this;
+        if (UIManager.instancia == null) return;
         UIManager.instancia.logicaActiva = this;
-        UIManager.instancia.SetPrefabs(prefabTrigoN3, prefabPapaN3, prefabCalabazaN3);
 
-        // RESETEAR ICONOS A LOS ORIGINALES
+        // CORRECCIÓN: Los índices deben coincidir con ConfigurarBotonesUI
+        // Índice 0: Papa, Índice 1: Trigo, Índice 2: Calabaza
+        UIManager.instancia.SetPrefabs(prefabPapaN3, prefabTrigoN3, prefabCalabazaN3);
+
         UIManager.instancia.ConfigurarBotonesUI(
-            spriteTrigo, "Trigo",
             spritePapa, "Papa",
+            spriteTrigo, "Trigo",
             spriteCalabaza, "Calabaza"
         );
 
         UIManager.instancia.MostrarMochilaSolo(false);
         UIManager.instancia.MostrarChecklistSolo(false);
-
         ResetearNivel();
         StartCoroutine(Intro());
     }
@@ -85,11 +87,31 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         if (UIManager.instancia != null)
         {
             UIManager.instancia.ResetBotones();
-            UIManager.instancia.ConfigurarTextosChecklist("Derecha: sembrar papa", "Centro: sembrar trigo", "Izquierda: sembrar calabaza");
+            ActualizarTextosChecklistSegunAlgoritmo();
         }
 
         LimpiarNodosEscena();
         ApagarBrillosGlobales();
+    }
+
+    void ActualizarTextosChecklistSegunAlgoritmo()
+    {
+        if (modoActual == ModoOperacion.InsertarInicio)
+        {
+            UIManager.instancia.ConfigurarTextosChecklist(
+                "Derecha: sembrar papa",
+                "Centro: sembrar trigo",
+                "Izquierda: sembrar calabaza"
+            );
+        }
+        else if (modoActual == ModoOperacion.InsertarFinal)
+        {
+            UIManager.instancia.ConfigurarTextosChecklist(
+                "Izquierda: sembrar calabaza",
+                "Centro: sembrar trigo",
+                "Derecha: sembrar papa"
+            );
+        }
     }
 
     IEnumerator Intro()
@@ -116,7 +138,6 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         ProximoPaso();
     }
 
-
     void ProximoPaso()
     {
         if (modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal)
@@ -141,7 +162,6 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         pasoConexion = 0;
     }
 
-    // --- LÓGICA DE TRANSICIÓN ENTRE ALGORITMOS ---
     IEnumerator CambiarDeModo()
     {
         if (modoActual == ModoOperacion.InsertarInicio)
@@ -150,7 +170,10 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             yield return new WaitForSeconds(3f);
             modoActual = ModoOperacion.InsertarFinal;
             LimpiarEscenaParaSiguienteAlgoritmo();
-            UIManager.instancia.ConfigurarTextosChecklist("Izquierda: sembrar calabaza", "Centro: sembrar trigo", "Derecha: sembrar papa");
+
+            // CORRECCIÓN: Actualizamos los textos para el nuevo modo
+            ActualizarTextosChecklistSegunAlgoritmo();
+
             StartCoroutine(Intro());
         }
         else if (modoActual == ModoOperacion.InsertarFinal)
@@ -540,7 +563,12 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         }
     }
 
-    public void AvanceSiembraExitosa() { UIManager.instancia.SetSemillaPalpitar(""); StartCoroutine(EsperarYAsignarNodo()); }
+    public void AvanceSiembraExitosa()
+    {
+        UIManager.instancia.SetSemillaPalpitar("");
+        StartCoroutine(EsperarYAsignarNodo());
+    }
+
     IEnumerator EsperarYAsignarNodo()
     {
         yield return new WaitForSeconds(0.1f);
@@ -553,7 +581,6 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             if (modoActual == ModoOperacion.InsertarInicio)
             {
                 brilloHead.SetEncendido(true);
-                // NUEVO: Andy avisa que ya puedes seguir con la conexión
                 andy.Decir("¡NODO listo! Ahora recoge el agua del INICIO para conectarla.");
             }
             else if (modoActual == ModoOperacion.InsertarFinal)
@@ -570,6 +597,10 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 }
             }
         }
+        else
+        {
+            Debug.LogError("No se encontró el nodo en la escena. Revisa que el nombre del Prefab contenga el nombre de la semilla.");
+        }
     }
 
     NodoManager BuscarNuevoNodoEnEscena()
@@ -580,10 +611,6 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         string buscado = nombres[fase].ToLower();
         foreach (var nm in Object.FindObjectsByType<NodoManager>(FindObjectsSortMode.None))
         {
-            // Buscamos un nodo que:
-            // 1. Tenga el nombre de la semilla actual
-            // 2. SEA UN CLON (para no agarrar el del Nivel 1)
-            // 3. No esté ya en la lista de nodos completados
             if (nm.gameObject.name.ToLower().Contains(buscado) &&
                 nm.gameObject.name.Contains("(Clone)") &&
                 !listaNodos.Contains(nm))
