@@ -269,8 +269,8 @@ MonoBehaviour:
   velocidadEncogidoFinal: 5
   cuadroAgua: {fileID: 4204604788392367696}
   escalaMinima: {x: 1, y: 1, z: 0}
-  escalaMaxima: {x: 4, y: 2.5, z: 0}
-  escalaNormal: {x: 2.5, y: 2.5, z: 0}
+  escalaMaxima: {x: 6, y: 5, z: 0}
+  escalaNormal: {x: 3, y: 2, z: 0}
   velocidadEscala: 0.7
   retrasoEntreSembrios: 0.3
   spriteSeco: {fileID: -5953878577670561019, guid: fe686bfbd8240a541a9a21729f34aff2, type: 3}

@@ -50040,7 +50040,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Derecha: sembrar trigo'
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ff8bed058541fb4caf1cb757f6e4c56, type: 2}
   m_sharedMaterial: {fileID: -546690878275915547, guid: 7ff8bed058541fb4caf1cb757f6e4c56, type: 2}
@@ -52172,8 +52172,8 @@ Tilemap:
   - first: {x: 25, y: -4, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 15
-      m_TileSpriteIndex: 22
+      m_TileIndex: 25
+      m_TileSpriteIndex: 38
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -57351,7 +57351,7 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 17
     m_Data: {fileID: 11400000, guid: 82bd3f0660b5d1b489bd225955a2f38c, type: 2}
-  - m_RefCount: 12
+  - m_RefCount: 11
     m_Data: {fileID: 11400000, guid: 9eeb97fda2033704ab3b05c5556aeae8, type: 2}
   - m_RefCount: 4
     m_Data: {fileID: 11400000, guid: 757befbb726de9747bd06504a894a4c7, type: 2}
@@ -57371,7 +57371,7 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: fe00a4e4516d23f46a50f46ba1b2ff91, type: 2}
   - m_RefCount: 240
     m_Data: {fileID: 11400000, guid: bb972a34ec092564d8b6385cb76203d4, type: 2}
-  - m_RefCount: 8
+  - m_RefCount: 9
     m_Data: {fileID: 11400000, guid: 1fc03708d0e3a61489ea9d5325d1e8fe, type: 2}
   - m_RefCount: 1
     m_Data: {fileID: 11400000, guid: 92d884dd5fff5b94b86ade04826267b1, type: 2}
@@ -57446,7 +57446,7 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 12
+  - m_RefCount: 11
     m_Data: {fileID: 1627828282, guid: 73a56813e8cdd784096eacf64b5a9f83, type: 3}
   - m_RefCount: 4
     m_Data: {fileID: -6890745662352738869, guid: 73a56813e8cdd784096eacf64b5a9f83, type: 3}
@@ -57478,7 +57478,7 @@ Tilemap:
     m_Data: {fileID: 591300791, guid: 73a56813e8cdd784096eacf64b5a9f83, type: 3}
   - m_RefCount: 293
     m_Data: {fileID: 7904083640753998035, guid: 73a56813e8cdd784096eacf64b5a9f83, type: 3}
-  - m_RefCount: 8
+  - m_RefCount: 9
     m_Data: {fileID: -1605049954, guid: 73a56813e8cdd784096eacf64b5a9f83, type: 3}
   - m_RefCount: 8
     m_Data: {fileID: 5364804986001580263, guid: 73a56813e8cdd784096eacf64b5a9f83, type: 3}
@@ -63714,7 +63714,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Derecha: sembrar trigo'
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ff8bed058541fb4caf1cb757f6e4c56, type: 2}
   m_sharedMaterial: {fileID: -546690878275915547, guid: 7ff8bed058541fb4caf1cb757f6e4c56, type: 2}
@@ -86233,6 +86233,17 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 5.1, y: 5.1}
   m_EdgeRadius: 0
+--- !u!114 &1202796607 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6011285520602270788, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+  m_PrefabInstance: {fileID: 1265494905}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1227960334
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -86831,6 +86842,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 1366122969537112110, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2390184735900671953, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_Name
       value: SemillaPapa
@@ -86864,9 +86879,29 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 191083641}
     - target: {fileID: 3906074956565988614, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: itemsChecklist.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3906074956565988614, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: botonesSemillas.Array.size
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 3906074956565988614, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: 'itemsChecklist.Array.data[1]'
+      value: 
+      objectReference: {fileID: 722138010}
+    - target: {fileID: 3906074956565988614, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: 'itemsChecklist.Array.data[2]'
+      value: 
+      objectReference: {fileID: 1938375271}
+    - target: {fileID: 3906074956565988614, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: 'itemsChecklist.Array.data[3]'
+      value: 
+      objectReference: {fileID: 243276386}
+    - target: {fileID: 3906074956565988614, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: 'itemsChecklist.Array.data[4]'
+      value: 
+      objectReference: {fileID: 1202796607}
     - target: {fileID: 3906074956565988614, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: 'botonesSemillas.Array.data[0]'
       value: 
@@ -86907,9 +86942,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: SemillaRemolacha
       objectReference: {fileID: 0}
+    - target: {fileID: 5140937685323964650, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5410629951142309986, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_Name
       value: SemillaTrigo
+      objectReference: {fileID: 0}
+    - target: {fileID: 6011285520602270788, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: m_text
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6168197099399102507, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_Alpha
@@ -89500,6 +89543,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1532143211}
   m_CullTransparentMesh: 1
+--- !u!114 &1536299284 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7954506215568926922, guid: 0de18c0e3fab66545be3570cc35952e9, type: 3}
+  m_PrefabInstance: {fileID: 826578590}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6495b2e4b1118aa4693dacdfda273ce0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1548172877
 GameObject:
   m_ObjectHideFlags: 0
@@ -90344,7 +90398,7 @@ Transform:
   m_GameObject: {fileID: 1735559719}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 29.73, y: 1.0200007, z: 0}
+  m_LocalPosition: {x: 29.73, y: 0.020000696, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -91771,7 +91825,7 @@ Transform:
   m_GameObject: {fileID: 1845346465}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.07999992, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -91895,24 +91949,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0976d74c87dbcc8488da2c02840c663d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  misSprites:
-  - {fileID: 3530326326342318695, guid: 7c83225fb307b3f4183195fc6ac9a273, type: 3}
-  - {fileID: -8837905132163604103, guid: 07f59a9d6656a4540876194e2b9269b1, type: 3}
-  - {fileID: -666870068449178133, guid: 4e52881ec9a7d9c439711e8b3dbf54a9, type: 3}
-  - {fileID: -3829704256182829468, guid: 69655a6125fe7414ab6ac77f106357c5, type: 3}
-  - {fileID: 5721182865851055489, guid: 10772d9933d3d9049903185ee294bed4, type: 3}
-  misPrefabs:
-  - {fileID: 839396964857267429, guid: fa4e183b913e95440bd11a8997ab0b55, type: 3}
-  - {fileID: 839396964857267429, guid: 8d7f8c06c64ef4946a580528f5179251, type: 3}
-  - {fileID: 839396964857267429, guid: 22355c0c31e3edc41b0b81ee4d6c8e60, type: 3}
-  - {fileID: 839396964857267429, guid: c2e39210e5bffbb4183789baf4ad9128, type: 3}
-  - {fileID: 839396964857267429, guid: 42e0481dcaf070e42a11290c1cfc758c, type: 3}
+  spriteCalabaza: {fileID: 3530326326342318695, guid: 7c83225fb307b3f4183195fc6ac9a273, type: 3}
+  spritePapa: {fileID: -8837905132163604103, guid: 07f59a9d6656a4540876194e2b9269b1, type: 3}
+  spriteTrigo: {fileID: -666870068449178133, guid: 4e52881ec9a7d9c439711e8b3dbf54a9, type: 3}
+  spriteZanahoria: {fileID: -3829704256182829468, guid: 69655a6125fe7414ab6ac77f106357c5, type: 3}
+  spriteRabano: {fileID: 5721182865851055489, guid: 10772d9933d3d9049903185ee294bed4, type: 3}
+  prefabCalabaza: {fileID: 839396964857267429, guid: fa4e183b913e95440bd11a8997ab0b55, type: 3}
+  prefabPapa: {fileID: 839396964857267429, guid: 8d7f8c06c64ef4946a580528f5179251, type: 3}
+  prefabTrigo: {fileID: 839396964857267429, guid: 22355c0c31e3edc41b0b81ee4d6c8e60, type: 3}
+  prefabZanahoria: {fileID: 839396964857267429, guid: c2e39210e5bffbb4183789baf4ad9128, type: 3}
+  prefabRabano: {fileID: 839396964857267429, guid: 42e0481dcaf070e42a11290c1cfc758c, type: 3}
   andy: {fileID: 1873500765}
   textoPuntos: {fileID: 209793410}
   lineaAgua: {fileID: 1845346467}
   lineaFija: {fileID: 1046537633}
   lupi: {fileID: 191083641}
-  puntoInicioRio: {fileID: 826578592}
+  puntoRio: {fileID: 826578592}
+  brilloRio: {fileID: 1536299284}
 --- !u!1 &1861877062
 GameObject:
   m_ObjectHideFlags: 0
@@ -92162,6 +92215,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1938375271 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1366122969537112110, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+  m_PrefabInstance: {fileID: 1265494905}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &1943060707 stripped

@@ -33,6 +33,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     private bool cargandoAgua = false;
     private NodoManager managerActual;
 
+    private int[] mapaIndicesUI = { 4, 0, 2 };
     void Awake() => instancia = this;
 
     void OnEnable()
@@ -40,25 +41,26 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         if (UIManager.instancia == null) return;
         UIManager.instancia.logicaActiva = this;
 
-        // 1. Configuramos los prefabs
         UIManager.instancia.SetPrefabs(prefabTrigoN2, prefabCalabazaN2, prefabPapaN2);
 
-        // 2. Configuramos los botones (Mismo orden que nombresNodos)
-        UIManager.instancia.ConfigurarBotonesUI(
-            spriteTrigo, "Trigo",
-            spriteCalabaza, "Calabaza",
-            spritePapa, "Papa"
-        );
+        // Agrupamos en arreglos para el nuevo UIManager
+        Sprite[] imagenes = { spriteTrigo, spriteCalabaza, spritePapa };
+        string[] nombres = { "Trigo", "Calabaza", "Papa" };
+
+        UIManager.instancia.ConfigurarBotonesUI(imagenes, nombres);
 
         ResetearNivel();
         UIManager.instancia.MostrarMochilaSolo(false);
         UIManager.instancia.MostrarChecklistSolo(false);
 
-        // 3. ¡IMPORTANTE! El orden aquí DEBE coincidir con nombresNodos = { "Trigo", "Calabaza", "Papa" }
+        // El orden en tu UIManager (según tu imagen) es: 0:Derecha, 1:Arriba, 2:Centro, 3:Abajo, 4:Izquierda
+        // En LogicaNivel2.cs -> OnEnable
         UIManager.instancia.ConfigurarTextosChecklist(
-            "Izquierda: sembrar trigo",      // Índice 0
-            "Derecha: sembrar calabaza",     // Índice 1
-            "Centro: sembrar papa"           // Índice 2
+            "Izquierda: sembrar trigo", // Slot 0
+            "",                          // Slot 1 (Se apagará)
+            "Derecha: sembrar calabaza",      // Slot 2
+            "",                          // Slot 3 (Se apagará)
+            "Centro: sembrar papa"   // Slot 4
         );
 
         ActualizarPuntos();
@@ -159,8 +161,8 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
             managerActual.DrenarAgua();
             brilloNull.SetEncendido(false);
 
-            int[] mapping = { 0, 2, 1 };
-            UIManager.instancia.MarcarTareaCompletada(fase);
+            // USAMOS EL MAPA PARA MARCAR LA TAREA CORRECTA
+            UIManager.instancia.MarcarTareaCompletada(mapaIndicesUI[fase]);
 
             fase++;
             if (fase < 3) StartCoroutine(EsperarSiguiente());

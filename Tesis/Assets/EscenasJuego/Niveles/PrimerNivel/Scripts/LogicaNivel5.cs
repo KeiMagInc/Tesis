@@ -42,7 +42,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     // Reemplaza tu OnEnable por este:
     void OnEnable()
     {
-        if (UIManager.instancia == null) return; // Seguridad
+        if (UIManager.instancia == null) return;
 
         LogicaNivel3 nivel3 = Object.FindAnyObjectByType<LogicaNivel3>();
         if (nivel3 != null) nivel3.gameObject.SetActive(false);
@@ -51,11 +51,11 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         UIManager.instancia.logicaActiva = this;
         UIManager.instancia.SetPrefabs(prefabRemolacha, prefabZanahoria, prefabRabano);
 
-        UIManager.instancia.ConfigurarBotonesUI(
-            spriteRemolacha, "Remolacha",
-            spriteZanahoria, "Zanahoria",
-            spriteRabano, "Rabano"
-        );
+        // Agrupamos en arreglos
+        Sprite[] imagenes = { spriteRemolacha, spriteZanahoria, spriteRabano };
+        string[] nombres = { "Remolacha", "Zanahoria", "Rabano" };
+
+        UIManager.instancia.ConfigurarBotonesUI(imagenes, nombres);
 
         ResetearNivel();
         StartCoroutine(Intro());

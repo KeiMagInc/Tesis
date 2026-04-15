@@ -56,17 +56,19 @@ public class UIManager : MonoBehaviour
         MostrarChecklistSolo(mostrar);
     }
 
-    public void SetPrefabs(GameObject p1, GameObject p2, GameObject p3)
+    // REEMPLAZA ESTA FUNCIÓN: Ahora acepta un número variable de prefabs
+    public void SetPrefabs(params GameObject[] prefabs)
     {
-        // Limpiar para evitar basura de niveles anteriores
         System.Array.Clear(prefabsActuales, 0, prefabsActuales.Length);
-        prefabsActuales[0] = p1; prefabsActuales[1] = p2; prefabsActuales[2] = p3;
+        for (int i = 0; i < prefabs.Length && i < prefabsActuales.Length; i++)
+        {
+            prefabsActuales[i] = prefabs[i];
+        }
     }
 
-    public void ConfigurarBotonesUI(Sprite s1, string n1, Sprite s2, string n2, Sprite s3, string n3)
+    // REEMPLAZA ESTA FUNCIÓN: Ahora acepta arreglos de sprites y nombres
+    public void ConfigurarBotonesUI(Sprite[] imgs, string[] noms)
     {
-        Sprite[] imgs = { s1, s2, s3 };
-        string[] noms = { n1, n2, n3 };
         ConfigurarMochila(imgs, noms, prefabsActuales);
     }
 
@@ -144,14 +146,27 @@ public class UIManager : MonoBehaviour
 
     public void ConfigurarTextosChecklist(params string[] textos)
     {
-        foreach (var item in itemsChecklist) if (item != null) item.gameObject.SetActive(false);
-        for (int i = 0; i < textos.Length && i < itemsChecklist.Length; i++)
+        // 1. Apagamos y vaciamos TODO
+        for (int i = 0; i < itemsChecklist.Length; i++)
         {
             if (itemsChecklist[i] != null)
+            {
+                itemsChecklist[i].text = ""; // Vaciamos el texto
+                itemsChecklist[i].gameObject.SetActive(false); // Apagamos el objeto
+            }
+        }
+
+        // 2. Encendemos solo lo que recibimos
+        for (int i = 0; i < textos.Length && i < itemsChecklist.Length; i++)
+        {
+            if (itemsChecklist[i] != null && !string.IsNullOrEmpty(textos[i]))
             {
                 itemsChecklist[i].gameObject.SetActive(true);
                 itemsChecklist[i].text = textos[i];
                 itemsChecklist[i].color = Color.black;
+
+                // Log para debug: saber qué estamos encendiendo
+                Debug.Log($"Checklist: Encendiendo Slot {i} con texto: {textos[i]}");
             }
         }
     }

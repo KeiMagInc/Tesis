@@ -55,15 +55,13 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         if (UIManager.instancia == null) return;
         UIManager.instancia.logicaActiva = this;
 
-        // CORRECCIÓN: Los índices deben coincidir con ConfigurarBotonesUI
-        // Índice 0: Papa, Índice 1: Trigo, Índice 2: Calabaza
         UIManager.instancia.SetPrefabs(prefabPapaN3, prefabTrigoN3, prefabCalabazaN3);
 
-        UIManager.instancia.ConfigurarBotonesUI(
-            spritePapa, "Papa",
-            spriteTrigo, "Trigo",
-            spriteCalabaza, "Calabaza"
-        );
+        // Agrupamos en arreglos
+        Sprite[] imagenes = { spritePapa, spriteTrigo, spriteCalabaza };
+        string[] nombres = { "Papa", "Trigo", "Calabaza" };
+
+        UIManager.instancia.ConfigurarBotonesUI(imagenes, nombres);
 
         UIManager.instancia.MostrarMochilaSolo(false);
         UIManager.instancia.MostrarChecklistSolo(false);
@@ -99,17 +97,21 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         if (modoActual == ModoOperacion.InsertarInicio)
         {
             UIManager.instancia.ConfigurarTextosChecklist(
-                "Derecha: sembrar papa",
-                "Centro: sembrar trigo",
-                "Izquierda: sembrar calabaza"
+                "Derecha: sembrar papa",   // Slot 0
+                "",                        // Slot 1
+                "Centro: sembrar trigo",   // Slot 2
+                "",                        // Slot 3
+                "Izquierda: sembrar calabaza" // Slot 4
             );
         }
         else if (modoActual == ModoOperacion.InsertarFinal)
         {
             UIManager.instancia.ConfigurarTextosChecklist(
-                "Izquierda: sembrar calabaza",
-                "Centro: sembrar trigo",
-                "Derecha: sembrar papa"
+                "Izquierda: sembrar calabaza", // Slot 0 (Cambiado según tu lógica de nivel)
+                "",                            // Slot 1
+                "Centro: sembrar trigo",       // Slot 2
+                "",                            // Slot 3
+                "Derecha: sembrar papa"        // Slot 4
             );
         }
     }
@@ -183,7 +185,15 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             modoActual = ModoOperacion.EliminarInicio;
             fase = 0;
             UIManager.instancia.ResetBotones();
-            UIManager.instancia.ConfigurarTextosChecklist("Eliminar Calabaza", "Eliminar Papa", "");
+
+            // IMPORTANTE: Enviamos los 5 campos para que "sembrar trigo" y los demás desaparezcan
+            UIManager.instancia.ConfigurarTextosChecklist(
+                "", // Slot 0
+                "Eliminar Calabaza",     // Slot 1
+                "",                  // Slot 2 (Limpiar)
+                "Eliminar Papa",                  // Slot 3 (Limpiar)
+                ""                   // Slot 4 (Limpiar)
+            );
             StartCoroutine(Intro());
         }
     }

@@ -6,20 +6,21 @@ using UnityEngine;
 
 public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
 {
-    [Header("Configuración de Semillas")]
-    public Sprite[] misSprites;
-    public GameObject[] misPrefabs;
+    public static LogicaNivel4 instancia;
 
-    // Nombres exactos como están en las Zonas de Plantado (evita tildes si el inspector no las tiene)
-    private string[] nombresNodos = { "Calabaza", "Papa", "Trigo", "Zanahoria", "Rabano" };
+    [Header("Sprites UI")]
+    public Sprite spriteCalabaza;
+    public Sprite spritePapa;
+    public Sprite spriteTrigo;
+    public Sprite spriteZanahoria;
+    public Sprite spriteRabano;
 
-    private string[] textosChecklist = {
-        "1. Insertar Calabaza (Inicio del ciclo)",
-        "2. Insertar Papa",
-        "3. Insertar Trigo",
-        "4. Insertar Zanahoria",
-        "5. Insertar Rabano"
-    };
+    [Header("Prefabs de los Nodos")]
+    public GameObject prefabCalabaza;
+    public GameObject prefabPapa;
+    public GameObject prefabTrigo;
+    public GameObject prefabZanahoria;
+    public GameObject prefabRabano;
 
     [Header("Referencias de Escena")]
     public AndyController andy;
@@ -27,217 +28,277 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     public LineRenderer lineaAgua;
     public LineRenderer lineaFija;
     public Transform lupi;
-    public Transform puntoInicioRio; // El punto de acceso inicial
 
-    private Transform lcActual;
-    private NodoManager nuevoNodo;
-    private List<NodoManager> nodosEnLista = new List<NodoManager>();
+    [Header("Puntos de Control")]
+    public Transform puntoRio;
+    public EfectoLetrero brilloRio;
 
-    private int fase = 0;
-    private int subPasoAlgoritmo = 0;
+    // Variables de estado
+    private List<NodoManager> listaNodos = new List<NodoManager>();
+    private NodoManager nodoActual;
     private bool cargandoAgua = false;
-    private Vector3 temporalPaso1Destino = Vector3.zero;
+    private int fase = 0;
+    private int subPaso = 0;
+    private List<Vector3> puntosConfirmados = new List<Vector3>();
+    private string[] nombresNodos = { "Calabaza", "Papa", "Trigo", "Zanahoria", "Rabano" };
+
+    void Awake() => instancia = this;
 
     void OnEnable()
     {
         if (UIManager.instancia == null) return;
         UIManager.instancia.logicaActiva = this;
+
+        // 1. Intercambiamos el orden de los PREFABS (Trigo primero, luego Papa)
+        UIManager.instancia.SetPrefabs(prefabCalabaza, prefabPapa, prefabTrigo, prefabRabano, prefabZanahoria);
+
+        // 2. Intercambiamos el orden de los SPRITES
+        Sprite[] misSprites = { spriteCalabaza, spritePapa, spriteTrigo, spriteRabano, spriteZanahoria };
+
+        // 3. Intercambiamos el orden de los NOMBRES
+        string[] misNombres = { "Calabaza", "Papa", "Trigo", "Rabano", "Zanahoria" };
+
+        UIManager.instancia.ConfigurarBotonesUI(misSprites, misNombres);
+
+        UIManager.instancia.MostrarMochilaSolo(false);
+        UIManager.instancia.MostrarChecklistSolo(false);
+
         ResetearNivel();
-        StartCoroutine(Intro());
+        StartCoroutine(SecuenciaIntro());
     }
 
     public void ResetearNivel()
     {
-        fase = 0; subPasoAlgoritmo = 0;
-        lcActual = puntoInicioRio;
-        nuevoNodo = null;
+        fase = 0;
+        subPaso = 0;
         cargandoAgua = false;
-        nodosEnLista.Clear();
-        temporalPaso1Destino = Vector3.zero;
+        listaNodos.Clear();
+        nodoActual = null;
 
-        lineaAgua.positionCount = 0;
-        lineaFija.positionCount = 0;
+        // 1. Limpiar la lista de puntos y resetear las líneas
+        puntosConfirmados.Clear();
+        if (puntoRio != null) puntosConfirmados.Add(puntoRio.position);
 
-        UIManager.instancia.MostrarMochilaSolo(false);
-        UIManager.instancia.MostrarChecklistSolo(false);
-        UIManager.instancia.ResetBotones();
-        UIManager.instancia.SetSemillaPalpitar("");
+        if (lineaAgua != null) lineaAgua.positionCount = 0;
+        if (lineaFija != null)
+        {
+            lineaFija.positionCount = 0;
+            lineaFija.SetPositions(new Vector3[0]); // Fuerza la limpieza de vértices antiguos
+        }
 
-        UIManager.instancia.ConfigurarMochila(misSprites, nombresNodos, misPrefabs);
-        UIManager.instancia.ConfigurarTextosChecklist(textosChecklist);
+        // 2. BUSCAR Y DESTRUIR LAS PLANTAS SEMBRADAS (Clones)
+        // Asegúrate de que tus prefabs de plantas tengan el Tag "Planta"
+        foreach (var p in GameObject.FindGameObjectsWithTag("Planta"))
+        {
+            Destroy(p);
+        }
 
-        ApagarBrillosEscena();
-        ActualizarVisualCirculo();
+        // 3. Resetear las zonas de plantado para que permitan volver a sembrar
+        ZonaPlantado[] zonas = Object.FindObjectsByType<ZonaPlantado>(FindObjectsSortMode.None);
+        foreach (var z in zonas) z.ResetearZona();
+
+        if (UIManager.instancia != null)
+        {
+            UIManager.instancia.ResetBotones();
+            UIManager.instancia.ConfigurarTextosChecklist(
+                "Sembrar calabaza",
+                "Sembrar papa",
+                "Sembrar trigo",
+                "Sembrar zanahoria",
+                "Sembrar rábano"
+            );
+        }
+        ApagarBrillos();
     }
 
-    IEnumerator Intro()
+    IEnumerator SecuenciaIntro()
     {
-        yield return new WaitForSeconds(1f);
-        andy.Decir("¡Lupi! El río es el origen. Vamos a insertar cultivos usando el algoritmo de Joyanes.");
-        yield return new WaitForSeconds(3.5f);
+        yield return new WaitForSeconds(0.5f);
+        andy.Decir("¡Algoritmo 8.10! Vamos a construir una LISTA CIRCULAR de 5 cultivos.");
+        yield return new WaitForSeconds(2.5f);
+
+        andy.Decir("Abre tu mochila y comencemos por la derecha.");
         UIManager.instancia.MostrarMochilaSolo(true);
+
         yield return new WaitUntil(() => UIManager.instancia.panelParcelas.activeSelf);
+
         UIManager.instancia.MostrarChecklistSolo(true);
-        ProximoPaso();
+        ProximoPasoSiembra();
     }
 
-    void ProximoPaso()
+    void ProximoPasoSiembra()
     {
-        ApagarBrillosEscena();
         if (fase < nombresNodos.Length)
         {
             UIManager.instancia.SetSemillaPalpitar(nombresNodos[fase]);
-            andy.Decir("Instrucción: " + textosChecklist[fase]);
+            andy.Decir("Siembra " + nombresNodos[fase] + " en la posición indicada.");
+            subPaso = 0; // Esperando siembra
         }
-        else andy.Decir("¡Ciclo circular completado! El agua regresa al río eternamente.");
-        subPasoAlgoritmo = 0;
-        temporalPaso1Destino = Vector3.zero;
-    }
-
-    public void AccionEnLetrero(string tipo, GameObject objetoTocado)
-    {
-        if (nuevoNodo == null) return;
-        NodoManager managerTocado = objetoTocado.GetComponentInParent<NodoManager>();
-
-        // PASO 1: nuevo.sig = acceso.sig
-        if (subPasoAlgoritmo == 0)
+        else
         {
-            if (!cargandoAgua && (tipo == "LC" || tipo == "Head" || (tipo == "SalidaHuerto" && managerTocado != nuevoNodo)))
-            {
-                cargandoAgua = true;
-                ApagarBrillosEscena();
-                EncenderBrilloHijo(nuevoNodo.gameObject, "Puntero", true);
-                andy.Decir("Lleva el agua al PUNTERO de la planta.");
-            }
-            else if (cargandoAgua && tipo == "SalidaHuerto" && managerTocado == nuevoNodo)
-            {
-                cargandoAgua = false;
-                subPasoAlgoritmo = 1;
-                // El nuevo nodo ahora apunta a donde el acceso apuntaba antes
-                temporalPaso1Destino = (fase == 0) ? puntoInicioRio.position : nodosEnLista[0].puntoEntrada.position;
-
-                ApagarBrillosEscena();
-                ActivarBrilloAccesoActual(true);
-                ActualizarVisualCirculo();
-                andy.Decir("¡Bien! Paso 2: Primero.sig = nuevo. Recoge agua del acceso.");
-            }
+            andy.Decir("¡Increíble! Has completado el ciclo circular de los 5 cultivos.");
         }
-        // PASO 2: acceso.sig = nuevo
-        else if (subPasoAlgoritmo == 1)
-        {
-            if (!cargandoAgua && (tipo == "LC" || tipo == "Head" || (tipo == "SalidaHuerto" && managerTocado != nuevoNodo)))
-            {
-                cargandoAgua = true;
-                ApagarBrillosEscena();
-                EncenderBrilloHijo(nuevoNodo.gameObject, "Dato", true);
-                andy.Decir("Conecta el flujo a la ENTRADA (Dato) de la planta.");
-            }
-            else if (cargandoAgua && tipo == "EntradaHuerto" && managerTocado == nuevoNodo)
-            {
-                FinalizarInsercion();
-            }
-        }
-    }
-
-    void FinalizarInsercion()
-    {
-        cargandoAgua = false;
-        nuevoNodo.ActivarHuerto();
-        SumarPuntos(20);
-        nodosEnLista.Add(nuevoNodo);
-        lcActual = nuevoNodo.puntoSalida;
-
-        UIManager.instancia.MarcarTareaCompletada(fase);
-        ActualizarVisualCirculo();
-        fase++;
-        nuevoNodo = null;
-        if (fase < nombresNodos.Length) StartCoroutine(EsperarSiguiente());
-        else ApagarBrillosEscena();
-    }
-
-    void ActualizarVisualCirculo()
-    {
-        List<Vector3> pts = new List<Vector3>();
-
-        // 1. Siempre inicia en el Río
-        pts.Add(puntoInicioRio.position);
-
-        if (nodosEnLista.Count > 0)
-        {
-            // El río conecta al primer nodo
-            pts.Add(nodosEnLista[0].puntoEntrada.position);
-
-            for (int i = 0; i < nodosEnLista.Count; i++)
-            {
-                // De la entrada a la salida de la misma planta (pero sin línea visual si quieres el corte)
-                // Para que se vea el corte, añadimos los puntos pero el LineRenderer los unirá.
-                // Si quieres cortes físicos reales, necesitarías múltiples LineRenderers.
-                // Aquí simulamos el flujo lógico:
-                pts.Add(nodosEnLista[i].puntoSalida.position);
-
-                if (i + 1 < nodosEnLista.Count)
-                    pts.Add(nodosEnLista[i + 1].puntoEntrada.position);
-                else
-                    pts.Add(puntoInicioRio.position); // Cierre al Río
-            }
-        }
-
-        // Línea temporal del Paso 1
-        if (nuevoNodo != null && temporalPaso1Destino != Vector3.zero)
-        {
-            pts.Add(nuevoNodo.puntoSalida.position);
-            pts.Add(temporalPaso1Destino);
-        }
-
-        lineaFija.positionCount = pts.Count;
-        lineaFija.SetPositions(pts.ToArray());
-    }
-
-    void Update()
-    {
-        if (lineaAgua == null || lupi == null) return;
-        if (cargandoAgua && lcActual != null)
-        {
-            lineaAgua.positionCount = 2;
-            lineaAgua.SetPositions(new Vector3[] { lcActual.position, lupi.position });
-        }
-        else lineaAgua.positionCount = 0;
     }
 
     public void AvanceSiembraExitosa()
     {
         UIManager.instancia.SetSemillaPalpitar("");
-        StartCoroutine(AsignarNuevoNodo());
+        StartCoroutine(EsperarYAsignarNodo());
     }
 
-    IEnumerator AsignarNuevoNodo()
+    IEnumerator EsperarYAsignarNodo()
     {
         yield return new WaitForSeconds(0.2f);
+        // Buscar el nodo que se acaba de clonar
         foreach (var nm in Object.FindObjectsByType<NodoManager>(FindObjectsSortMode.None))
         {
-            if (nm.name.Contains("(Clone)") && !nodosEnLista.Contains(nm))
+            if (nm.name.Contains("(Clone)") && !listaNodos.Contains(nm))
             {
-                nuevoNodo = nm; break;
+                nodoActual = nm;
+                break;
             }
         }
-        if (nuevoNodo != null)
+
+        if (nodoActual != null)
         {
-            andy.Decir("¡Huerto listo! Toma agua del PUNTO DE ACCESO.");
-            ActivarBrilloAccesoActual(true);
+            subPaso = 1; // Recoger agua
+            if (fase == 0)
+            {
+                brilloRio.SetEncendido(true);
+                andy.Decir("Recoge agua del RÍO para el primer nodo.");
+            }
+            else
+            {
+                // El agua se toma del puntero del nodo anterior
+                EncenderBrilloHijo(listaNodos[fase - 1].gameObject, "Puntero", true);
+                andy.Decir("Ahora conecta el PUNTERO de la planta anterior a la ENTRADA de la nueva.");
+            }
         }
     }
 
-    void ActivarBrilloAccesoActual(bool activar)
+    public void AccionEnLetrero(string tipo, GameObject objetoTocado)
     {
-        if (fase == 0)
+        if (nodoActual == null) return;
+        NodoManager managerTocado = objetoTocado.GetComponentInParent<NodoManager>();
+
+        if (!cargandoAgua)
         {
-            EfectoLetrero b = puntoInicioRio.GetComponentInChildren<EfectoLetrero>();
-            if (b == null && puntoInicioRio.parent != null) b = puntoInicioRio.parent.GetComponentInChildren<EfectoLetrero>();
-            if (b != null) b.SetEncendido(activar);
+            // RECOGER AGUA
+            if (fase == 0 && (tipo == "LC" || tipo == "Head"))
+            {
+                cargandoAgua = true;
+                brilloRio.SetEncendido(false);
+                EncenderBrilloHijo(nodoActual.gameObject, "Dato", true);
+            }
+            else if (fase > 0 && tipo == "SalidaHuerto" && managerTocado == listaNodos[fase - 1])
+            {
+                cargandoAgua = true;
+                EncenderBrilloHijo(listaNodos[fase - 1].gameObject, "Puntero", false);
+                EncenderBrilloHijo(nodoActual.gameObject, "Dato", true);
+
+                // Añadimos el punto de salida del anterior para que la línea se fije ahí al recoger
+                if (!puntosConfirmados.Contains(managerTocado.puntoSalida.position))
+                {
+                    puntosConfirmados.Add(managerTocado.puntoSalida.position);
+                    DibujarLineaFija();
+                }
+            }
+            // --- BUSCA ESTO Y DÉJALO ASÍ (Borra el bloque de puntosConfirmados.Add) ---
+            else if (subPaso == 2 && tipo == "SalidaHuerto" && managerTocado == nodoActual)
+            {
+                cargandoAgua = true;
+                EncenderBrilloHijo(nodoActual.gameObject, "Puntero", false);
+
+                GameObject destino = (fase == 0) ? nodoActual.gameObject : listaNodos[0].gameObject;
+                EncenderBrilloHijo(destino, "Dato", true);
+                andy.Decir("¡Agua recogida! Llévala a la ENTRADA para cerrar el círculo.");
+            }
         }
-        else EncenderBrilloHijo(nodosEnLista[fase - 1].gameObject, "Puntero", activar);
+        else
+        {
+            // CONECTAR AGUA
+            if (tipo == "EntradaHuerto")
+            {
+                if (subPaso == 1 && managerTocado == nodoActual)
+                {
+                    cargandoAgua = false;
+                    nodoActual.ActivarHuerto();
+                    SumarPuntos(10);
+
+                    // Solo agregamos la entrada para que la línea se quede en el "Dato"
+                    puntosConfirmados.Add(nodoActual.puntoEntrada.position);
+                    DibujarLineaFija();
+                    EncenderBrilloHijo(nodoActual.gameObject, "Dato", false);
+                    subPaso = 2;
+                    EncenderBrilloHijo(nodoActual.gameObject, "Puntero", true);
+                }
+                // --- BUSCA ESTA PARTE EN EL SUBPASO 2 DE CONECTAR AGUA ---
+                else if (subPaso == 2)
+                {
+                    bool esCorrecto = (fase == 0 && managerTocado == nodoActual) || (fase > 0 && managerTocado == listaNodos[0]);
+                    if (esCorrecto)
+                    {
+                        cargandoAgua = false;
+
+                        // --- CAMBIO AQUÍ: Fijamos los dos tramos finales de golpe ---
+                        puntosConfirmados.Add(nodoActual.puntoSalida.position);      // Tramo interno (Dato -> Puntero)
+                        puntosConfirmados.Add(managerTocado.puntoEntrada.position);  // Tramo de cierre (Puntero -> Inicio)
+                        DibujarLineaFija();
+
+                        EncenderBrilloHijo(managerTocado.gameObject, "Dato", false);
+                        FinalizarCicloFase();
+                    }
+                }
+            }
+        }
     }
 
+    void FinalizarCicloFase()
+    {
+        SumarPuntos(15);
+
+        // --- AÑADE ESTA LÍNEA AQUÍ ---
+        if (nodoActual != null) nodoActual.DrenarAgua();
+        // ----------------------------
+
+        listaNodos.Add(nodoActual);
+        UIManager.instancia.MarcarTareaCompletada(fase);
+        ApagarBrillos();
+
+        // Si no es el último nivel, el siguiente tramo empezará desde la salida de este nodo
+        if (fase < nombresNodos.Length - 1)
+        {
+            puntosConfirmados.RemoveAt(puntosConfirmados.Count - 1); // Quitamos el punto de cierre temporal
+        }
+
+        fase++;
+        nodoActual = null;
+        StartCoroutine(EsperarSiguiente());
+    }
+
+    void DibujarLineaFija()
+    {
+        lineaFija.positionCount = puntosConfirmados.Count;
+        lineaFija.SetPositions(puntosConfirmados.ToArray());
+    }
+
+    void Update()
+    {
+        if (cargandoAgua && lupi != null && puntosConfirmados.Count > 0)
+        {
+            lineaAgua.positionCount = 2;
+
+            // --- CAMBIO AQUÍ: El origen cambia según el subPaso ---
+            Vector3 origenManguera = (subPaso == 1) ?
+                puntosConfirmados[puntosConfirmados.Count - 1] : // Sale del Río o planta anterior
+                nodoActual.puntoSalida.position;                // Sale del Puntero actual
+
+            lineaAgua.SetPositions(new Vector3[] { origenManguera, lupi.position });
+        }
+        else lineaAgua.positionCount = 0;
+    }
+
+    // --- UTILIDADES ---
     void EncenderBrilloHijo(GameObject n, string parte, bool activar)
     {
         if (n == null) return;
@@ -245,17 +306,12 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
             if (b.name.ToUpper().Contains(parte.ToUpper())) b.SetEncendido(activar);
     }
 
-    void ApagarBrillosEscena()
+    void ApagarBrillos()
     {
-        if (puntoInicioRio != null)
-        {
-            EfectoLetrero b = puntoInicioRio.GetComponentInChildren<EfectoLetrero>();
-            if (b == null && puntoInicioRio.parent != null) b = puntoInicioRio.parent.GetComponentInChildren<EfectoLetrero>();
-            if (b != null) b.SetEncendido(false);
-        }
+        if (brilloRio) brilloRio.SetEncendido(false);
         foreach (var b in Object.FindObjectsByType<EfectoLetrero>(FindObjectsSortMode.None)) b.SetEncendido(false);
     }
 
     void SumarPuntos(int cant) { UIManager.puntosGlobales += cant; if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString(); }
-    IEnumerator EsperarSiguiente() { yield return new WaitForSeconds(2f); ProximoPaso(); }
+    IEnumerator EsperarSiguiente() { yield return new WaitForSeconds(2f); ProximoPasoSiembra(); }
 }
