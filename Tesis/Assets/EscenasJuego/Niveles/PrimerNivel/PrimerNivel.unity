@@ -90128,7 +90128,7 @@ Transform:
   m_GameObject: {fileID: 1735559719}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 29.73, y: 0.020000696, z: 0}
+  m_LocalPosition: {x: -9.27, y: -0.9799993, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -91022,17 +91022,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6307189b7081ca94c9b26f812fa8bb09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRemolacha: {fileID: 980901043704405067, guid: 7183fdf36fa816349b9d8cad0ea90708, type: 3}
-  spriteZanahoria: {fileID: -3829704256182829468, guid: 69655a6125fe7414ab6ac77f106357c5, type: 3}
   spriteRabano: {fileID: 5721182865851055489, guid: 10772d9933d3d9049903185ee294bed4, type: 3}
+  spriteZanahoria: {fileID: -3829704256182829468, guid: 69655a6125fe7414ab6ac77f106357c5, type: 3}
+  spriteRemolacha: {fileID: 980901043704405067, guid: 7183fdf36fa816349b9d8cad0ea90708, type: 3}
   andy: {fileID: 1873500765}
   textoPuntos: {fileID: 209793410}
   lineaAgua: {fileID: 1802465722}
   lineaFija: {fileID: 903374926}
   lupi: {fileID: 191083641}
-  prefabRemolacha: {fileID: 839396964857267429, guid: 11b5bfb101b341147a2eb57aa4ae2ae8, type: 3}
-  prefabZanahoria: {fileID: 839396964857267429, guid: c9c37e0e769a99545925ae1b5e789f5a, type: 3}
   prefabRabano: {fileID: 839396964857267429, guid: f6ddd5f03af1a41419635b3a07c63b53, type: 3}
+  prefabZanahoria: {fileID: 839396964857267429, guid: 8260760e5fced9f4c90a4064489fe448, type: 3}
+  prefabRemolacha: {fileID: 839396964857267429, guid: 29f87ed2cdfe5e848979bb0ab48da8e7, type: 3}
   puntoSalidaHead: {fileID: 501578209}
   puntoEntradaNull: {fileID: 1528405447}
   brilloHead: {fileID: 501578208}
@@ -92557,9 +92557,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1267587922}
-  - {fileID: 1309577390}
   - {fileID: 1975240338}
+  - {fileID: 1309577390}
+  - {fileID: 1267587922}
   m_Father: {fileID: 1318942936}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!156049354 &2046827178

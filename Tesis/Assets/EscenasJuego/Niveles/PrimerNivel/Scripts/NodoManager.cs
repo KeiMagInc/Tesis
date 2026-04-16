@@ -4,8 +4,16 @@ using System.Collections.Generic;
 
 public class NodoManager : MonoBehaviour
 {
+    // Mantenemos estos para compatibilidad con niveles 1, 2, 3 y 4
     public Transform puntoEntrada;
     public Transform puntoSalida;
+
+    // AÑADIMOS estos para el Nivel 5 (Lista Doble)
+    [Header("Referencias Lista Doble (Nivel 5)")]
+    public Transform puntoAnterior;  // LIGAIZQ
+    public Transform puntoDato;      // INFORMACIÓN
+    public Transform puntoSiguiente; // LIGADER
+
     [Header("Ajustes de Velocidad de Eliminación")]
     [Tooltip("Velocidad de reducción del agua (cuadro azul)")]
     public float velocidadAguaEliminar = 4.0f;

@@ -6,10 +6,10 @@ using UnityEngine;
 
 public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
 {
-    [Header("Sprites UI para Nivel 4")]
-    public Sprite spriteRemolacha;
-    public Sprite spriteZanahoria;
+    [Header("Sprites UI")]
     public Sprite spriteRabano;
+    public Sprite spriteZanahoria;
+    public Sprite spriteRemolacha;
 
     public static LogicaNivel5 instancia;
     public AndyController andy;
@@ -18,10 +18,10 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     public LineRenderer lineaFija;
     public Transform lupi;
 
-    [Header("Prefabs Específicos Nivel 4")]
-    public GameObject prefabRemolacha;
-    public GameObject prefabZanahoria;
+    [Header("Prefabs Nivel 5 (Doble)")]
     public GameObject prefabRabano;
+    public GameObject prefabZanahoria;
+    public GameObject prefabRemolacha;
 
     [Header("Conexiones y Brillos Fijos")]
     public Transform puntoSalidaHead;
@@ -30,35 +30,37 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     public EfectoLetrero brilloNull;
 
     private int fase = 0;
-    private int pasoConexion = 0;
+    private int pasoConexion = 0; // 0: Inicio->Dato, 1: Siguiente->Destino, 2: Anterior de la lista->NuevoNodo
     private bool cargandoAgua = false;
 
     private NodoManager managerActual;
     private List<NodoManager> listaNodos = new List<NodoManager>();
-    private string[] nombresNodos = { "Remolacha", "Zanahoria", "Rabano" };
+    private string[] nombresNodos = { "Rabano", "Zanahoria", "Remolacha" };
 
     void Awake() => instancia = this;
 
-    // Reemplaza tu OnEnable por este:
     void OnEnable()
     {
         if (UIManager.instancia == null) return;
 
-        LogicaNivel3 nivel3 = Object.FindAnyObjectByType<LogicaNivel3>();
-        if (nivel3 != null) nivel3.gameObject.SetActive(false);
+        // Desactivar otros niveles por si acaso
+        if (LogicaNivel3.instancia != null) LogicaNivel3.instancia.gameObject.SetActive(false);
+        if (LogicaNivel4.instancia != null) LogicaNivel4.instancia.gameObject.SetActive(false);
 
         instancia = this;
         UIManager.instancia.logicaActiva = this;
-        UIManager.instancia.SetPrefabs(prefabRemolacha, prefabZanahoria, prefabRabano);
 
-        // Agrupamos en arreglos
+        // Configurar Mochila solo con 3 semillas
+        UIManager.instancia.SetPrefabs(prefabRemolacha, prefabZanahoria, prefabRabano);
         Sprite[] imagenes = { spriteRemolacha, spriteZanahoria, spriteRabano };
         string[] nombres = { "Remolacha", "Zanahoria", "Rabano" };
-
         UIManager.instancia.ConfigurarBotonesUI(imagenes, nombres);
 
+        UIManager.instancia.MostrarMochilaSolo(false);
+        UIManager.instancia.MostrarChecklistSolo(false);
+
         ResetearNivel();
-        StartCoroutine(Intro());
+        StartCoroutine(IntroNivel5());
     }
 
     public void ResetearNivel()
@@ -72,87 +74,226 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         if (UIManager.instancia != null)
         {
             UIManager.instancia.ResetBotones();
-            UIManager.instancia.ConfigurarTextosChecklist("Izquierda: sembrar rábano", "Centro: sembrar zanahoria", "Derecha: sembrar remolacha");
+            UIManager.instancia.ConfigurarTextosChecklist(
+                "Izquierda: sembrar rabano",
+                "",
+                "Centro: sembrar zanahoria",
+                "",
+                "Derecha: sembrar remolacha"
+            );
         }
         LimpiarNodosEscena();
+        ApagarBrillosGlobales();
     }
 
-    IEnumerator Intro()
+    IEnumerator IntroNivel5()
     {
         yield return new WaitForSeconds(0.5f);
-        andy.Decir("¡Algoritmo 5.16! Inserción al INICIO de una LISTA DOBLE.");
-        yield return new WaitForSeconds(2.5f);
-        andy.Decir("Siembra la " + nombresNodos[fase]);
+        andy.Decir("¡Algoritmo 5.16! Vamos a crear una LISTA DOBLEMENTE LIGADA.");
+        yield return new WaitForSeconds(3f);
+        andy.Decir("Abre tu mochila para elegir la semilla.");
+
         UIManager.instancia.MostrarMochilaSolo(true);
-        UIManager.instancia.SetSemillaPalpitar(nombresNodos[fase]);
+        // Esperar a que el jugador abra el panel (como en nivel 3 y 4)
+        yield return new WaitUntil(() => UIManager.instancia.panelParcelas.activeSelf);
+
         UIManager.instancia.MostrarChecklistSolo(true);
+        ProximoPaso();
+    }
+
+    void ProximoPaso()
+    {
+        if (fase < nombresNodos.Length)
+        {
+            andy.Decir("Busca la semilla de " + nombresNodos[fase] + " y siémbrala.");
+            UIManager.instancia.SetSemillaPalpitar(nombresNodos[fase]);
+            pasoConexion = 0;
+        }
+    }
+
+    public void AvanceSiembraExitosa()
+    {
+        UIManager.instancia.SetSemillaPalpitar("");
+        StartCoroutine(AsignarNuevoNodo());
+    }
+
+    IEnumerator AsignarNuevoNodo()
+    {
+        yield return new WaitForSeconds(0.2f);
+        foreach (var nm in Object.FindObjectsByType<NodoManager>(FindObjectsSortMode.None))
+        {
+            if (nm.gameObject.name.Contains("(Clone)") && !listaNodos.Contains(nm) && nm != managerActual)
+            {
+                managerActual = nm;
+                break;
+            }
+        }
+
+        if (managerActual != null)
+        {
+            andy.Decir("¡Nodo creado! Según Cairo, primero conectamos el INICIO al DATO.");
+            brilloHead.SetEncendido(true); // Palpita el inicio
+        }
     }
 
     public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
     {
+        // Esta línea te dirá en la Consola de Unity qué está llegando exactamente
+        Debug.Log("Interacción detectada: Tipo=" + tipo + " | Objeto=" + (objetoTocado != null ? objetoTocado.name : "null"));
+
         if (managerActual == null) return;
+        NodoManager managerTocado = objetoTocado != null ? objetoTocado.GetComponentInParent<NodoManager>() : null;
+
+        // Variables de flexibilidad para los nombres de los letreros
+        bool esDato = tipo.Contains("Dato") || tipo.Contains("Entrada");
+        bool esSiguiente = tipo.Contains("Siguiente") || tipo.Contains("Salida");
+        bool esAnterior = tipo.Contains("Anterior") || tipo.Contains("Izquierda");
 
         if (!cargandoAgua)
         {
+            // --- SECCIÓN: RECOGER AGUA ---
+
+            // PASO 0: Recoger del letrero INICIO (Head)
             if (tipo == "Head" && pasoConexion == 0)
             {
                 brilloHead.SetEncendido(false);
                 cargandoAgua = true;
                 EncenderBrilloEnNodo(managerActual.gameObject, "Dato", true);
-                andy.Decir("Lleva el agua al DATO del nuevo nodo.");
+                andy.Decir("Lleva el agua al letrero DATO de la nueva planta.");
             }
-            else if (tipo == "SalidaHuerto" && pasoConexion == 1 && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
+            // PASO 1: Recoger del letrero SIGUIENTE (LIGADER) del nuevo nodo
+            else if (esSiguiente && pasoConexion == 1 && managerTocado == managerActual)
             {
-                EncenderBrilloEnNodo(managerActual.gameObject, "Derecha", false);
+                EncenderBrilloEnNodo(managerActual.gameObject, "Siguiente", false);
                 cargandoAgua = true;
-                pasoConexion = 2;
-                if (fase == 0) brilloNull.SetEncendido(true);
-                else EncenderBrilloEnNodo(listaNodos[0].gameObject, "Dato", true);
-                andy.Decir("Ahora conecta la liga DERECHA (LIGADER).");
+
+                if (fase == 0)
+                {
+                    brilloNull.SetEncendido(true);
+                    andy.Decir("Como es el primer nodo, su liga SIGUIENTE apunta a NULL.");
+                }
+                else
+                {
+                    // Apuntar al que era el antiguo "P" (Inicio actual de la lista)
+                    EncenderBrilloEnNodo(listaNodos[0].gameObject, "Dato", true);
+                    andy.Decir("Conecta el SIGUIENTE de la nueva planta al DATO de la que ya estaba.");
+                }
+            }
+            // PASO 2: Recoger del letrero ANTERIOR (LIGAIZQ) del nodo que ya estaba en la lista
+            else if (esAnterior && pasoConexion == 2 && managerTocado == listaNodos[0])
+            {
+                EncenderBrilloEnNodo(listaNodos[0].gameObject, "Anterior", false);
+                cargandoAgua = true;
+                EncenderBrilloEnNodo(managerActual.gameObject, "Dato", true);
+                andy.Decir("Para terminar la Doble Liga, conecta el ANTERIOR de la vieja planta al DATO de la nueva.");
             }
         }
         else
         {
-            if (tipo == "EntradaHuerto" && pasoConexion == 0 && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
+            // --- SECCIÓN: CONECTAR AGUA ---
+
+            // PASO 0: Conectar al DATO del nuevo nodo
+            if (esDato && pasoConexion == 0 && managerTocado == managerActual)
             {
-                cargandoAgua = false; pasoConexion = 1;
+                cargandoAgua = false;
                 managerActual.ActivarHuerto();
                 EncenderBrilloEnNodo(managerActual.gameObject, "Dato", false);
-                EncenderBrilloEnNodo(managerActual.gameObject, "Derecha", true);
-                andy.Decir("¡Bien! Ahora activa el puntero DERECHO.");
+
+                andy.Decir("¡Bien! Ahora establezcamos la liga derecha (SIGUIENTE).");
+                EncenderBrilloEnNodo(managerActual.gameObject, "Siguiente", true);
+                pasoConexion = 1;
             }
-            else if (pasoConexion == 2)
+            // PASO 1: Conectar la liga derecha (SIGUIENTE -> Destino)
+            else if (pasoConexion == 1)
             {
                 bool exito = false;
                 if (fase == 0 && tipo == "Null") exito = true;
-                else if (fase > 0 && tipo == "EntradaHuerto" && objetoTocado.GetComponentInParent<NodoManager>() == listaNodos[0]) exito = true;
-                if (exito) FinalizarNodo();
+                else if (fase > 0 && esDato && managerTocado == listaNodos[0]) exito = true;
+
+                if (exito)
+                {
+                    cargandoAgua = false;
+                    brilloNull.SetEncendido(false);
+                    if (fase > 0) EncenderBrilloEnNodo(listaNodos[0].gameObject, "Dato", false);
+
+                    // Si no es el primer nodo (fase > 0), aplicamos el concepto de Lista Doble
+                    if (fase > 0)
+                    {
+                        andy.Decir("Ahora la liga izquierda: Toca el letrero ANTERIOR de la planta " + nombresNodos[fase - 1]);
+                        EncenderBrilloEnNodo(listaNodos[0].gameObject, "Anterior", true);
+                        pasoConexion = 2;
+                    }
+                    else
+                    {
+                        FinalizarNodoCompleto();
+                    }
+                }
+            }
+            // PASO 2: Conectar la liga izquierda (ANTERIOR viejo -> DATO nuevo)
+            else if (esDato && pasoConexion == 2 && managerTocado == managerActual)
+            {
+                EncenderBrilloEnNodo(managerActual.gameObject, "Dato", false);
+                FinalizarNodoCompleto();
             }
         }
     }
 
-    void FinalizarNodo()
+    void FinalizarPasoDoble()
     {
-        cargandoAgua = false; SumarPuntos(15);
-        managerActual.DrenarAgua();
-        ApagarBrillosGlobales();
-        UIManager.instancia.MarcarTareaCompletada(fase);
-        listaNodos.Insert(0, managerActual);
-        ActualizarLineaFija();
-        fase++; managerActual = null;
-        if (fase < 3) StartCoroutine(EsperarSiguiente());
-        else andy.Decir("¡Estructura Doble completada!");
+        cargandoAgua = false;
+        brilloNull.SetEncendido(false);
+        if (fase > 0) EncenderBrilloEnNodo(listaNodos[0].gameObject, "Dato", false);
+
+        if (fase > 0)
+        {
+            andy.Decir("¡Lista Doble! Ahora el nodo anterior debe apuntar hacia atrás. Toca ANTERIOR de la " + nombresNodos[fase - 1]);
+            EncenderBrilloEnNodo(listaNodos[0].gameObject, "Anterior", true);
+            pasoConexion = 2;
+        }
+        else FinalizarNodoCompleto();
     }
 
-    void ActualizarLineaFija()
+    void FinalizarNodoCompleto()
+    {
+        cargandoAgua = false;
+        SumarPuntos(20);
+        managerActual.DrenarAgua();
+        ApagarBrillosGlobales();
+
+        UIManager.instancia.MarcarTareaCompletada(fase * 2 == 0 ? 0 : fase * 2); // Ajuste simple para tus slots
+        listaNodos.Insert(0, managerActual);
+
+        ActualizarLineaFijaDoble();
+        fase++;
+        managerActual = null;
+
+        if (fase < 3) StartCoroutine(EsperarSiguiente());
+        else andy.Decir("¡Excelente! Has creado una Estructura Doblemente Ligada.");
+    }
+
+    void ActualizarLineaFijaDoble()
     {
         List<Vector3> camino = new List<Vector3>();
         if (listaNodos.Count == 0) return;
+
         camino.Add(puntoSalidaHead.position);
-        foreach (var n in listaNodos) { camino.Add(n.puntoEntrada.position); camino.Add(n.puntoSalida.position); }
+        // Camino hacia adelante (LIGADER / Siguiente)
+        foreach (var n in listaNodos)
+        {
+            camino.Add(n.puntoEntrada.position);
+            camino.Add(n.puntoSalida.position);
+        }
         camino.Add(puntoEntradaNull.position);
-        for (int i = listaNodos.Count - 1; i >= 0; i--) { camino.Add(listaNodos[i].puntoSalida.position); camino.Add(listaNodos[i].puntoEntrada.position); }
+
+        // Camino hacia atrás (LIGAIZQ / Anterior)
+        for (int i = listaNodos.Count - 1; i >= 0; i--)
+        {
+            // Usamos posiciones ligeramente desplazadas o los mismos puntos para representar la doble liga
+            camino.Add(listaNodos[i].puntoSalida.position);
+            camino.Add(listaNodos[i].puntoEntrada.position);
+        }
         camino.Add(puntoSalidaHead.position);
+
         lineaFija.positionCount = camino.Count;
         lineaFija.SetPositions(camino.ToArray());
     }
@@ -160,38 +301,50 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     void Update()
     {
         if (lupi == null || lineaAgua == null) return;
-        List<Vector3> pts = new List<Vector3>() { puntoSalidaHead.position };
-        if (managerActual != null)
+        List<Vector3> pts = new List<Vector3>();
+
+        if (cargandoAgua)
         {
-            if (pasoConexion == 1) pts.Add(managerActual.puntoEntrada.position);
-            else if (pasoConexion == 2) { pts.Add(managerActual.puntoEntrada.position); pts.Add(managerActual.puntoSalida.position); }
+            Vector3 origen = puntoSalidaHead.position; // Por defecto sale del letrero INICIO
+
+            if (pasoConexion == 1 && managerActual != null)
+                origen = managerActual.puntoSiguiente.position; // Sale de SIGUIENTE
+
+            if (pasoConexion == 2 && listaNodos.Count > 1)
+                origen = listaNodos[1].puntoAnterior.position; // Sale de ANTERIOR del nodo que ya estaba
+
+            pts.Add(origen);
+            pts.Add(lupi.position);
         }
-        if (cargandoAgua) pts.Add(lupi.position);
+
         lineaAgua.positionCount = pts.Count;
         lineaAgua.SetPositions(pts.ToArray());
-    }
-
-    public void AvanceSiembraExitosa() => StartCoroutine(AsignarNuevoNodo());
-
-    IEnumerator AsignarNuevoNodo()
-    {
-        yield return new WaitForSeconds(0.2f);
-        foreach (var nm in Object.FindObjectsByType<NodoManager>(FindObjectsSortMode.None))
-        {
-            if (nm.gameObject.name.Contains("(Clone)") && !listaNodos.Contains(nm)) { managerActual = nm; break; }
-        }
-        if (managerActual != null) { brilloHead.SetEncendido(true); andy.Decir("¡Semilla lista! Recoge agua del INICIO."); }
     }
 
     IEnumerator EsperarSiguiente()
     {
         yield return new WaitForSeconds(2f);
-        andy.Decir("Siguiente: " + nombresNodos[fase]);
-        UIManager.instancia.SetSemillaPalpitar(nombresNodos[fase]);
+        ProximoPaso();
     }
 
-    void EncenderBrilloEnNodo(GameObject n, string p, bool e) { foreach (var b in n.GetComponentsInChildren<EfectoLetrero>(true)) if (b.gameObject.name.ToUpper().Contains(p.ToUpper())) b.SetEncendido(e); }
-    void ApagarBrillosGlobales() { if (brilloHead) brilloHead.SetEncendido(false); if (brilloNull) brilloNull.SetEncendido(false); foreach (var b in Object.FindObjectsByType<EfectoLetrero>(FindObjectsSortMode.None)) b.SetEncendido(false); }
+    void EncenderBrilloEnNodo(GameObject n, string p, bool e)
+    {
+        foreach (var b in n.GetComponentsInChildren<EfectoLetrero>(true))
+            if (b.gameObject.name.ToUpper().Contains(p.ToUpper())) b.SetEncendido(e);
+    }
+
+    void ApagarBrillosGlobales()
+    {
+        if (brilloHead) brilloHead.SetEncendido(false);
+        if (brilloNull) brilloNull.SetEncendido(false);
+        foreach (var b in Object.FindObjectsByType<EfectoLetrero>(FindObjectsSortMode.None)) b.SetEncendido(false);
+    }
+
     void SumarPuntos(int c) { UIManager.puntosGlobales += c; if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString(); }
-    void LimpiarNodosEscena() { foreach (var n in Object.FindObjectsByType<NodoManager>(FindObjectsInactive.Include, FindObjectsSortMode.None)) if (n.name.Contains("(Clone)")) Destroy(n.gameObject); }
+
+    void LimpiarNodosEscena()
+    {
+        foreach (var n in Object.FindObjectsByType<NodoManager>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            if (n.name.Contains("(Clone)")) Destroy(n.gameObject);
+    }
 }
