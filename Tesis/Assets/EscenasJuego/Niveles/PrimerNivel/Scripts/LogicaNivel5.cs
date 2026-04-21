@@ -6,11 +6,6 @@ using UnityEngine;
 
 public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
 {
-    [Header("Sprites UI")]
-    public Sprite spriteRabano;
-    public Sprite spriteZanahoria;
-    public Sprite spriteRemolacha;
-
     public static LogicaNivel5 instancia;
     public AndyController andy;
     public TextMeshProUGUI textoPuntos;
@@ -18,12 +13,15 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     public LineRenderer lineaFija;
     public Transform lupi;
 
-    [Header("Prefabs Nivel 5 (Doble)")]
+    [Header("Prefabs y Sprites")]
     public GameObject prefabRabano;
     public GameObject prefabZanahoria;
     public GameObject prefabRemolacha;
+    public Sprite spriteRabano;
+    public Sprite spriteZanahoria;
+    public Sprite spriteRemolacha;
 
-    [Header("Conexiones y Brillos Fijos")]
+    [Header("Referencias de Escena")]
     public Transform puntoSalidaHead;
     public Transform puntoEntradaNull;
     public EfectoLetrero brilloHead;
@@ -32,30 +30,20 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     private int fase = 0;
     private int pasoConexion = 0;
     private bool cargandoAgua = false;
-
     private NodoManager managerActual;
     private List<NodoManager> listaNodos = new List<NodoManager>();
     private string[] nombresNodos = { "Rabano", "Zanahoria", "Remolacha" };
+    private Transform puntoOrigenActual;
 
     void Awake() => instancia = this;
 
     void OnEnable()
     {
         if (UIManager.instancia == null) return;
-        if (LogicaNivel3.instancia != null) LogicaNivel3.instancia.gameObject.SetActive(false);
-        if (LogicaNivel4.instancia != null) LogicaNivel4.instancia.gameObject.SetActive(false);
-
         instancia = this;
         UIManager.instancia.logicaActiva = this;
-
         UIManager.instancia.SetPrefabs(prefabRabano, prefabZanahoria, prefabRemolacha);
-        Sprite[] imagenes = { spriteRabano, spriteZanahoria, spriteRemolacha };
-        string[] nombres = { "Rabano", "Zanahoria", "Remolacha" };
-        UIManager.instancia.ConfigurarBotonesUI(imagenes, nombres);
-
-        UIManager.instancia.MostrarMochilaSolo(false);
-        UIManager.instancia.MostrarChecklistSolo(false);
-
+        UIManager.instancia.ConfigurarBotonesUI(new Sprite[] { spriteRabano, spriteZanahoria, spriteRemolacha }, nombresNodos);
         ResetearNivel();
         StartCoroutine(IntroNivel5());
     }
@@ -65,18 +53,8 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         fase = 0; pasoConexion = 0; cargandoAgua = false;
         lineaAgua.positionCount = 0; lineaFija.positionCount = 0;
         listaNodos.Clear(); managerActual = null;
-
-        if (UIManager.instancia != null)
-        {
-            UIManager.instancia.ResetBotones();
-            UIManager.instancia.ConfigurarTextosChecklist(
-                "Izquierda: sembrar rabano",
-                "",
-                "Centro: sembrar zanahoria",
-                "",
-                "Derecha: sembrar remolacha"
-            );
-        }
+        UIManager.instancia.ResetBotones();
+        UIManager.instancia.ConfigurarTextosChecklist("Sembrar rabano", "", "Sembrar zanahoria", "", "Sembrar remolacha");
         LimpiarNodosEscena();
         ApagarBrillosGlobales();
     }
@@ -84,9 +62,8 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     IEnumerator IntroNivel5()
     {
         yield return new WaitForSeconds(0.5f);
-        andy.Decir("¡Vamos a crear una LISTA DOBLEMENTE LIGADA insertando nodos al final!");
-        yield return new WaitForSeconds(3.5f);
-        andy.Decir("Abre tu mochila para elegir la semilla.");
+        andy.Decir("¡Algoritmo de Lista Doble! Vamos a insertar al final.");
+        yield return new WaitForSeconds(2.5f);
         UIManager.instancia.MostrarMochilaSolo(true);
         yield return new WaitUntil(() => UIManager.instancia.panelParcelas.activeSelf);
         UIManager.instancia.MostrarChecklistSolo(true);
@@ -97,7 +74,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     {
         if (fase < nombresNodos.Length)
         {
-            andy.Decir("Busca la semilla de " + nombresNodos[fase] + " y siémbrala.");
+            andy.Decir("Siembra la semilla de " + nombresNodos[fase]);
             UIManager.instancia.SetSemillaPalpitar(nombresNodos[fase]);
             pasoConexion = 0;
         }
@@ -106,224 +83,181 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     public void AvanceSiembraExitosa()
     {
         UIManager.instancia.SetSemillaPalpitar("");
-        StartCoroutine(AsignarNuevoNodo());
-    }
+        managerActual = ObtenerNodoReciente();
 
-    IEnumerator AsignarNuevoNodo()
-    {
-        yield return new WaitForSeconds(0.2f);
-        foreach (var nm in Object.FindObjectsByType<NodoManager>(FindObjectsSortMode.None))
+        if (fase == 0)
         {
-            if (nm.gameObject.name.Contains("(Clone)") && !listaNodos.Contains(nm) && nm != managerActual)
-            {
-                managerActual = nm; break;
-            }
+            andy.Decir("Recoge agua del INICIO.");
+            if (brilloHead) brilloHead.SetEncendido(true);
         }
-
-        if (managerActual != null)
+        else
         {
-            managerActual.ActivarHuerto(); // Activamos visualmente
-            if (fase == 0)
-            {
-                andy.Decir("Lleva el inicio al PUNTERO ANTERIOR del rábano.");
-                brilloHead.SetEncendido(true);
-            }
-            else
-            {
-                string viejo = nombresNodos[fase - 1];
-                andy.Decir($"Conecta la SALIDA SIGUIENTE de {viejo} a la ENTRADA ANTERIOR de {nombresNodos[fase]}.");
-                EncenderBrilloEnNodo(listaNodos[fase - 1].gameObject, "Siguiente", true);
-            }
+            andy.Decir("Conecta la SALIDA SIGUIENTE de " + nombresNodos[fase - 1]);
+            EncenderBrilloEnNodo(listaNodos[fase - 1].gameObject, "SalidaSiguiente", true);
         }
     }
 
     public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
     {
-        Debug.Log("Interacción detectada: " + tipo);
         if (managerActual == null) return;
-
-        NodoManager managerTocado = objetoTocado != null ? objetoTocado.GetComponentInParent<NodoManager>() : null;
-        NodoManager nodoAnterior = listaNodos.Count > 0 ? listaNodos[listaNodos.Count - 1] : null;
+        NodoManager nodoTocado = objetoTocado?.GetComponentInParent<NodoManager>();
+        NodoManager nodoPrevio = (fase > 0) ? listaNodos[fase - 1] : null;
 
         if (!cargandoAgua)
         {
-            // === RECOGER AGUA ===
-            if (fase == 0)
+            if (pasoConexion == 0)
             {
-                if (tipo == "Head" && pasoConexion == 0)
-                {
-                    brilloHead.SetEncendido(false); cargandoAgua = true;
-                    EncenderBrilloEnNodo(managerActual.gameObject, "Anterior", true);
-                }
-                else if (tipo == "SalidaSiguiente" && pasoConexion == 1 && managerTocado == managerActual)
-                {
-                    EncenderBrilloEnNodo(managerActual.gameObject, "Siguiente", false);
-                    cargandoAgua = true; brilloNull.SetEncendido(true);
-                    andy.Decir("Ahora conecta la SALIDA SIGUIENTE del rábano hacia NULL.");
-                }
+                if (fase == 0 && tipo == "Head") IniciarCarga(puntoSalidaHead, "EntradaAnterior", managerActual.gameObject);
+                else if (fase > 0 && tipo == "SalidaSiguiente" && nodoTocado == nodoPrevio) IniciarCarga(nodoPrevio.puntoSalidaSiguiente, "EntradaAnterior", managerActual.gameObject);
             }
-            else // Fase 1 (Zanahoria) y Fase 2 (Remolacha)
+            else if (pasoConexion == 1 && fase > 0)
             {
-                if (tipo == "SalidaSiguiente" && pasoConexion == 0 && managerTocado == nodoAnterior)
+                if (tipo == "SalidaAnterior" && nodoTocado == managerActual) IniciarCarga(managerActual.puntoSalidaAnterior, "EntradaSiguiente", nodoPrevio.gameObject);
+            }
+            else if ((fase == 0 && pasoConexion == 1) || (fase > 0 && pasoConexion == 2))
+            {
+                if (tipo == "SalidaSiguiente" && nodoTocado == managerActual)
                 {
-                    EncenderBrilloEnNodo(nodoAnterior.gameObject, "Siguiente", false);
                     cargandoAgua = true;
-                    EncenderBrilloEnNodo(managerActual.gameObject, "Anterior", true);
-                }
-                else if (tipo == "SalidaAnterior" && pasoConexion == 1 && managerTocado == managerActual)
-                {
-                    EncenderBrilloEnNodo(managerActual.gameObject, "Anterior", false);
-                    cargandoAgua = true;
-                    EncenderBrilloEnNodo(nodoAnterior.gameObject, "Siguiente", true);
-                    andy.Decir($"¡Enlace doble! Conecta la SALIDA ANTERIOR de {nombresNodos[fase]} a la ENTRADA SIGUIENTE de {nombresNodos[fase - 1]}.");
-                }
-                else if (tipo == "SalidaSiguiente" && pasoConexion == 2 && managerTocado == managerActual)
-                {
-                    EncenderBrilloEnNodo(managerActual.gameObject, "Siguiente", false);
-                    cargandoAgua = true; brilloNull.SetEncendido(true);
-                    andy.Decir($"Finalmente, conecta la SALIDA SIGUIENTE de {nombresNodos[fase]} a NULL.");
+                    puntoOrigenActual = managerActual.puntoSalidaSiguiente;
+                    if (brilloNull) brilloNull.SetEncendido(true);
+                    andy.Decir("Lleva la salida a NULL.");
                 }
             }
         }
         else
         {
-            // === CONECTAR AGUA ===
-            if (fase == 0)
+            if (pasoConexion == 0 && tipo == "EntradaAnterior" && nodoTocado == managerActual)
             {
-                if (tipo == "EntradaAnterior" && pasoConexion == 0 && managerTocado == managerActual)
+                FinalizarPaso("EntradaAnterior", managerActual.gameObject);
+                managerActual.ActivarHuerto();
+
+                if (fase == 0)
                 {
-                    cargandoAgua = false; pasoConexion = 1;
-                    EncenderBrilloEnNodo(managerActual.gameObject, "Anterior", false);
-                    EncenderBrilloEnNodo(managerActual.gameObject, "Siguiente", true);
-                    andy.Decir("¡Bien! Ve a la SALIDA SIGUIENTE del rábano.");
+                    pasoConexion = 1;
+                    andy.Decir("Ahora conecta la SALIDA SIGUIENTE a NULL.");
+                    EncenderBrilloEnNodo(managerActual.gameObject, "SalidaSiguiente", true);
                 }
-                else if (tipo == "Null" && pasoConexion == 1)
+                else
                 {
-                    FinalizarNodoCompleto();
+                    pasoConexion = 1;
+                    andy.Decir("Ahora la liga hacia atrás: SALIDA ANTERIOR a la ENTRADA SIGUIENTE previa.");
+                    EncenderBrilloEnNodo(managerActual.gameObject, "SalidaAnterior", true);
                 }
             }
-            else // Fase 1 y 2
+            else if (pasoConexion == 1 && fase > 0 && tipo == "EntradaSiguiente" && nodoTocado == nodoPrevio)
             {
-                if (tipo == "EntradaAnterior" && pasoConexion == 0 && managerTocado == managerActual)
-                {
-                    cargandoAgua = false; pasoConexion = 1;
-                    EncenderBrilloEnNodo(managerActual.gameObject, "Anterior", false);
-                    EncenderBrilloEnNodo(managerActual.gameObject, "Anterior", true); // Brillo en la salida anterior
-                    andy.Decir($"Ve a la SALIDA ANTERIOR de {nombresNodos[fase]}.");
-                }
-                else if (tipo == "EntradaSiguiente" && pasoConexion == 1 && managerTocado == nodoAnterior)
-                {
-                    cargandoAgua = false; pasoConexion = 2;
-                    EncenderBrilloEnNodo(nodoAnterior.gameObject, "Siguiente", false);
-                    EncenderBrilloEnNodo(managerActual.gameObject, "Siguiente", true);
-                    andy.Decir($"Por último, ve a la SALIDA SIGUIENTE de {nombresNodos[fase]}.");
-                }
-                else if (tipo == "Null" && pasoConexion == 2)
-                {
-                    FinalizarNodoCompleto();
-                }
+                FinalizarPaso("EntradaSiguiente", nodoPrevio.gameObject);
+                pasoConexion = 2;
+                andy.Decir("Bien. Cierra el nodo llevando la SALIDA SIGUIENTE a NULL.");
+                EncenderBrilloEnNodo(managerActual.gameObject, "SalidaSiguiente", true);
+            }
+            else if (tipo == "Null")
+            {
+                FinalizarNodoCompleto();
             }
         }
+    }
+
+    void IniciarCarga(Transform origen, string proximoBrillo, GameObject nodoDestino)
+    {
+        if (origen == null) { Debug.LogError("Origen de agua no asignado en el Inspector."); return; }
+        cargandoAgua = true;
+        puntoOrigenActual = origen;
+        ApagarBrillosGlobales();
+        EncenderBrilloEnNodo(nodoDestino, proximoBrillo, true);
+    }
+
+    void FinalizarPaso(string brilloApagar, GameObject nodo)
+    {
+        cargandoAgua = false;
+        puntoOrigenActual = null;
+        SumarPuntos(10);
+        EncenderBrilloEnNodo(nodo, brilloApagar, false);
     }
 
     void FinalizarNodoCompleto()
     {
         cargandoAgua = false;
+        puntoOrigenActual = null;
+        if (brilloNull) brilloNull.SetEncendido(false);
         SumarPuntos(20);
         managerActual.DrenarAgua();
-        ApagarBrillosGlobales();
-
-        UIManager.instancia.MarcarTareaCompletada(fase * 2 == 0 ? 0 : fase * 2);
-        listaNodos.Add(managerActual); // Inserción AL FINAL de la lista
-
+        listaNodos.Add(managerActual);
+        UIManager.instancia.MarcarTareaCompletada(fase * 2);
         ActualizarLineaFijaDoble();
         fase++;
         managerActual = null;
-
         if (fase < 3) StartCoroutine(EsperarSiguiente());
-        else andy.Decir("¡Excelente! Has creado una Estructura Doblemente Ligada insertando al final.");
-    }
-
-    void ActualizarLineaFijaDoble()
-    {
-        if (listaNodos.Count == 0) return;
-        List<Vector3> camino = new List<Vector3>();
-
-        // Dibujamos el recorrido principal de ida y vuelta para simular la doble liga
-        camino.Add(puntoSalidaHead.position);
-
-        // Ida
-        for (int i = 0; i < listaNodos.Count; i++)
-        {
-            camino.Add(listaNodos[i].puntoEntradaAnterior.position);
-            camino.Add(listaNodos[i].puntoSalidaSiguiente.position);
-        }
-        camino.Add(puntoEntradaNull.position);
-
-        // Vuelta
-        for (int i = listaNodos.Count - 1; i > 0; i--)
-        {
-            camino.Add(listaNodos[i].puntoSalidaAnterior.position);
-            camino.Add(listaNodos[i - 1].puntoEntradaSiguiente.position);
-        }
-
-        lineaFija.positionCount = camino.Count;
-        lineaFija.SetPositions(camino.ToArray());
+        else andy.Decir("¡Lista Doblemente Ligada completada!");
     }
 
     void Update()
     {
-        if (lupi == null || lineaAgua == null) return;
-        List<Vector3> pts = new List<Vector3>();
-
-        if (cargandoAgua && managerActual != null)
+        if (cargandoAgua && puntoOrigenActual != null)
         {
-            Vector3 origen = puntoSalidaHead.position;
+            lineaAgua.positionCount = 2;
+            lineaAgua.SetPosition(0, puntoOrigenActual.position);
+            lineaAgua.SetPosition(1, lupi.position);
+        }
+        else lineaAgua.positionCount = 0;
+    }
 
-            if (fase == 0)
-            {
-                if (pasoConexion == 1) origen = managerActual.puntoSalidaSiguiente.position;
-            }
-            else
-            {
-                NodoManager anterior = listaNodos[listaNodos.Count - 1];
-                if (pasoConexion == 0) origen = anterior.puntoSalidaSiguiente.position;
-                if (pasoConexion == 1) origen = managerActual.puntoSalidaAnterior.position;
-                if (pasoConexion == 2) origen = managerActual.puntoSalidaSiguiente.position;
-            }
+    void ActualizarLineaFijaDoble()
+    {
+        List<Vector3> cam = new List<Vector3>();
+        if (puntoSalidaHead) cam.Add(puntoSalidaHead.position);
 
-            pts.Add(origen);
-            pts.Add(lupi.position);
+        for (int i = 0; i < listaNodos.Count; i++)
+        {
+            // Protección contra Nulos
+            if (listaNodos[i].puntoEntradaAnterior) cam.Add(listaNodos[i].puntoEntradaAnterior.position);
+            if (listaNodos[i].puntoSalidaSiguiente) cam.Add(listaNodos[i].puntoSalidaSiguiente.position);
         }
 
-        lineaAgua.positionCount = pts.Count;
-        lineaAgua.SetPositions(pts.ToArray());
+        if (puntoEntradaNull) cam.Add(puntoEntradaNull.position);
+
+        for (int i = listaNodos.Count - 1; i > 0; i--)
+        {
+            if (listaNodos[i].puntoSalidaAnterior) cam.Add(listaNodos[i].puntoSalidaAnterior.position);
+            if (listaNodos[i - 1].puntoEntradaSiguiente) cam.Add(listaNodos[i - 1].puntoEntradaSiguiente.position);
+        }
+        lineaFija.positionCount = cam.Count;
+        lineaFija.SetPositions(cam.ToArray());
     }
 
-    IEnumerator EsperarSiguiente()
+    private NodoManager ObtenerNodoReciente()
     {
-        yield return new WaitForSeconds(2f);
-        ProximoPaso();
+        foreach (var nm in Object.FindObjectsByType<NodoManager>(FindObjectsSortMode.None))
+            if (nm.gameObject.name.Contains("(Clone)") && !listaNodos.Contains(nm)) return nm;
+        return null;
     }
 
-    void EncenderBrilloEnNodo(GameObject n, string palabra, bool encender)
+    void EncenderBrilloEnNodo(GameObject n, string identificadorBuscado, bool estado)
     {
-        foreach (var b in n.GetComponentsInChildren<EfectoLetrero>(true))
-            if (b.gameObject.name.ToUpper().Contains(palabra.ToUpper())) b.SetEncendido(encender);
+        if (n == null) return;
+        // Buscamos todos los Triggers en el nodo
+        TriggerConexion[] triggers = n.GetComponentsInChildren<TriggerConexion>(true);
+        foreach (var t in triggers)
+        {
+            // Si el identificador del script coincide con lo que buscamos
+            if (t.identificador.Equals(identificadorBuscado, System.StringComparison.OrdinalIgnoreCase))
+            {
+                // Encendemos el EfectoLetrero que esté en ese mismo objeto
+                EfectoLetrero ef = t.GetComponent<EfectoLetrero>();
+                if (ef != null) ef.SetEncendido(estado);
+            }
+        }
     }
 
     void ApagarBrillosGlobales()
     {
         if (brilloHead) brilloHead.SetEncendido(false);
         if (brilloNull) brilloNull.SetEncendido(false);
-        foreach (var b in Object.FindObjectsByType<EfectoLetrero>(FindObjectsSortMode.None)) b.SetEncendido(false);
+        foreach (var ef in Object.FindObjectsByType<EfectoLetrero>(FindObjectsSortMode.None)) ef.SetEncendido(false);
     }
 
     void SumarPuntos(int c) { UIManager.puntosGlobales += c; if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString(); }
-
-    void LimpiarNodosEscena()
-    {
-        foreach (var n in Object.FindObjectsByType<NodoManager>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-            if (n.name.Contains("(Clone)")) Destroy(n.gameObject);
-    }
+    void LimpiarNodosEscena() { foreach (var n in Object.FindObjectsByType<NodoManager>(FindObjectsInactive.Include, FindObjectsSortMode.None)) if (n.name.Contains("(Clone)")) Destroy(n.gameObject); }
+    IEnumerator EsperarSiguiente() { yield return new WaitForSeconds(2f); ProximoPaso(); }
 }

@@ -10,23 +10,18 @@ public class UIManager : MonoBehaviour
     public static UIManager instancia;
     public ILogicaNivel logicaActiva;
     public static int puntosGlobales = 0;
-
     [Header("Referencias de UI")]
     public CanvasGroup groupChecklist;
     public CanvasGroup groupIconoMochila;
     public GameObject panelParcelas;
     public AndyController andy;
-
     [Header("Mochila (Arrastra los 6 botones aquí)")]
     public Button[] botonesSemillas;
-
     [Header("Checklist")]
     public TextMeshProUGUI[] itemsChecklist;
-
     [Header("Configuración Lupi")]
     public Transform playerLupi;
     public float distanciaParaEncajar = 5.0f;
-
     private string[] nombresLogicosActuales = new string[6];
     private GameObject[] prefabsActuales = new GameObject[6];
     private Vector3[] escalasOriginales;
@@ -37,11 +32,8 @@ public class UIManager : MonoBehaviour
     {
         instancia = this;
         ColorUtility.TryParseHtmlString("#028A0F", out colorVerdeMilitar);
-
-        // Inicializamos los arreglos de datos para evitar errores de índice
         nombresLogicosActuales = new string[botonesSemillas.Length];
         prefabsActuales = new GameObject[botonesSemillas.Length];
-
         escalasOriginales = new Vector3[botonesSemillas.Length];
         for (int i = 0; i < botonesSemillas.Length; i++)
         {
@@ -56,7 +48,6 @@ public class UIManager : MonoBehaviour
         MostrarChecklistSolo(mostrar);
     }
 
-    // REEMPLAZA ESTA FUNCIÓN: Ahora acepta un número variable de prefabs
     public void SetPrefabs(params GameObject[] prefabs)
     {
         System.Array.Clear(prefabsActuales, 0, prefabsActuales.Length);
@@ -66,20 +57,16 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // REEMPLAZA ESTA FUNCIÓN: Ahora acepta arreglos de sprites y nombres
     public void ConfigurarBotonesUI(Sprite[] imgs, string[] noms)
     {
         ConfigurarMochila(imgs, noms, prefabsActuales);
     }
 
-    // FUNCIÓN MEJORADA: Ahora es a prueba de errores de índice
     public void ConfigurarMochila(Sprite[] imagenes, string[] nombres, GameObject[] prefabs)
     {
         for (int i = 0; i < botonesSemillas.Length; i++)
         {
             if (botonesSemillas[i] == null) continue;
-
-            // SEGURIDAD: Solo entramos si el índice 'i' existe en TODOS los arreglos recibidos
             if (i < imagenes.Length && i < nombres.Length && i < prefabs.Length)
             {
                 if (imagenes[i] != null)
@@ -94,7 +81,6 @@ public class UIManager : MonoBehaviour
             }
             else
             {
-                // Si el nivel no tiene tantas semillas, apagamos el botón sobrante
                 botonesSemillas[i].gameObject.SetActive(false);
             }
         }
@@ -116,11 +102,9 @@ public class UIManager : MonoBehaviour
             andy.Decir("¡Usa la " + semillaActiva + " primero!");
             return;
         }
-
         ZonaPlantado[] zonas = Object.FindObjectsByType<ZonaPlantado>(FindObjectsSortMode.None);
         ZonaPlantado masCercana = null;
         float dMin = float.MaxValue;
-
         foreach (var z in zonas)
         {
             if (z.tipoDeSemillaPermitida.ToLower().Contains(tipo.ToLower()) && !z.estaOcupada)
@@ -129,7 +113,6 @@ public class UIManager : MonoBehaviour
                 if (d < dMin) { dMin = d; masCercana = z; }
             }
         }
-
         if (masCercana != null && dMin <= distanciaParaEncajar)
         {
             if (prefabsActuales[indice] != null)
@@ -146,17 +129,14 @@ public class UIManager : MonoBehaviour
 
     public void ConfigurarTextosChecklist(params string[] textos)
     {
-        // 1. Apagamos y vaciamos TODO
         for (int i = 0; i < itemsChecklist.Length; i++)
         {
             if (itemsChecklist[i] != null)
             {
-                itemsChecklist[i].text = ""; // Vaciamos el texto
-                itemsChecklist[i].gameObject.SetActive(false); // Apagamos el objeto
+                itemsChecklist[i].text = ""; 
+                itemsChecklist[i].gameObject.SetActive(false); 
             }
         }
-
-        // 2. Encendemos solo lo que recibimos
         for (int i = 0; i < textos.Length && i < itemsChecklist.Length; i++)
         {
             if (itemsChecklist[i] != null && !string.IsNullOrEmpty(textos[i]))
@@ -164,8 +144,6 @@ public class UIManager : MonoBehaviour
                 itemsChecklist[i].gameObject.SetActive(true);
                 itemsChecklist[i].text = textos[i];
                 itemsChecklist[i].color = Color.black;
-
-                // Log para debug: saber qué estamos encendiendo
                 Debug.Log($"Checklist: Encendiendo Slot {i} con texto: {textos[i]}");
             }
         }
