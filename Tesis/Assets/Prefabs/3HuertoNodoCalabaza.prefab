@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 668096943620094687}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.75, y: -0.75, z: 0}
+  m_LocalPosition: {x: -1.75, y: 0, z: 0}
   m_LocalScale: {x: 5, y: 5, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -76,7 +76,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.5, y: 0.5}
+  m_Size: {x: 0.5, y: 1}
   m_EdgeRadius: 0
 --- !u!1 &776164675174373067
 GameObject:
@@ -265,6 +265,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   puntoEntrada: {fileID: 2250400793531471313}
   puntoSalida: {fileID: 6174649838750680848}
+  puntoAnterior: {fileID: 0}
+  puntoDato: {fileID: 0}
+  puntoSiguiente: {fileID: 0}
+  velocidadAguaEliminar: 4
+  velocidadEncogidoFinal: 5
   cuadroAgua: {fileID: 4204604788392367696}
   escalaMinima: {x: 1, y: 1, z: 0}
   escalaMaxima: {x: 6, y: 6, z: 0}
@@ -1079,11 +1084,21 @@ Tilemap:
   m_GameObject: {fileID: 4058723725317039945}
   m_Enabled: 1
   m_Tiles:
+  - first: {x: -13, y: -9, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 31
+      m_TileSpriteIndex: 37
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
   - first: {x: -12, y: -9, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 37
-      m_TileSpriteIndex: 37
+      m_TileIndex: 33
+      m_TileSpriteIndex: 33
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -1109,11 +1124,21 @@ Tilemap:
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741825
+  - first: {x: -13, y: -8, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 34
+      m_TileSpriteIndex: 34
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
   - first: {x: -13, y: -7, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 32
-      m_TileSpriteIndex: 32
+      m_TileIndex: 34
+      m_TileSpriteIndex: 34
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -1263,20 +1288,20 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 2
-    m_Data: {fileID: 11400000, guid: 3b4a90aa1133b3a44ae3648a83e80728, type: 2}
   - m_RefCount: 1
-    m_Data: {fileID: 11400000, guid: f5855130c44a5bc4f86bf0c7ac8676e3, type: 2}
+    m_Data: {fileID: 11400000, guid: 34c7b9e759c374f4297446c3a773cade, type: 2}
+  - m_RefCount: 1
+    m_Data: {fileID: 11400000, guid: 3b4a90aa1133b3a44ae3648a83e80728, type: 2}
   - m_RefCount: 2
+    m_Data: {fileID: 11400000, guid: f5855130c44a5bc4f86bf0c7ac8676e3, type: 2}
+  - m_RefCount: 4
     m_Data: {fileID: 11400000, guid: ef072275ea254704ba34f1c2bfe6a918, type: 2}
   - m_RefCount: 1
     m_Data: {fileID: 11400000, guid: f94a2f804e840764f9c00ce31e67d663, type: 2}
   - m_RefCount: 1
     m_Data: {fileID: 11400000, guid: 3241f8865d08dcb4b8de4f414a02a97e, type: 2}
-  - m_RefCount: 1
-    m_Data: {fileID: 11400000, guid: 6d1472613846f024cb84dfb86e153187, type: 2}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 3
     m_Data: {fileID: 11400000, guid: 6f136e033f12501409e53b7470329fb4, type: 2}
   - m_RefCount: 1
@@ -1346,24 +1371,24 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 2
-    m_Data: {fileID: 5279349232238883422, guid: 73a56813e8cdd784096eacf64b5a9f83, type: 3}
   - m_RefCount: 1
-    m_Data: {fileID: -9148145757416460974, guid: 73a56813e8cdd784096eacf64b5a9f83, type: 3}
+    m_Data: {fileID: 5279349232238883422, guid: 73a56813e8cdd784096eacf64b5a9f83, type: 3}
   - m_RefCount: 2
+    m_Data: {fileID: -9148145757416460974, guid: 73a56813e8cdd784096eacf64b5a9f83, type: 3}
+  - m_RefCount: 4
     m_Data: {fileID: -4086278587231816967, guid: 73a56813e8cdd784096eacf64b5a9f83, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: -6151629706196081924, guid: 73a56813e8cdd784096eacf64b5a9f83, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: 5819271524585048507, guid: 73a56813e8cdd784096eacf64b5a9f83, type: 3}
   - m_RefCount: 1
-    m_Data: {fileID: -2001942902276615501, guid: 73a56813e8cdd784096eacf64b5a9f83, type: 3}
+    m_Data: {fileID: 8271573990385750617, guid: 73a56813e8cdd784096eacf64b5a9f83, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: 6002208470786643057, guid: 73a56813e8cdd784096eacf64b5a9f83, type: 3}
   - m_RefCount: 3
     m_Data: {fileID: 4972642590468337107, guid: 73a56813e8cdd784096eacf64b5a9f83, type: 3}
   m_TileMatrixArray:
-  - m_RefCount: 12
+  - m_RefCount: 14
     m_Data:
       e00: 1
       e01: 0
@@ -1382,7 +1407,7 @@ Tilemap:
       e32: 0
       e33: 1
   m_TileColorArray:
-  - m_RefCount: 12
+  - m_RefCount: 14
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
@@ -1757,7 +1782,7 @@ GameObject:
   - component: {fileID: 811412054768166380}
   - component: {fileID: 2425883285927305870}
   m_Layer: 5
-  m_Name: LetreroDato
+  m_Name: LetreroInfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1969,7 +1994,7 @@ GameObject:
   - component: {fileID: 5605385588254008328}
   - component: {fileID: 7287603277903203338}
   m_Layer: 5
-  m_Name: Puntero
+  m_Name: Liga
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2022,7 +2047,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'PUNTERO
+  m_text: 'LIGA
 
 
 '
@@ -2052,8 +2077,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 12
-  m_fontSizeBase: 12
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2129,7 +2154,7 @@ GameObject:
   - component: {fileID: 5178196964421556645}
   - component: {fileID: 4340155289113492184}
   m_Layer: 5
-  m_Name: LetreroPuntero
+  m_Name: LetreroLiga
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2310,7 +2335,7 @@ GameObject:
   - component: {fileID: 4829586008210179056}
   - component: {fileID: 5009856839938909321}
   m_Layer: 5
-  m_Name: Dato
+  m_Name: Info
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2363,7 +2388,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'DATO
+  m_text: 'INFO
 
 
 '
@@ -2393,8 +2418,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 12
-  m_fontSizeBase: 12
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

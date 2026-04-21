@@ -25,8 +25,8 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
 
     [Header("Efectos")]
     public EfectoLetrero brilloInicio;
-    public EfectoLetrero brilloDato;
-    public EfectoLetrero brilloPuntero;
+    public EfectoLetrero brilloInfo;
+    public EfectoLetrero brilloLiga;
     public EfectoLetrero brilloNull;
 
     public NodoManager huertoScript;
@@ -98,7 +98,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         {
             estado = 1; GanarPuntos(10);
             ActualizarBrillos(false, true, false, false);
-            andy.Decir("¡Dirección obtenida de P! Llévala al campo DATO.");
+            andy.Decir("¡Dirección obtenida de P! Llévala al campo INFO.");
         }
     }
 
@@ -110,7 +110,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
             if (huertoScript) huertoScript.ActivarHuerto();
             GanarPuntos(10);
             ActualizarBrillos(false, false, true, false);
-            andy.Decir("¡Campo INFO asignado! Activa el PUNTERO.");
+            andy.Decir("¡Campo INFO asignado! Activa el LIGA.");
         }
     }
 
@@ -150,8 +150,8 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     void ActualizarBrillos(bool ini, bool dat, bool pun, bool nul)
     {
         if (brilloInicio) brilloInicio.SetEncendido(ini);
-        if (brilloDato) brilloDato.SetEncendido(dat);
-        if (brilloPuntero) brilloPuntero.SetEncendido(pun);
+        if (brilloInfo) brilloInfo.SetEncendido(dat);
+        if (brilloLiga) brilloLiga.SetEncendido(pun);
         if (brilloNull) brilloNull.SetEncendido(nul);
     }
 

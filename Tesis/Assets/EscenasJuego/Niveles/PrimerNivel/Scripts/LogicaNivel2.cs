@@ -125,11 +125,11 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
             lineaAgua.positionCount = 2;
             lineaAgua.SetPosition(0, puntoSalidaHead.position);
             brilloHead.SetEncendido(false);
-            andy.Decir("Lleva el flujo al DATO.");
+            andy.Decir("Lleva el flujo a la INFO.");
 
-            // BUSCAMOS EL NODO CLONADO PARA ENCENDER SU DATO
+            // BUSCAMOS EL NODO CLONADO PARA ENCENDER SU Info
             GameObject huerto = BuscarHuerto();
-            if (huerto != null) EncenderBrilloHijo(huerto, "Dato", true);
+            if (huerto != null) EncenderBrilloHijo(huerto, "Info", true);
         }
         else if (tipo == "EntradaHuerto" && cargandoAgua)
         {
@@ -139,16 +139,16 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
             managerActual.ActivarHuerto();
             pasoConexion = 1;
             SumarPuntos(10);
-            EncenderBrilloHijo(managerActual.gameObject, "Dato", false);
-            EncenderBrilloHijo(managerActual.gameObject, "Puntero", true);
-            andy.Decir("Activa el PUNTERO.");
+            EncenderBrilloHijo(managerActual.gameObject, "Info", false);
+            EncenderBrilloHijo(managerActual.gameObject, "Liga", true);
+            andy.Decir("Activa la LIGA.");
         }
         else if (tipo == "SalidaHuerto" && pasoConexion == 1)
         {
             cargandoAgua = true;
             lineaAgua.positionCount = 4;
             lineaAgua.SetPosition(2, managerActual.puntoSalida.position);
-            EncenderBrilloHijo(managerActual.gameObject, "Puntero", false);
+            EncenderBrilloHijo(managerActual.gameObject, "Liga", false);
             brilloNull.SetEncendido(true);
             pasoConexion = 2;
             andy.Decir("Apunta a NULL.");
@@ -192,7 +192,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         if (!r) return;
         foreach (var b in r.GetComponentsInChildren<EfectoLetrero>(true))
         {
-            // Convierte ambos a Mayúsculas para que "dato" y "Dato" sean lo mismo
+            // Convierte ambos a Mayúsculas para que "Info" y "Info" sean lo mismo
             if (b.gameObject.name.ToUpper().Contains(n.ToUpper()))
                 b.SetEncendido(e);
         }

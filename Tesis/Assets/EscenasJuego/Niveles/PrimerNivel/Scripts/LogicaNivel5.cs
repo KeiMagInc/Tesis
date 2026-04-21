@@ -43,17 +43,16 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     {
         if (UIManager.instancia == null) return;
 
-        // Desactivar otros niveles por si acaso
         if (LogicaNivel3.instancia != null) LogicaNivel3.instancia.gameObject.SetActive(false);
         if (LogicaNivel4.instancia != null) LogicaNivel4.instancia.gameObject.SetActive(false);
 
         instancia = this;
         UIManager.instancia.logicaActiva = this;
 
-        // Configurar Mochila solo con 3 semillas
-        UIManager.instancia.SetPrefabs(prefabRemolacha, prefabZanahoria, prefabRabano);
-        Sprite[] imagenes = { spriteRemolacha, spriteZanahoria, spriteRabano };
-        string[] nombres = { "Remolacha", "Zanahoria", "Rabano" };
+        // ORDEN CORRECTO: Rabano (0), Zanahoria (1), Remolacha (2)
+        UIManager.instancia.SetPrefabs(prefabRabano, prefabZanahoria, prefabRemolacha);
+        Sprite[] imagenes = { spriteRabano, spriteZanahoria, spriteRemolacha };
+        string[] nombres = { "Rabano", "Zanahoria", "Remolacha" };
         UIManager.instancia.ConfigurarBotonesUI(imagenes, nombres);
 
         UIManager.instancia.MostrarMochilaSolo(false);
@@ -305,13 +304,14 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
 
         if (cargandoAgua)
         {
-            Vector3 origen = puntoSalidaHead.position; // Por defecto sale del letrero INICIO
+            Vector3 origen = puntoSalidaHead.position;
 
-            if (pasoConexion == 1 && managerActual != null)
-                origen = managerActual.puntoSiguiente.position; // Sale de SIGUIENTE
+            // Verificamos que managerActual y sus puntos NO sean nulos antes de usarlos
+            if (pasoConexion == 1 && managerActual != null && managerActual.puntoSiguiente != null)
+                origen = managerActual.puntoSiguiente.position;
 
-            if (pasoConexion == 2 && listaNodos.Count > 1)
-                origen = listaNodos[1].puntoAnterior.position; // Sale de ANTERIOR del nodo que ya estaba
+            if (pasoConexion == 2 && listaNodos.Count > 1 && listaNodos[1].puntoAnterior != null)
+                origen = listaNodos[1].puntoAnterior.position;
 
             pts.Add(origen);
             pts.Add(lupi.position);

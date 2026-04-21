@@ -158,8 +158,8 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         }
         else if (modoActual == ModoOperacion.EliminarFinal)
         {
-            andy.Decir("Toca el PUNTERO del Trigo. Vamos a desconectar el último NODO de la lista.");
-            EncenderBrilloEnNodo(listaNodos[1].gameObject, "Puntero", true);
+            andy.Decir("Toca el LIGA del Trigo. Vamos a desconectar el último NODO de la lista.");
+            EncenderBrilloEnNodo(listaNodos[1].gameObject, "Liga", true);
         }
         pasoConexion = 0;
     }
@@ -206,15 +206,15 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         {
             brilloHead.SetEncendido(false);
             cargandoAgua = true;
-            andy.Decir("Conecta el INICIO directamente al DATO del Trigo. Así saltaremos la Calabaza.");
-            EncenderBrilloEnNodo(listaNodos[1].gameObject, "Dato", true);
+            andy.Decir("Conecta el INICIO directamente a la INFO del Trigo. Así saltaremos la Calabaza.");
+            EncenderBrilloEnNodo(listaNodos[1].gameObject, "Info", true);
         }
         else if (tipo == "EntradaHuerto" && cargandoAgua)
         {
             if (objetoTocado.GetComponentInParent<NodoManager>() == listaNodos[1])
             {
                 cargandoAgua = false;
-                EncenderBrilloEnNodo(listaNodos[1].gameObject, "Dato", false);
+                EncenderBrilloEnNodo(listaNodos[1].gameObject, "Info", false);
                 andy.Decir("¡Bien! Al quitarle el agua desaparecerá de la lista.");
                 StartCoroutine(SecuenciaEliminacionExitosa(0));
             }
@@ -227,10 +227,10 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         {
             if (objetoTocado.GetComponentInParent<NodoManager>() == listaNodos[1])
             {
-                EncenderBrilloEnNodo(listaNodos[1].gameObject, "Puntero", false);
+                EncenderBrilloEnNodo(listaNodos[1].gameObject, "Liga", false);
                 cargandoAgua = true;
                 brilloNull.SetEncendido(true);
-                andy.Decir("Lleva el PUNTERO del Trigo hacia NULL. Esto dejará a la Papa fuera de la lista.");
+                andy.Decir("Lleva el LIGA del Trigo hacia NULL. Esto dejará a la Papa fuera de la lista.");
             }
         }
         else if (tipo == "Null" && cargandoAgua)
@@ -406,7 +406,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         {
             puntosCadenaFija.Add(puntoSalidaHead.position);
             puntosCadenaFija.Add(listaNodos[1].puntoEntrada.position); // Trigo
-            puntosCadenaFija.Add(listaNodos[1].puntoSalida.position);  // Puntero Trigo
+            puntosCadenaFija.Add(listaNodos[1].puntoSalida.position);  // Liga Trigo
             puntosCadenaFija.Add(puntoEntradaNull.position);          // Hacia el NULL final
         }
 
@@ -465,20 +465,20 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             {
                 if (tipo == "SalidaHuerto")
                 {
-                    andy.Decir("¡No! El INICIO debe conectarse al DATO (izquierda) para entrar al NODO.");
+                    andy.Decir("¡No! El INICIO debe conectarse a la INFO (izquierda) para entrar al NODO.");
                     return;
                 }
 
-                // Verificamos si tocamos el DATO del nodo actual
+                // Verificamos si tocamos el Info del nodo actual
                 if (tipo == "EntradaHuerto" && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
                 {
-                    EncenderBrilloEnNodo(managerActual.gameObject, "Dato", false);
+                    EncenderBrilloEnNodo(managerActual.gameObject, "Info", false);
                     managerActual.ActivarHuerto();
                     SumarPuntos(10);
                     cargandoAgua = false;
                     pasoConexion = 1;
-                    EncenderBrilloEnNodo(managerActual.gameObject, "Puntero", true);
-                    andy.Decir("¡Muy bien! Ahora activa su PUNTERO.");
+                    EncenderBrilloEnNodo(managerActual.gameObject, "Liga", true);
+                    andy.Decir("¡Muy bien! Ahora activa su LIGA.");
                 }
             }
             else if (pasoConexion == 2) // El agua va hacia el siguiente
@@ -493,16 +493,16 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             {
                 brilloHead.SetEncendido(false);
                 cargandoAgua = true;
-                EncenderBrilloEnNodo(managerActual.gameObject, "Dato", true);
-                andy.Decir("Lleva el agua al DATO de la planta nueva.");
+                EncenderBrilloEnNodo(managerActual.gameObject, "Info", true);
+                andy.Decir("Lleva el agua al INFO de la planta nueva.");
             }
             else if (tipo == "SalidaHuerto" && pasoConexion == 1 && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
             {
-                EncenderBrilloEnNodo(managerActual.gameObject, "Puntero", false);
+                EncenderBrilloEnNodo(managerActual.gameObject, "Liga", false);
                 cargandoAgua = true;
                 pasoConexion = 2;
                 if (fase == 0) brilloNull.SetEncendido(true);
-                else EncenderBrilloEnNodo(managerAnterior.gameObject, "Dato", true);
+                else EncenderBrilloEnNodo(managerAnterior.gameObject, "Info", true);
             }
         }
     }
@@ -513,34 +513,34 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
 
         if (cargandoAgua)
         {
-            if (pasoConexion == 0) // Viene del Head o del Puntero anterior
+            if (pasoConexion == 0) // Viene del Head o del Liga anterior
             {
                 // BLOQUEO: Si intenta entrar por la salida
                 if (tipo == "SalidaHuerto" && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
                 {
-                    andy.Decir("¡Error! El flujo de la lista debe entrar por el DATO (izquierda) del nuevo nodo.");
+                    andy.Decir("¡Error! El flujo de la lista debe entrar por la INFO (izquierda) del nuevo nodo.");
                     return;
                 }
 
                 if (tipo == "EntradaHuerto" && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
                 {
-                    EncenderBrilloEnNodo(managerActual.gameObject, "Dato", false);
+                    EncenderBrilloEnNodo(managerActual.gameObject, "Info", false);
                     managerActual.ActivarHuerto();
                     SumarPuntos(10);
                     cargandoAgua = false;
                     pasoConexion = 1;
-                    EncenderBrilloEnNodo(managerActual.gameObject, "Puntero", true);
-                    andy.Decir("¡Bien! Ahora lleva el PUNTERO de esta nueva planta hacia NULL.");
+                    EncenderBrilloEnNodo(managerActual.gameObject, "Liga", true);
+                    andy.Decir("¡Bien! Ahora lleva a la LIGA de esta nueva planta hacia NULL.");
                 }
                 else
                 {
-                    andy.Decir("Conecta la manguera al letrero de DATO (izquierdo) de la nueva planta.");
+                    andy.Decir("Conecta la manguera al letrero de INFO (izquierdo) de la nueva planta.");
                 }
             }
             else if (pasoConexion == 2) // El agua va hacia NULL
             {
                 if (tipo == "Null") FinalizarNodo();
-                else andy.Decir("Como es el final de la lista, el PUNTERO debe ir a NULL.");
+                else andy.Decir("Como es el final de la lista, la LIGA debe ir a NULL.");
             }
         }
         else // RECOGER AGUA
@@ -554,17 +554,17 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 }
                 else if (fase > 0 && tipo == "SalidaHuerto" && objetoTocado.GetComponentInParent<NodoManager>() == managerAnterior)
                 {
-                    EncenderBrilloEnNodo(managerAnterior.gameObject, "Puntero", false);
+                    EncenderBrilloEnNodo(managerAnterior.gameObject, "Liga", false);
                     cargandoAgua = true;
                 }
 
-                if (cargandoAgua) EncenderBrilloEnNodo(managerActual.gameObject, "Dato", true);
+                if (cargandoAgua) EncenderBrilloEnNodo(managerActual.gameObject, "Info", true);
             }
             else if (tipo == "SalidaHuerto" && pasoConexion == 1)
             {
                 if (objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
                 {
-                    EncenderBrilloEnNodo(managerActual.gameObject, "Puntero", false);
+                    EncenderBrilloEnNodo(managerActual.gameObject, "Liga", false);
                     cargandoAgua = true;
                     pasoConexion = 2;
                     brilloNull.SetEncendido(true);
@@ -602,8 +602,8 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 }
                 else
                 {
-                    EncenderBrilloEnNodo(managerAnterior.gameObject, "Puntero", true);
-                    andy.Decir("¡NODO listo! Recoge el agua del PUNTERO del NODO anterior.");
+                    EncenderBrilloEnNodo(managerAnterior.gameObject, "Liga", true);
+                    andy.Decir("¡NODO listo! Recoge el agua de la LIGA del NODO anterior.");
                 }
             }
         }

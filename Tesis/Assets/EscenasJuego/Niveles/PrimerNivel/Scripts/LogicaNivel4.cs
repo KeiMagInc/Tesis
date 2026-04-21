@@ -190,9 +190,9 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
             }
             else
             {
-                // El agua se toma del puntero del nodo anterior
-                EncenderBrilloHijo(listaNodos[fase - 1].gameObject, "Puntero", true);
-                andy.Decir("Ahora conecta el PUNTERO de la planta anterior a la ENTRADA de la nueva.");
+                // El agua se toma del Liga del nodo anterior
+                EncenderBrilloHijo(listaNodos[fase - 1].gameObject, "Liga", true);
+                andy.Decir("Ahora conecta el LIGA de la planta anterior a la ENTRADA de la nueva.");
             }
         }
     }
@@ -211,13 +211,13 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                 {
                     cargandoAgua = true;
                     brilloRio.SetEncendido(false);
-                    EncenderBrilloHijo(nodoActual.gameObject, "Dato", true);
+                    EncenderBrilloHijo(nodoActual.gameObject, "Info", true);
                 }
                 else if (fase > 0 && tipo == "SalidaHuerto" && managerTocado == listaNodos[fase - 1])
                 {
                     cargandoAgua = true;
-                    EncenderBrilloHijo(listaNodos[fase - 1].gameObject, "Puntero", false);
-                    EncenderBrilloHijo(nodoActual.gameObject, "Dato", true);
+                    EncenderBrilloHijo(listaNodos[fase - 1].gameObject, "Liga", false);
+                    EncenderBrilloHijo(nodoActual.gameObject, "Info", true);
 
                     // Añadimos el punto de salida del anterior para que la línea se fije ahí al recoger
                     if (!puntosConfirmados.Contains(managerTocado.puntoSalida.position))
@@ -230,10 +230,10 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                 else if (subPaso == 2 && tipo == "SalidaHuerto" && managerTocado == nodoActual)
                 {
                     cargandoAgua = true;
-                    EncenderBrilloHijo(nodoActual.gameObject, "Puntero", false);
+                    EncenderBrilloHijo(nodoActual.gameObject, "Liga", false);
 
                     GameObject destino = (fase == 0) ? nodoActual.gameObject : listaNodos[0].gameObject;
-                    EncenderBrilloHijo(destino, "Dato", true);
+                    EncenderBrilloHijo(destino, "Info", true);
                     andy.Decir("¡Agua recogida! Llévala a la ENTRADA para cerrar el círculo.");
                 }
             }
@@ -248,12 +248,12 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                         nodoActual.ActivarHuerto();
                         SumarPuntos(10);
 
-                        // Solo agregamos la entrada para que la línea se quede en el "Dato"
+                        // Solo agregamos la entrada para que la línea se quede en el "Info"
                         puntosConfirmados.Add(nodoActual.puntoEntrada.position);
                         DibujarLineaFija();
-                        EncenderBrilloHijo(nodoActual.gameObject, "Dato", false);
+                        EncenderBrilloHijo(nodoActual.gameObject, "Info", false);
                         subPaso = 2;
-                        EncenderBrilloHijo(nodoActual.gameObject, "Puntero", true);
+                        EncenderBrilloHijo(nodoActual.gameObject, "Liga", true);
                     }
                     // --- BUSCA ESTA PARTE EN EL SUBPASO 2 DE CONECTAR AGUA ---
                     else if (subPaso == 2)
@@ -264,11 +264,11 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                             cargandoAgua = false;
 
                             // --- CAMBIO AQUÍ: Fijamos los dos tramos finales de golpe ---
-                            puntosConfirmados.Add(nodoActual.puntoSalida.position);      // Tramo interno (Dato -> Puntero)
-                            puntosConfirmados.Add(managerTocado.puntoEntrada.position);  // Tramo de cierre (Puntero -> Inicio)
+                            puntosConfirmados.Add(nodoActual.puntoSalida.position);      // Tramo interno (Info -> Liga)
+                            puntosConfirmados.Add(managerTocado.puntoEntrada.position);  // Tramo de cierre (Liga -> Inicio)
                             DibujarLineaFija();
 
-                            EncenderBrilloHijo(managerTocado.gameObject, "Dato", false);
+                            EncenderBrilloHijo(managerTocado.gameObject, "Info", false);
                             FinalizarCicloFase();
                         }
                     }
@@ -329,12 +329,12 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         if (indiceAEliminar == 4) // Caso 1: Eliminar el último (Rábano)
         {
             andy.Decir("Para eliminar el RÁBANO, conecta la ZANAHORIA directamente a la CALABAZA.");
-            EncenderBrilloHijo(listaNodos[3].gameObject, "Puntero", true);
+            EncenderBrilloHijo(listaNodos[3].gameObject, "Liga", true);
         }
         else // Caso 2: Eliminar el primero (Calabaza - El "LC" del libro)
         {
             andy.Decir("Ahora eliminaremos el inicio. Conecta la ZANAHORIA a la PAPA.");
-            EncenderBrilloHijo(listaNodos[3].gameObject, "Puntero", true);
+            EncenderBrilloHijo(listaNodos[3].gameObject, "Liga", true);
         }
     }
 
@@ -344,15 +344,15 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
 
         if (!cargandoAgua)
         {
-            // Recogemos agua del puntero del nodo ANTERIOR al que queremos borrar
+            // Recogemos agua del Liga del nodo ANTERIOR al que queremos borrar
             if (tipo == "SalidaHuerto" && managerTocado == listaNodos[3])
             {
                 cargandoAgua = true;
-                EncenderBrilloHijo(listaNodos[3].gameObject, "Puntero", false);
+                EncenderBrilloHijo(listaNodos[3].gameObject, "Liga", false);
 
                 // Brillo en el destino según el libro
                 int destino = (indiceAEliminar == 4) ? 0 : 1;
-                EncenderBrilloHijo(listaNodos[destino].gameObject, "Dato", true);
+                EncenderBrilloHijo(listaNodos[destino].gameObject, "Info", true);
             }
         }
         else
@@ -363,7 +363,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                 if (managerTocado == listaNodos[destino])
                 {
                     cargandoAgua = false;
-                    EncenderBrilloHijo(listaNodos[destino].gameObject, "Dato", false);
+                    EncenderBrilloHijo(listaNodos[destino].gameObject, "Info", false);
 
                     // Ejecutar eliminación visual
                     int objetivo = (indiceAEliminar == 4) ? 4 : 0;
