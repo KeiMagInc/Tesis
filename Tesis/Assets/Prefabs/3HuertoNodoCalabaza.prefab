@@ -176,7 +176,7 @@ GameObject:
   - component: {fileID: 6801623386641726986}
   - component: {fileID: 4233625125665758415}
   - component: {fileID: 9328321732198063}
-  - component: {fileID: 3129169062535770140}
+  - component: {fileID: 2887869679638261783}
   m_Layer: 0
   m_Name: 3HuertoNodoCalabaza
   m_TagString: Planta
@@ -265,9 +265,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   puntoEntrada: {fileID: 2250400793531471313}
   puntoSalida: {fileID: 6174649838750680848}
-  puntoAnterior: {fileID: 0}
-  puntoDato: {fileID: 0}
-  puntoSiguiente: {fileID: 0}
+  puntoEntradaAnterior: {fileID: 0}
+  puntoSalidaAnterior: {fileID: 0}
+  puntoEntradaSiguiente: {fileID: 0}
+  puntoSalidaSiguiente: {fileID: 0}
   velocidadAguaEliminar: 4
   velocidadEncogidoFinal: 5
   cuadroAgua: {fileID: 4204604788392367696}
@@ -278,7 +279,7 @@ MonoBehaviour:
   retrasoEntreSembrios: 0.3
   spriteSeco: {fileID: 4378049581531813254, guid: cbc21c51be2f305408febc872344eb88, type: 3}
   spriteVivo: {fileID: 6075094999978065127, guid: dc201ca03aed7df4eb60708518c4c8a8, type: 3}
---- !u!114 &3129169062535770140
+--- !u!114 &2887869679638261783
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -287,9 +288,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 839396964857267429}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92431b4574f30ce47bcaa627a6bf3b7b, type: 3}
+  m_Script: {fileID: 11500000, guid: d2174c40f7532ef48b20f9a87f4379bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  identificador: EntradaHuerto
 --- !u!1 &1077177690419212729
 GameObject:
   m_ObjectHideFlags: 0
@@ -519,7 +521,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6174649838750680848}
   - component: {fileID: 8922596514882991105}
-  - component: {fileID: 2428242475425803255}
+  - component: {fileID: 3653328651939073654}
   m_Layer: 0
   m_Name: PuntoSalida
   m_TagString: Untagged
@@ -588,7 +590,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.5, y: 0.5}
   m_EdgeRadius: 0
---- !u!114 &2428242475425803255
+--- !u!114 &3653328651939073654
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -597,9 +599,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2212228696518948857}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1097e895493f83041afc08ee73ab7fdd, type: 3}
+  m_Script: {fileID: 11500000, guid: d2174c40f7532ef48b20f9a87f4379bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  identificador: SalidaHuerto
 --- !u!1 &2341628530272272590
 GameObject:
   m_ObjectHideFlags: 0

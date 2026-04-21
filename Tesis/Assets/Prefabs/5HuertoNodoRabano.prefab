@@ -97,6 +97,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5925638560145586722}
   - component: {fileID: 9087396398082129146}
+  - component: {fileID: 8513884526039252066}
   m_Layer: 0
   m_Name: PuntoEntradaAnterior
   m_TagString: Untagged
@@ -165,6 +166,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.5, y: 0.5}
   m_EdgeRadius: 0
+--- !u!114 &8513884526039252066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 823661459386432123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2174c40f7532ef48b20f9a87f4379bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  identificador: EntradaAnterior
 --- !u!1 &839396964857267429
 GameObject:
   m_ObjectHideFlags: 0
@@ -176,7 +190,7 @@ GameObject:
   - component: {fileID: 6801623386641726986}
   - component: {fileID: 4233625125665758415}
   - component: {fileID: 9328321732198063}
-  - component: {fileID: 3129169062535770140}
+  - component: {fileID: 163854486635771053}
   m_Layer: 0
   m_Name: 5HuertoNodoRabano
   m_TagString: Planta
@@ -267,9 +281,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   puntoEntrada: {fileID: 0}
   puntoSalida: {fileID: 0}
-  puntoAnterior: {fileID: 0}
-  puntoDato: {fileID: 0}
-  puntoSiguiente: {fileID: 0}
+  puntoEntradaAnterior: {fileID: 0}
+  puntoSalidaAnterior: {fileID: 0}
+  puntoEntradaSiguiente: {fileID: 0}
+  puntoSalidaSiguiente: {fileID: 0}
   velocidadAguaEliminar: 4
   velocidadEncogidoFinal: 5
   cuadroAgua: {fileID: 4204604788392367696}
@@ -280,7 +295,7 @@ MonoBehaviour:
   retrasoEntreSembrios: 0.3
   spriteSeco: {fileID: -5953878577670561019, guid: fe686bfbd8240a541a9a21729f34aff2, type: 3}
   spriteVivo: {fileID: -8339912874213387208, guid: 05cab3f7bb3315345ac73e7b6b15eb27, type: 3}
---- !u!114 &3129169062535770140
+--- !u!114 &163854486635771053
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -289,9 +304,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 839396964857267429}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92431b4574f30ce47bcaa627a6bf3b7b, type: 3}
+  m_Script: {fileID: 11500000, guid: d2174c40f7532ef48b20f9a87f4379bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  identificador: EntradaHuerto
 --- !u!1 &1077177690419212729
 GameObject:
   m_ObjectHideFlags: 0
@@ -874,7 +890,7 @@ GameObject:
   m_Component:
   - component: {fileID: 175523488421517237}
   - component: {fileID: 9170491884340351580}
-  - component: {fileID: 8325383993683325658}
+  - component: {fileID: 3052328735057380693}
   m_Layer: 0
   m_Name: 'PuntoSalidaSiguiente '
   m_TagString: Untagged
@@ -943,7 +959,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.5, y: 0.5}
   m_EdgeRadius: 0
---- !u!114 &8325383993683325658
+--- !u!114 &3052328735057380693
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -952,9 +968,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3607540639526107091}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1097e895493f83041afc08ee73ab7fdd, type: 3}
+  m_Script: {fileID: 11500000, guid: d2174c40f7532ef48b20f9a87f4379bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  identificador: SalidaSiguiente
 --- !u!1 &3668847794203586645
 GameObject:
   m_ObjectHideFlags: 0
@@ -1052,7 +1069,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3150080156870218744}
   - component: {fileID: 6119039949288836820}
-  - component: {fileID: 9099216275018115741}
+  - component: {fileID: 7072605298698879845}
   m_Layer: 0
   m_Name: PuntoEntradaSiguiente
   m_TagString: Untagged
@@ -1121,7 +1138,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.5, y: 0.5}
   m_EdgeRadius: 0
---- !u!114 &9099216275018115741
+--- !u!114 &7072605298698879845
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1130,9 +1147,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3793020676846507919}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1097e895493f83041afc08ee73ab7fdd, type: 3}
+  m_Script: {fileID: 11500000, guid: d2174c40f7532ef48b20f9a87f4379bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  identificador: EntradaSiguiente
 --- !u!1 &4058723725317039945
 GameObject:
   m_ObjectHideFlags: 0
@@ -1967,6 +1985,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8125119693539678429}
   - component: {fileID: 850211560684492546}
+  - component: {fileID: 7665634975677453688}
   m_Layer: 0
   m_Name: PuntoSalidaAnterior
   m_TagString: Untagged
@@ -2035,6 +2054,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.5, y: 0.5}
   m_EdgeRadius: 0
+--- !u!114 &7665634975677453688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4871018266488453665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2174c40f7532ef48b20f9a87f4379bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  identificador: SalidaAnterior
 --- !u!1 &4996305520200634390
 GameObject:
   m_ObjectHideFlags: 0

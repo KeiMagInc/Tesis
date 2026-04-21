@@ -10,42 +10,31 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     public Sprite spriteTrigo;
     public Sprite spritePapa;
     public Sprite spriteCalabaza;
-
     public static LogicaNivel3 instancia;
     public AndyController andy;
     public TextMeshProUGUI textoPuntos;
     public LineRenderer lineaAgua;
     public LineRenderer lineaFija;
     public Transform lupi;
-
     private enum ModoOperacion { InsertarInicio, InsertarFinal, EliminarInicio, EliminarFinal }
     private ModoOperacion modoActual = ModoOperacion.InsertarInicio;
-
     [Header("Prefabs Específicos Nivel 3")]
     public GameObject prefabPapaN3;
     public GameObject prefabTrigoN3;
     public GameObject prefabCalabazaN3;
-
     [Header("Conexiones y Brillos Fijos")]
     public Transform puntoSalidaHead;
     public Transform puntoEntradaNull;
     public EfectoLetrero brilloHead;
     public EfectoLetrero brilloNull;
-
     private int fase = 0;
     private int pasoConexion = 0;
     private bool cargandoAgua = false;
-
     private NodoManager managerActual;
     private NodoManager managerAnterior;
     private List<NodoManager> listaNodos = new List<NodoManager>();
-
     private List<Vector3> puntosCadenaFija = new List<Vector3>();
-
-    // ORDEN PARA INSERTAR INICIO: Derecha -> Centro -> Izquierda
     private string[] nombresNodosInicio = { "Papa", "Trigo", "Calabaza" };
-
-    // ORDEN PARA INSERTAR FINAL: Izquierda -> Centro -> Derecha
     private string[] nombresNodosFinal = { "Calabaza", "Trigo", "Papa" };
 
     void Awake() => instancia = this;
@@ -54,15 +43,10 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     {
         if (UIManager.instancia == null) return;
         UIManager.instancia.logicaActiva = this;
-
         UIManager.instancia.SetPrefabs(prefabPapaN3, prefabTrigoN3, prefabCalabazaN3);
-
-        // Agrupamos en arreglos
         Sprite[] imagenes = { spritePapa, spriteTrigo, spriteCalabaza };
         string[] nombres = { "Papa", "Trigo", "Calabaza" };
-
         UIManager.instancia.ConfigurarBotonesUI(imagenes, nombres);
-
         UIManager.instancia.MostrarMochilaSolo(false);
         UIManager.instancia.MostrarChecklistSolo(false);
         ResetearNivel();
@@ -81,13 +65,11 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         listaNodos.Clear();
         managerAnterior = null;
         managerActual = null;
-
         if (UIManager.instancia != null)
         {
             UIManager.instancia.ResetBotones();
             ActualizarTextosChecklistSegunAlgoritmo();
         }
-
         LimpiarNodosEscena();
         ApagarBrillosGlobales();
     }
@@ -97,21 +79,21 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         if (modoActual == ModoOperacion.InsertarInicio)
         {
             UIManager.instancia.ConfigurarTextosChecklist(
-                "Derecha: sembrar papa",   // Slot 0
-                "",                        // Slot 1
-                "Centro: sembrar trigo",   // Slot 2
-                "",                        // Slot 3
-                "Izquierda: sembrar calabaza" // Slot 4
+                "Derecha: sembrar papa",  
+                "",                       
+                "Centro: sembrar trigo",  
+                "",                       
+                "Izquierda: sembrar calabaza"
             );
         }
         else if (modoActual == ModoOperacion.InsertarFinal)
         {
             UIManager.instancia.ConfigurarTextosChecklist(
-                "Izquierda: sembrar calabaza", // Slot 0 (Cambiado según tu lógica de nivel)
-                "",                            // Slot 1
-                "Centro: sembrar trigo",       // Slot 2
-                "",                            // Slot 3
-                "Derecha: sembrar papa"        // Slot 4
+                "Izquierda: sembrar calabaza", 
+                "",                            
+                "Centro: sembrar trigo",      
+                "",                           
+                "Derecha: sembrar papa"        
             );
         }
     }
@@ -119,23 +101,19 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     IEnumerator Intro()
     {
         yield return new WaitForSeconds(0.5f);
-
         if (modoActual == ModoOperacion.InsertarInicio)
             andy.Decir("¡Algoritmo 5.1! Vamos a insertar al INICIO.");
         else if (modoActual == ModoOperacion.InsertarFinal)
             andy.Decir("¡Algoritmo 5.2! Ahora insertaremos al FINAL.");
         else if (modoActual == ModoOperacion.EliminarInicio)
             andy.Decir("¡Algoritmo 5.9! Vamos a eliminar el PRIMER nodo.");
-
         yield return new WaitForSeconds(2.5f);
-
         if (modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal)
         {
             andy.Decir("Primero, abre tu mochila para elegir la semilla que vamos a plantar.");
             UIManager.instancia.MostrarMochilaSolo(true);
             yield return new WaitUntil(() => UIManager.instancia.panelParcelas.activeSelf);
         }
-
         UIManager.instancia.MostrarChecklistSolo(true);
         ProximoPaso();
     }
@@ -172,10 +150,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             yield return new WaitForSeconds(3f);
             modoActual = ModoOperacion.InsertarFinal;
             LimpiarEscenaParaSiguienteAlgoritmo();
-
-            // CORRECCIÓN: Actualizamos los textos para el nuevo modo
             ActualizarTextosChecklistSegunAlgoritmo();
-
             StartCoroutine(Intro());
         }
         else if (modoActual == ModoOperacion.InsertarFinal)
@@ -185,20 +160,16 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             modoActual = ModoOperacion.EliminarInicio;
             fase = 0;
             UIManager.instancia.ResetBotones();
-
-            // IMPORTANTE: Enviamos los 5 campos para que "sembrar trigo" y los demás desaparezcan
             UIManager.instancia.ConfigurarTextosChecklist(
-                "", // Slot 0
-                "Eliminar Calabaza",     // Slot 1
-                "",                  // Slot 2 (Limpiar)
-                "Eliminar Papa",                  // Slot 3 (Limpiar)
-                ""                   // Slot 4 (Limpiar)
+                "", 
+                "Eliminar Calabaza",     
+                "",                  
+                "Eliminar Papa",                 
+                ""                 
             );
             StartCoroutine(Intro());
         }
     }
-
-    // --- LÓGICAS DE ELIMINACIÓN ---
 
     void LogicaEliminarInicio(string tipo, GameObject objetoTocado)
     {
@@ -246,18 +217,15 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     {
         SumarPuntos(20);
         listaNodos[indiceNodo].IniciarSecuenciaEliminacion();
-
         yield return new WaitForSeconds(1.5f);
         ActualizarLineaFijaPostEliminacion();
-        UIManager.instancia.MarcarTareaCompletada(fase);
+        UIManager.instancia.MarcarTareaCompletada((fase * 2) + 1);
         fase++;
-
         if (modoActual == ModoOperacion.EliminarInicio)
         {
             andy.Decir("¡Adiós calabaza! Último paso...");
             yield return new WaitForSeconds(1.5f);
             modoActual = ModoOperacion.EliminarFinal;
-            // No llamamos a Intro completo para no repetir mochila, solo el texto y guía
             ProximoPaso();
         }
         else
@@ -265,8 +233,6 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             andy.Decir("¡Perfecto! Dominas las listas de Cairo.");
         }
     }
-
-    // --- MÉTODOS DE APOYO (REUTILIZADOS) ---
 
     void LimpiarEscenaParaSiguienteAlgoritmo()
     {
@@ -288,8 +254,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         SumarPuntos(10);
         managerActual.DrenarAgua();
         ApagarBrillosGlobales();
-        UIManager.instancia.MarcarTareaCompletada(fase);
-
+        UIManager.instancia.MarcarTareaCompletada(fase * 2); 
         if (modoActual == ModoOperacion.InsertarInicio)
         {
             listaNodos.Insert(0, managerActual);
@@ -310,30 +275,24 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 puntosCadenaFija.Add(puntoEntradaNull.position);
             }
         }
-
         lineaFija.positionCount = puntosCadenaFija.Count;
         lineaFija.SetPositions(puntosCadenaFija.ToArray());
-
-        managerAnterior = managerActual; // Guardamos la actual como anterior
-        managerActual = null;            // ¡IMPORTANTE! Limpiamos la actual para la siguiente fase
+        managerAnterior = managerActual; 
+        managerActual = null;            
         fase++;
-
         if (fase < 3) StartCoroutine(EsperarSiguiente());
         else StartCoroutine(CambiarDeModo());
     }
 
     void Update()
     {
-        // Si alguno de los objetos esenciales fue destruido, dejamos de ejecutar el Update
         if (puntoSalidaHead == null || lupi == null || puntoEntradaNull == null) return;
-
         ActualizarVisualManguera();
     }
 
     void ActualizarVisualManguera()
     {
         List<Vector3> puntosActivos = new List<Vector3>();
-
         if (modoActual == ModoOperacion.InsertarInicio)
         {
             puntosActivos.Add(puntoSalidaHead.position);
@@ -358,7 +317,6 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         {
             if (managerActual != null)
             {
-                // Verificamos que managerAnterior no sea nulo antes de pedir su posición
                 Vector3 origen = (fase == 0 || managerAnterior == null) ? puntoSalidaHead.position : managerAnterior.puntoSalida.position;
                 puntosActivos.Add(origen);
                 if (pasoConexion == 0) { if (cargandoAgua) puntosActivos.Add(lupi.position); }
@@ -373,13 +331,11 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         }
         else if (modoActual == ModoOperacion.EliminarFinal)
         {
-            // Verificamos que el nodo exista antes de acceder a su transform
             if (listaNodos.Count > 1 && listaNodos[1] != null)
                 puntosActivos.Add(listaNodos[1].puntoSalida.position);
 
             if (cargandoAgua) puntosActivos.Add(lupi.position);
         }
-
         if (lineaAgua != null)
         {
             lineaAgua.positionCount = puntosActivos.Count;
@@ -390,8 +346,6 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     void ActualizarLineaFijaPostEliminacion()
     {
         puntosCadenaFija.Clear();
-
-        // Si acabamos de eliminar la primera planta (Calabaza)
         if (modoActual == ModoOperacion.EliminarInicio)
         {
             puntosCadenaFija.Add(puntoSalidaHead.position);
@@ -401,40 +355,31 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             puntosCadenaFija.Add(listaNodos[2].puntoSalida.position);
             puntosCadenaFija.Add(puntoEntradaNull.position);
         }
-        // Si acabamos de eliminar la última planta (Papa)
         else if (modoActual == ModoOperacion.EliminarFinal)
         {
             puntosCadenaFija.Add(puntoSalidaHead.position);
-            puntosCadenaFija.Add(listaNodos[1].puntoEntrada.position); // Trigo
-            puntosCadenaFija.Add(listaNodos[1].puntoSalida.position);  // Liga Trigo
-            puntosCadenaFija.Add(puntoEntradaNull.position);          // Hacia el NULL final
+            puntosCadenaFija.Add(listaNodos[1].puntoEntrada.position); 
+            puntosCadenaFija.Add(listaNodos[1].puntoSalida.position);  
+            puntosCadenaFija.Add(puntoEntradaNull.position);          
         }
-
         lineaFija.positionCount = puntosCadenaFija.Count;
         lineaFija.SetPositions(puntosCadenaFija.ToArray());
     }
 
     void LimpiarNodosEscena()
     {
-        // Buscamos todos los NodoManager en la escena
         NodoManager[] todosLosNodos = Object.FindObjectsByType<NodoManager>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-
         foreach (var n in todosLosNodos)
         {
-            // Si es un clon (Nivel 3), lo destruimos
             if (n.gameObject.name.Contains("(Clone)"))
             {
                 Destroy(n.gameObject);
             }
         }
-
-        // Reseteamos el Nivel 1 una sola vez, no dentro del bucle
         if (LogicaNivel1.instancia != null)
         {
             LogicaNivel1.instancia.ResetearNivelSilencioso();
         }
-
-        // Reseteamos las zonas de plantado
         ZonaPlantado[] zonas = Object.FindObjectsByType<ZonaPlantado>(FindObjectsSortMode.None);
         foreach (var z in zonas) z.ResetearZona();
     }
@@ -452,24 +397,20 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
 
     void LogicaInsertarInicio(string tipo, GameObject objetoTocado)
     {
-        // Si aún no hemos sembrado, Andy avisa
         if (managerActual == null && (tipo == "Head" || tipo == "EntradaHuerto"))
         {
             andy.Decir("Primero siembra la semilla de " + nombresNodosInicio[fase]);
             return;
         }
-
         if (cargandoAgua)
         {
-            if (pasoConexion == 0) // El agua viene del INICIO
+            if (pasoConexion == 0) 
             {
                 if (tipo == "SalidaHuerto")
                 {
                     andy.Decir("¡No! El INICIO debe conectarse a la INFO (izquierda) para entrar al NODO.");
                     return;
                 }
-
-                // Verificamos si tocamos el Info del nodo actual
                 if (tipo == "EntradaHuerto" && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
                 {
                     EncenderBrilloEnNodo(managerActual.gameObject, "Info", false);
@@ -481,13 +422,13 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                     andy.Decir("¡Muy bien! Ahora activa su LIGA.");
                 }
             }
-            else if (pasoConexion == 2) // El agua va hacia el siguiente
+            else if (pasoConexion == 2) 
             {
                 if (tipo == "Null" && fase == 0) FinalizarNodo();
                 else if (tipo == "EntradaHuerto" && fase > 0 && objetoTocado.GetComponentInParent<NodoManager>() == managerAnterior) FinalizarNodo();
             }
         }
-        else // RECOGER AGUA
+        else 
         {
             if (tipo == "Head" && pasoConexion == 0)
             {
@@ -510,18 +451,15 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     void LogicaInsertarFinal(string tipo, GameObject objetoTocado)
     {
         if (managerActual == null) return;
-
         if (cargandoAgua)
         {
-            if (pasoConexion == 0) // Viene del Head o del Liga anterior
+            if (pasoConexion == 0) 
             {
-                // BLOQUEO: Si intenta entrar por la salida
                 if (tipo == "SalidaHuerto" && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
                 {
                     andy.Decir("¡Error! El flujo de la lista debe entrar por la INFO (izquierda) del nuevo nodo.");
                     return;
                 }
-
                 if (tipo == "EntradaHuerto" && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
                 {
                     EncenderBrilloEnNodo(managerActual.gameObject, "Info", false);
@@ -537,13 +475,13 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                     andy.Decir("Conecta la manguera al letrero de INFO (izquierdo) de la nueva planta.");
                 }
             }
-            else if (pasoConexion == 2) // El agua va hacia NULL
+            else if (pasoConexion == 2)
             {
                 if (tipo == "Null") FinalizarNodo();
                 else andy.Decir("Como es el final de la lista, la LIGA debe ir a NULL.");
             }
         }
-        else // RECOGER AGUA
+        else
         {
             if (pasoConexion == 0)
             {
@@ -557,7 +495,6 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                     EncenderBrilloEnNodo(managerAnterior.gameObject, "Liga", false);
                     cargandoAgua = true;
                 }
-
                 if (cargandoAgua) EncenderBrilloEnNodo(managerActual.gameObject, "Info", true);
             }
             else if (tipo == "SalidaHuerto" && pasoConexion == 1)
@@ -583,9 +520,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     {
         yield return new WaitForSeconds(0.1f);
         yield return new WaitForFixedUpdate();
-
         managerActual = BuscarNuevoNodoEnEscena();
-
         if (managerActual != null)
         {
             if (modoActual == ModoOperacion.InsertarInicio)
@@ -617,7 +552,6 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     {
         string[] nombres = (modoActual == ModoOperacion.InsertarInicio) ? nombresNodosInicio : nombresNodosFinal;
         if (fase >= nombres.Length) return null;
-
         string buscado = nombres[fase].ToLower();
         foreach (var nm in Object.FindObjectsByType<NodoManager>(FindObjectsSortMode.None))
         {

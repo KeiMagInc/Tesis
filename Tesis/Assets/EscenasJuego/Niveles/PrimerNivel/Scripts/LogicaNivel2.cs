@@ -10,59 +10,46 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     public Sprite spritePapa;
     public Sprite spriteCalabaza;
     private string[] nombresNodos = { "Trigo", "Calabaza", "Papa" };
-
     public static LogicaNivel2 instancia;
     public AndyController andy;
     public TextMeshProUGUI textoPuntos;
     public LineRenderer lineaAgua;
     public Transform lupi;
-
     [Header("Prefabs Específicos Nivel 2")]
     public GameObject prefabTrigoN2;
     public GameObject prefabPapaN2;
     public GameObject prefabCalabazaN2;
-
     [Header("Conexiones y Brillos")]
     public Transform puntoSalidaHead;
     public Transform puntoEntradaNull;
     public EfectoLetrero brilloHead;
     public EfectoLetrero brilloNull;
-
     private int fase = 0;
     private int pasoConexion = 0;
     private bool cargandoAgua = false;
     private NodoManager managerActual;
-
-    private int[] mapaIndicesUI = { 4, 0, 2 };
+    private int[] mapaIndicesUI = { 0, 2, 4 };
+    
     void Awake() => instancia = this;
 
     void OnEnable()
     {
         if (UIManager.instancia == null) return;
         UIManager.instancia.logicaActiva = this;
-
         UIManager.instancia.SetPrefabs(prefabTrigoN2, prefabCalabazaN2, prefabPapaN2);
-
-        // Agrupamos en arreglos para el nuevo UIManager
         Sprite[] imagenes = { spriteTrigo, spriteCalabaza, spritePapa };
         string[] nombres = { "Trigo", "Calabaza", "Papa" };
-
         UIManager.instancia.ConfigurarBotonesUI(imagenes, nombres);
-
         ResetearNivel();
         UIManager.instancia.MostrarMochilaSolo(false);
         UIManager.instancia.MostrarChecklistSolo(false);
-
-        // El orden en tu UIManager (según tu imagen) es: 0:Derecha, 1:Arriba, 2:Centro, 3:Abajo, 4:Izquierda
-        // En LogicaNivel2.cs -> OnEnable
         UIManager.instancia.ConfigurarTextosChecklist(
-            "Izquierda: sembrar trigo", // Slot 0
-            "",                          // Slot 1 (Se apagará)
-            "Derecha: sembrar calabaza",      // Slot 2
-            "",                          // Slot 3 (Se apagará)
-            "Centro: sembrar papa"   // Slot 4
+            "Izquierda: sembrar trigo",
+            "",                          
+            "Derecha: sembrar calabaza", 
+            "",                          
+            "Centro: sembrar papa"   
         );
-
         ActualizarPuntos();
         StartCoroutine(Intro());
     }
@@ -73,10 +60,8 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         lineaAgua.positionCount = 0;
         UIManager.instancia.ResetBotones();
         ApagarBrillos();
-
         ZonaPlantado[] zonas = Object.FindObjectsByType<ZonaPlantado>(FindObjectsSortMode.None);
         foreach (var z in zonas) z.ResetearZona();
-
         foreach (var p in GameObject.FindGameObjectsWithTag("Planta")) Destroy(p);
     }
 
@@ -84,18 +69,10 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     {
         yield return new WaitForSeconds(1f);
         andy.Decir("¡Lupi! Abre tu mochila para ver las semillas.");
-
-        // 1. APARECE MOCHILA
         UIManager.instancia.MostrarMochilaSolo(true);
-
-        // 2. ESPERA HASTA QUE EL JUGADOR LA ABRA
         yield return new WaitUntil(() => UIManager.instancia.panelParcelas.activeSelf);
-
         andy.Decir("Bien. Ahora revisa las tareas pendientes.");
-
-        // 3. APARECE CHECKLIST
         UIManager.instancia.MostrarChecklistSolo(true);
-
         yield return new WaitForSeconds(2.5f);
         ProximoPaso();
     }
@@ -126,8 +103,6 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
             lineaAgua.SetPosition(0, puntoSalidaHead.position);
             brilloHead.SetEncendido(false);
             andy.Decir("Lleva el flujo a la INFO.");
-
-            // BUSCAMOS EL NODO CLONADO PARA ENCENDER SU Info
             GameObject huerto = BuscarHuerto();
             if (huerto != null) EncenderBrilloHijo(huerto, "Info", true);
         }
@@ -160,10 +135,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
             SumarPuntos(10);
             managerActual.DrenarAgua();
             brilloNull.SetEncendido(false);
-
-            // USAMOS EL MAPA PARA MARCAR LA TAREA CORRECTA
             UIManager.instancia.MarcarTareaCompletada(mapaIndicesUI[fase]);
-
             fase++;
             if (fase < 3) StartCoroutine(EsperarSiguiente());
             else andy.Decir("¡Nodos completados!");
@@ -171,7 +143,6 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     }
 
     void Update() { if (cargandoAgua) lineaAgua.SetPosition(lineaAgua.positionCount - 1, lupi.position); }
-
     void SumarPuntos(int cant) { UIManager.puntosGlobales += cant; ActualizarPuntos(); }
     void ActualizarPuntos() { if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString(); }
 
@@ -180,7 +151,6 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         string buscado = nombresNodos[fase].ToLower();
         foreach (var n in Object.FindObjectsByType<NodoManager>(FindObjectsSortMode.None))
         {
-            // Solo devuelve el objeto si es un CLON (sembrado en este nivel)
             if (n.gameObject.name.ToLower().Contains(buscado) && n.gameObject.name.Contains("(Clone)"))
                 return n.gameObject;
         }
@@ -192,12 +162,10 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         if (!r) return;
         foreach (var b in r.GetComponentsInChildren<EfectoLetrero>(true))
         {
-            // Convierte ambos a Mayúsculas para que "Info" y "Info" sean lo mismo
             if (b.gameObject.name.ToUpper().Contains(n.ToUpper()))
                 b.SetEncendido(e);
         }
     }
-
     void ApagarBrillos() { if (brilloHead) brilloHead.SetEncendido(false); if (brilloNull) brilloNull.SetEncendido(false); }
     IEnumerator EsperarSiguiente() { yield return new WaitForSeconds(2f); ProximoPaso(); }
 }

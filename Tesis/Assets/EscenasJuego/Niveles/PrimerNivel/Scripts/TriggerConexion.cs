@@ -1,7 +1,9 @@
 using UnityEngine;
 
-public class TriggerHuerto : MonoBehaviour
+public class TriggerConexion : MonoBehaviour
 {
+    [Tooltip("Ej: Head, Null, EntradaAnterior, SalidaSiguiente, SalidaAnterior, EntradaSiguiente")]
+    public string identificador;
     private bool estaCerca = false;
 
     void OnTriggerEnter2D(Collider2D other) { if (other.CompareTag("Player")) estaCerca = true; }
@@ -11,10 +13,9 @@ public class TriggerHuerto : MonoBehaviour
     {
         if (estaCerca && Input.GetKeyDown(KeyCode.E))
         {
-            // CAMBIO CLAVE: Debe decir .instancia (sin el UI al final)
             if (UIManager.instancia != null && UIManager.instancia.logicaActiva != null)
             {
-                UIManager.instancia.logicaActiva.AccionEnLetrero("EntradaHuerto", gameObject);
+                UIManager.instancia.logicaActiva.AccionEnLetrero(identificador, gameObject);
             }
         }
     }

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5850316628809326085}
   - component: {fileID: 5292569419175651786}
-  - component: {fileID: 3492961234248472176}
+  - component: {fileID: 6589777844836977626}
   m_Layer: 0
   m_Name: Head
   m_TagString: Untagged
@@ -91,7 +91,7 @@ PolygonCollider2D:
       - {x: 0.77773345, y: 0.1949501}
       - {x: 0.78620875, y: 1.2004595}
   m_UseDelaunayMesh: 0
---- !u!114 &3492961234248472176
+--- !u!114 &6589777844836977626
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -100,9 +100,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 252545187734408304}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c0b6b25ad5c4794fb1734e0a158a7dd, type: 3}
+  m_Script: {fileID: 11500000, guid: d2174c40f7532ef48b20f9a87f4379bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  identificador: Head
 --- !u!1 &979280760666837515
 GameObject:
   m_ObjectHideFlags: 0

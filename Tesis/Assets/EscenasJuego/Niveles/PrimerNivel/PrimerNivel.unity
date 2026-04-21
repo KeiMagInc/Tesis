@@ -65627,8 +65627,8 @@ MonoBehaviour:
   puntoSalidaHuerto: {fileID: 1040050849}
   puntoEntradaNull: {fileID: 1133196638}
   brilloInicio: {fileID: 1151831951}
-  brilloDato: {fileID: 484576953}
-  brilloPuntero: {fileID: 482442312}
+  brilloInfo: {fileID: 484576953}
+  brilloLiga: {fileID: 482442312}
   brilloNull: {fileID: 1600429763}
   huertoScript: {fileID: 1943060709}
 --- !u!120 &686502029
@@ -92458,7 +92458,7 @@ Transform:
   m_GameObject: {fileID: 1735559719}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.27, y: -0.9799993, z: 0}
+  m_LocalPosition: {x: -5.2700005, y: -13.98, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

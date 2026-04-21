@@ -8,27 +8,22 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     public Sprite spriteTrigo;
     public Sprite spritePapa;
     public Sprite spriteCalabaza;
-
     public static LogicaNivel1 instancia;
     public AndyController andy;
     public LineRenderer lineaAgua;
     public Transform lupi;
-
     [Header("Interfaz")]
     public TextMeshProUGUI textoPuntos;
-
     [Header("Puntos de Conexión")]
     public Transform puntoSalidaHead;
     public Transform puntoEntradaHuerto;
     public Transform puntoSalidaHuerto;
     public Transform puntoEntradaNull;
-
     [Header("Efectos")]
     public EfectoLetrero brilloInicio;
     public EfectoLetrero brilloInfo;
     public EfectoLetrero brilloLiga;
     public EfectoLetrero brilloNull;
-
     public NodoManager huertoScript;
     private int estado = 0;
 
@@ -37,19 +32,13 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     void OnEnable()
     {
         if (UIManager.instancia == null) return;
-
         UIManager.instancia.logicaActiva = this;
-
-        // OCULTAR TODO AL EMPEZAR
         UIManager.instancia.MostrarMochilaSolo(false);
         UIManager.instancia.MostrarChecklistSolo(false);
         UIManager.instancia.panelParcelas.SetActive(false);
-
         ResetearNivel();
     }
 
-    // ESTO SE EJECUTA AL SALIR DEL NIVEL 1 (Cuando se activa el Nivel 2 o 3)
-    // Agregamos esta función para que el Nivel 1 se limpie solo al cerrarse
     void OnDisable()
     {
         ResetearNivelSilencioso();
@@ -60,9 +49,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         estado = 0;
         if (lineaAgua != null) lineaAgua.positionCount = 0;
         if (huertoScript != null) huertoScript.ResetearNodo();
-
         ActualizarBrillos(true, false, false, false);
-
         if (andy != null)
         {
             andy.Decir("¡Lupi! El río fluye de P (Inicio) a NULL.\nUsa 'E' en INICIO para obtener la dirección.");
@@ -70,7 +57,6 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         ActualizarPuntos();
     }
 
-    // Nueva función para limpiar el nivel sin que Andy hable (útil al salir)
     public void ResetearNivelSilencioso()
     {
         estado = 0;
