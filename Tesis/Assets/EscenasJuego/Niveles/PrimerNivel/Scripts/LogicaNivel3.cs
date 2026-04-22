@@ -368,22 +368,25 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
 
     void LimpiarNodosEscena()
     {
-        NodoManager[] todosLosNodos = Object.FindObjectsByType<NodoManager>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        foreach (var n in todosLosNodos)
+        // 1. Destruimos las plantas anteriores (los clones)
+        foreach (var n in Object.FindObjectsByType<NodoManager>(FindObjectsInactive.Include, FindObjectsSortMode.None))
         {
-            if (n.gameObject.name.Contains("(Clone)"))
-            {
-                Destroy(n.gameObject);
-            }
+            if (n.gameObject.name.Contains("(Clone)")) Destroy(n.gameObject);
         }
+
+        // 2. ¡LA CLAVE! Reiniciar la lógica base del Huerto (LogicaNivel1)
         if (LogicaNivel1.instancia != null)
         {
             LogicaNivel1.instancia.ResetearNivelSilencioso();
         }
-        ZonaPlantado[] zonas = Object.FindObjectsByType<ZonaPlantado>(FindObjectsSortMode.None);
-        foreach (var z in zonas) z.ResetearZona();
-    }
 
+        // 3. Reactivamos los colliders de las parcelas quitando el check
+        ZonaPlantado[] zonas = Object.FindObjectsByType<ZonaPlantado>(FindObjectsSortMode.None);
+        foreach (var z in zonas)
+        {
+            z.ResetearZona();
+        }
+    }
     public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
     {
         switch (modoActual)
