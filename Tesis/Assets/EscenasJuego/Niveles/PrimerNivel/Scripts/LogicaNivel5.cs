@@ -13,7 +13,8 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     public LineRenderer lineaFija;
     public Transform lupi;
     public LineRenderer lineaFijaPrev;
-
+    private enum ModoOperacion { Insertar, Eliminar }
+    private ModoOperacion modoActual = ModoOperacion.Insertar;
     [Header("Prefabs y Sprites")]
     public GameObject prefabRabano;
     public GameObject prefabZanahoria;
@@ -123,88 +124,95 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
 
     public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
     {
-        if (managerActual == null) return;
-        NodoManager nodoTocado = objetoTocado?.GetComponentInParent<NodoManager>();
-        NodoManager nodoPrevio = (fase > 0) ? listaNodos[fase - 1] : null;
-
-        if (!cargandoAgua)
+        if (modoActual == ModoOperacion.Insertar)
         {
-            if (pasoConexion == 0)
+            if (managerActual == null) return;
+            NodoManager nodoTocado = objetoTocado?.GetComponentInParent<NodoManager>();
+            NodoManager nodoPrevio = (fase > 0) ? listaNodos[fase - 1] : null;
+
+            if (!cargandoAgua)
             {
-                if (fase == 0 && tipo == "Head")
+                if (pasoConexion == 0)
                 {
-                    IniciarCarga(puntoSalidaHead, "EntradaAnterior", managerActual.gameObject);
-                    if (brilloHead) brilloHead.SetEncendido(false); // APAGAR INICIO
+                    if (fase == 0 && tipo == "Head")
+                    {
+                        IniciarCarga(puntoSalidaHead, "EntradaAnterior", managerActual.gameObject);
+                        if (brilloHead) brilloHead.SetEncendido(false); // APAGAR INICIO
+                    }
+                    else if (fase > 0 && tipo == "SalidaSiguiente" && nodoTocado == nodoPrevio)
+                    {
+                        IniciarCarga(nodoPrevio.puntoSalidaSiguiente, "EntradaAnterior", managerActual.gameObject);
+                        SetPalpitarVisual(nodoPrevio.gameObject, "LetreroLigaDer", false); // APAGAR SIGUIENTE PREVIO
+                    }
                 }
-                else if (fase > 0 && tipo == "SalidaSiguiente" && nodoTocado == nodoPrevio)
+                else if (pasoConexion == 1 && fase > 0)
                 {
-                    IniciarCarga(nodoPrevio.puntoSalidaSiguiente, "EntradaAnterior", managerActual.gameObject);
-                    SetPalpitarVisual(nodoPrevio.gameObject, "LetreroLigaDer", false); // APAGAR SIGUIENTE PREVIO
+                    if (tipo == "SalidaAnterior" && nodoTocado == managerActual)
+                    {
+                        IniciarCarga(managerActual.puntoSalidaAnterior, "EntradaSiguiente", nodoPrevio.gameObject);
+                        SetPalpitarVisual(managerActual.gameObject, "LetreroLigaIzq", false); // APAGAR ANTERIOR ACTUAL
+                    }
+                }
+                // CASO: Llevar agua al NULL
+                else if ((fase == 0 && pasoConexion == 1) || (fase > 0 && pasoConexion == 2))
+                {
+                    if (tipo == "SalidaSiguiente" && nodoTocado == managerActual)
+                    {
+                        cargandoAgua = true;
+                        puntoOrigenActual = managerActual.puntoSalidaSiguiente;
+
+                        // GESTIÓN VISUAL NULL
+                        SetPalpitarVisual(managerActual.gameObject, "LetreroLigaDer", false); // APAGAR ORIGEN
+                        if (brilloNull) brilloNull.SetEncendido(true); // ENCENDER DESTINO (NULL)
+
+                        andy.Decir("Lleva la salida a NULL.");
+                    }
                 }
             }
-            else if (pasoConexion == 1 && fase > 0)
+            else
             {
-                if (tipo == "SalidaAnterior" && nodoTocado == managerActual)
+                // ... dentro de AccionEnLetrero, en la parte final del else (cuando cargandoAgua es true) ...
+
+                if (pasoConexion == 0 && tipo == "EntradaAnterior" && nodoTocado == managerActual)
                 {
-                    IniciarCarga(managerActual.puntoSalidaAnterior, "EntradaSiguiente", nodoPrevio.gameObject);
-                    SetPalpitarVisual(managerActual.gameObject, "LetreroLigaIzq", false); // APAGAR ANTERIOR ACTUAL
+                    FinalizarPaso("EntradaAnterior", managerActual.gameObject);
+                    SetPalpitarVisual(managerActual.gameObject, "LetreroLigaIzq", false); // Apagar destino al llegar
+
+                    managerActual.ActivarHuerto();
+
+                    if (fase == 0)
+                    {
+                        pasoConexion = 1;
+                        andy.Decir("Ahora conecta la SALIDA SIGUIENTE a NULL.");
+                        SetPalpitarVisual(managerActual.gameObject, "LetreroLigaDer", true); // Palpitar siguiente origen
+                    }
+                    else
+                    {
+                        pasoConexion = 1;
+                        andy.Decir("Ahora la liga hacia atrás: SALIDA ANTERIOR a la ENTRADA SIGUIENTE previa.");
+                        SetPalpitarVisual(managerActual.gameObject, "LetreroLigaIzq", true); // Palpitar anterior origen
+                    }
                 }
-            }
-            // CASO: Llevar agua al NULL
-            else if ((fase == 0 && pasoConexion == 1) || (fase > 0 && pasoConexion == 2))
-            {
-                if (tipo == "SalidaSiguiente" && nodoTocado == managerActual)
+                else if (pasoConexion == 1 && fase > 0 && tipo == "EntradaSiguiente" && nodoTocado == nodoPrevio)
                 {
-                    cargandoAgua = true;
-                    puntoOrigenActual = managerActual.puntoSalidaSiguiente;
+                    FinalizarPaso("EntradaSiguiente", nodoPrevio.gameObject);
+                    // El brillo del destino se apaga dentro de FinalizarPaso genérico o aquí:
+                    SetPalpitarVisual(nodoPrevio.gameObject, "LetreroLigaDer", false);
 
-                    // GESTIÓN VISUAL NULL
-                    SetPalpitarVisual(managerActual.gameObject, "LetreroLigaDer", false); // APAGAR ORIGEN
-                    if (brilloNull) brilloNull.SetEncendido(true); // ENCENDER DESTINO (NULL)
-
-                    andy.Decir("Lleva la salida a NULL.");
+                    pasoConexion = 2;
+                    andy.Decir("Bien. Cierra el nodo llevando la SALIDA SIGUIENTE a NULL.");
+                    SetPalpitarVisual(managerActual.gameObject, "LetreroLigaDer", true); // Palpitar origen final
+                }
+                else if (tipo == "Null")
+                {
+                    FinalizarNodoCompleto();
                 }
             }
         }
         else
         {
-            // ... dentro de AccionEnLetrero, en la parte final del else (cuando cargandoAgua es true) ...
-
-            if (pasoConexion == 0 && tipo == "EntradaAnterior" && nodoTocado == managerActual)
-            {
-                FinalizarPaso("EntradaAnterior", managerActual.gameObject);
-                SetPalpitarVisual(managerActual.gameObject, "LetreroLigaIzq", false); // Apagar destino al llegar
-
-                managerActual.ActivarHuerto();
-
-                if (fase == 0)
-                {
-                    pasoConexion = 1;
-                    andy.Decir("Ahora conecta la SALIDA SIGUIENTE a NULL.");
-                    SetPalpitarVisual(managerActual.gameObject, "LetreroLigaDer", true); // Palpitar siguiente origen
-                }
-                else
-                {
-                    pasoConexion = 1;
-                    andy.Decir("Ahora la liga hacia atrás: SALIDA ANTERIOR a la ENTRADA SIGUIENTE previa.");
-                    SetPalpitarVisual(managerActual.gameObject, "LetreroLigaIzq", true); // Palpitar anterior origen
-                }
-            }
-            else if (pasoConexion == 1 && fase > 0 && tipo == "EntradaSiguiente" && nodoTocado == nodoPrevio)
-            {
-                FinalizarPaso("EntradaSiguiente", nodoPrevio.gameObject);
-                // El brillo del destino se apaga dentro de FinalizarPaso genérico o aquí:
-                SetPalpitarVisual(nodoPrevio.gameObject, "LetreroLigaDer", false);
-
-                pasoConexion = 2;
-                andy.Decir("Bien. Cierra el nodo llevando la SALIDA SIGUIENTE a NULL.");
-                SetPalpitarVisual(managerActual.gameObject, "LetreroLigaDer", true); // Palpitar origen final
-            }
-            else if (tipo == "Null")
-            {
-                FinalizarNodoCompleto();
-            }
-        }
+            LogicaEliminarInicio(tipo, objetoTocado);
+        }        
     }
 
     void IniciarCarga(Transform origen, string proximoBrillo, GameObject nodoDestino)
@@ -269,12 +277,110 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
 
         listaNodos.Add(managerActual);
         managerActual = null;
-
         UIManager.instancia.MarcarTareaCompletada(fase * 2);
         fase++;
 
         if (fase < 3) StartCoroutine(EsperarSiguiente());
-        else andy.Decir("¡Lista Doblemente Ligada completada!");
+        else StartCoroutine(CambiarAModoEliminar()); // CAMBIO AQUÍ
+    }
+
+    IEnumerator CambiarAModoEliminar()
+    {
+        andy.Decir("¡Excelente! Ahora aprenderemos a ELIMINAR el primer nodo (Rábano).");
+        yield return new WaitForSeconds(3f);
+        modoActual = ModoOperacion.Eliminar;
+        pasoConexion = 0;
+        cargandoAgua = false;
+
+        UIManager.instancia.ConfigurarTextosChecklist("", "Eliminar Rábano", "", "", "");
+        andy.Decir("Recoge el agua del INICIO para saltar el Rábano y conectar directo a la Zanahoria.");
+        if (brilloHead) brilloHead.SetEncendido(true);
+    }
+
+    void LogicaEliminarInicio(string tipo, GameObject objetoTocado)
+    {
+        // 1. Declaramos nodoTocado extrayéndolo del objeto que enviamos por parámetro
+        NodoManager nodoTocado = objetoTocado != null ? objetoTocado.GetComponentInParent<NodoManager>() : null;
+
+        NodoManager nodoZanahoria = listaNodos[1]; // La Zanahoria
+        NodoManager nodoRabano = listaNodos[0];    // El Rábano a eliminar
+
+        if (!cargandoAgua)
+        {
+            if (tipo == "Head" && pasoConexion == 0)
+            {
+                brilloHead.SetEncendido(false);
+                IniciarCarga(puntoSalidaHead, "EntradaAnterior", nodoZanahoria.gameObject);
+                andy.Decir("Conecta el INICIO directamente a la entrada de la Zanahoria.");
+            }
+        }
+        else
+        {
+            // 2. Ahora nodoTocado ya existe y la comparación funcionará
+            if (tipo == "EntradaAnterior" && nodoTocado == nodoZanahoria)
+            {
+                cargandoAgua = false;
+
+                // Limpiar visualmente todas las líneas que conectaban al Rábano
+                LimpiarSegmentosDeNodo(nodoRabano);
+
+                // Crear el nuevo enlace directo Head -> Zanahoria
+                CrearSegmentoFijo(puntoSalidaHead.position, nodoZanahoria.puntoEntradaAnterior.position);
+
+                // Ejecutar la animación de eliminación del Rábano
+                StartCoroutine(SecuenciaEliminacionRábano(nodoRabano));
+            }
+        }
+    }
+
+    void LimpiarSegmentosDeNodo(NodoManager nodo)
+    {
+        // Obtenemos los puntos calientes del nodo que queremos desconectar
+        Vector3 entAnt = nodo.puntoEntradaAnterior.position;
+        Vector3 salSig = nodo.puntoSalidaSiguiente.position;
+        Vector3 salAnt = nodo.puntoSalidaAnterior.position;
+        Vector3 entSig = nodo.puntoEntradaSiguiente.position;
+
+        // Recorremos la lista de atrás hacia adelante para borrar sin errores
+        for (int i = lineasFijasActivas.Count - 1; i >= 0; i--)
+        {
+            LineRenderer lr = lineasFijasActivas[i];
+            if (lr == null) continue;
+
+            Vector3 p0 = lr.GetPosition(0);
+            Vector3 p1 = lr.GetPosition(1);
+
+            // Si la línea empieza o termina en cualquier punto del Rábano, la borramos
+            if (p0 == entAnt || p1 == entAnt || p0 == salSig || p1 == salSig ||
+                p0 == salAnt || p1 == salAnt || p0 == entSig || p1 == entSig)
+            {
+                Destroy(lr.gameObject);
+                lineasFijasActivas.RemoveAt(i);
+            }
+        }
+    }
+
+    IEnumerator SecuenciaEliminacionRábano(NodoManager nodo)
+    {
+        // NUEVO: Apagamos todos los brillos y palpitaciones de la escena inmediatamente
+        ApagarBrillosGlobales();
+
+        andy.Decir("¡Perfecto! Al conectar el agua a la Zanahoria, el Rábano queda fuera de la lista.");
+        SumarPuntos(30);
+
+        // Animación de secado y desaparición
+        nodo.IniciarSecuenciaEliminacion();
+
+        yield return new WaitForSeconds(2f);
+
+        UIManager.instancia.MarcarTareaCompletada(1);
+        andy.Decir("¡Felicidades! Has dominado la inserción y eliminación en Listas Dobles.");
+    }
+
+    // Función auxiliar para limpiar segmentos específicos si es necesario
+    void LimpiarSegmentosEntre(Vector3 p1, Vector3 p2)
+    {
+        // Lógica para destruir las líneas que tocaban al rábano para que no se vea doble
     }
 
     void Update()
