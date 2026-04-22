@@ -61541,6 +61541,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -1.3
       objectReference: {fileID: 0}
+    - target: {fileID: 7626667441664156644, guid: 0de18c0e3fab66545be3570cc35952e9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7626667441664156644, guid: 0de18c0e3fab66545be3570cc35952e9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 8609532910330432396, guid: 0de18c0e3fab66545be3570cc35952e9, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -93352,9 +93360,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6307189b7081ca94c9b26f812fa8bb09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRabano: {fileID: 5721182865851055489, guid: 10772d9933d3d9049903185ee294bed4, type: 3}
-  spriteZanahoria: {fileID: -3829704256182829468, guid: 69655a6125fe7414ab6ac77f106357c5, type: 3}
-  spriteRemolacha: {fileID: 980901043704405067, guid: 7183fdf36fa816349b9d8cad0ea90708, type: 3}
   andy: {fileID: 1873500765}
   textoPuntos: {fileID: 209793410}
   lineaAgua: {fileID: 1802465722}
@@ -93363,6 +93368,9 @@ MonoBehaviour:
   prefabRabano: {fileID: 839396964857267429, guid: f6ddd5f03af1a41419635b3a07c63b53, type: 3}
   prefabZanahoria: {fileID: 839396964857267429, guid: 8260760e5fced9f4c90a4064489fe448, type: 3}
   prefabRemolacha: {fileID: 839396964857267429, guid: 29f87ed2cdfe5e848979bb0ab48da8e7, type: 3}
+  spriteRabano: {fileID: 5721182865851055489, guid: 10772d9933d3d9049903185ee294bed4, type: 3}
+  spriteZanahoria: {fileID: -3829704256182829468, guid: 69655a6125fe7414ab6ac77f106357c5, type: 3}
+  spriteRemolacha: {fileID: 980901043704405067, guid: 7183fdf36fa816349b9d8cad0ea90708, type: 3}
   puntoSalidaHead: {fileID: 501578209}
   puntoEntradaNull: {fileID: 1528405447}
   brilloHead: {fileID: 501578208}

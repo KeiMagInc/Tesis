@@ -12,6 +12,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     public LineRenderer lineaAgua;
     public LineRenderer lineaFija;
     public Transform lupi;
+    public LineRenderer lineaFijaPrev;
 
     [Header("Prefabs y Sprites")]
     public GameObject prefabRabano;
@@ -34,7 +35,10 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     private List<NodoManager> listaNodos = new List<NodoManager>();
     private string[] nombresNodos = { "Rabano", "Zanahoria", "Remolacha" };
     private Transform puntoOrigenActual;
-
+    private List<Vector3> puntosAdelante = new List<Vector3>();
+    private List<Vector3> puntosAtras = new List<Vector3>();
+    private List<LineRenderer> lineasFijasActivas = new List<LineRenderer>();
+    private LineRenderer enlaceActualAlNull;
     void Awake() => instancia = this;
 
     void OnEnable()
@@ -48,6 +52,16 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         StartCoroutine(IntroNivel5());
     }
 
+    void CrearSegmentoFijo(Vector3 inicio, Vector3 fin)
+    {
+        // Clonamos la lineaFija que ya tienes configurada con el color y grosor que te gusta
+        LineRenderer nuevaLinea = Instantiate(lineaFija, transform);
+        nuevaLinea.positionCount = 2;
+        nuevaLinea.SetPosition(0, inicio);
+        nuevaLinea.SetPosition(1, fin);
+        lineasFijasActivas.Add(nuevaLinea);
+    }
+
     public void ResetearNivel()
     {
         fase = 0; pasoConexion = 0; cargandoAgua = false;
@@ -57,6 +71,14 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         UIManager.instancia.ConfigurarTextosChecklist("Sembrar rabano", "", "Sembrar zanahoria", "", "Sembrar remolacha");
         LimpiarNodosEscena();
         ApagarBrillosGlobales();
+        puntosAdelante.Clear();
+        puntosAtras.Clear();
+        foreach (LineRenderer l in lineasFijasActivas) Destroy(l.gameObject);
+        lineasFijasActivas.Clear();
+        if (enlaceActualAlNull != null) Destroy(enlaceActualAlNull.gameObject);
+        lineaAgua.positionCount = 0;
+        lineaFija.positionCount = 0; // Esta ahora solo sirve como "plantilla"
+        if (lineaFijaPrev != null) lineaFijaPrev.positionCount = 0;
     }
 
     IEnumerator IntroNivel5()
@@ -84,6 +106,16 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     {
         UIManager.instancia.SetSemillaPalpitar("");
         managerActual = ObtenerNodoReciente();
+
+        // BORRAMOS ESTO: Ya no quitamos los puntos aquí para que la línea al NULL persista
+        /*
+        if (fase > 0 && puntosAdelante.Count >= 2)
+        {
+            puntosAdelante.RemoveAt(puntosAdelante.Count - 1);
+            puntosAdelante.RemoveAt(puntosAdelante.Count - 1);
+            ActualizarLineaFijaDoble();
+        }
+        */
 
         if (fase == 0)
         {
@@ -171,6 +203,26 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     void FinalizarPaso(string brilloApagar, GameObject nodo)
     {
         cargandoAgua = false;
+
+        if (brilloApagar == "EntradaAnterior")
+        {
+            // Si el nodo anterior estaba conectado al NULL, borramos ese enlace viejo
+            if (enlaceActualAlNull != null)
+            {
+                Destroy(enlaceActualAlNull.gameObject);
+                enlaceActualAlNull = null;
+            }
+
+            // Creamos el enlace: desde la salida del anterior hasta la entrada de este
+            CrearSegmentoFijo(puntoOrigenActual.position, managerActual.puntoEntradaAnterior.position);
+        }
+        else if (brilloApagar == "EntradaSiguiente")
+        {
+            // Enlace de retroceso: desde la salida anterior de este hasta la entrada siguiente del previo
+            NodoManager nodoPrevio = listaNodos[fase - 1];
+            CrearSegmentoFijo(managerActual.puntoSalidaAnterior.position, nodoPrevio.puntoEntradaSiguiente.position);
+        }
+
         puntoOrigenActual = null;
         SumarPuntos(10);
         EncenderBrilloEnNodo(nodo, brilloApagar, false);
@@ -179,15 +231,27 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     void FinalizarNodoCompleto()
     {
         cargandoAgua = false;
+
+        // Creamos el enlace al NULL
+        LineRenderer lineaNull = Instantiate(lineaFija, transform);
+        lineaNull.positionCount = 2;
+        lineaNull.SetPosition(0, managerActual.puntoSalidaSiguiente.position);
+        lineaNull.SetPosition(1, puntoEntradaNull.position);
+
+        // Lo guardamos por separado para poder quitarlo luego
+        enlaceActualAlNull = lineaNull;
+
         puntoOrigenActual = null;
         if (brilloNull) brilloNull.SetEncendido(false);
         SumarPuntos(20);
         managerActual.DrenarAgua();
+
         listaNodos.Add(managerActual);
-        UIManager.instancia.MarcarTareaCompletada(fase * 2);
-        ActualizarLineaFijaDoble();
-        fase++;
         managerActual = null;
+
+        UIManager.instancia.MarcarTareaCompletada(fase * 2);
+        fase++;
+
         if (fase < 3) StartCoroutine(EsperarSiguiente());
         else andy.Decir("¡Lista Doblemente Ligada completada!");
     }
@@ -205,25 +269,16 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
 
     void ActualizarLineaFijaDoble()
     {
-        List<Vector3> cam = new List<Vector3>();
-        if (puntoSalidaHead) cam.Add(puntoSalidaHead.position);
+        // Dibuja el camino "Siguiente" (Next)
+        lineaFija.positionCount = puntosAdelante.Count;
+        lineaFija.SetPositions(puntosAdelante.ToArray());
 
-        for (int i = 0; i < listaNodos.Count; i++)
+        // Dibuja el camino "Anterior" (Prev) en el SEGUNDO objeto
+        if (lineaFijaPrev != null)
         {
-            // Protección contra Nulos
-            if (listaNodos[i].puntoEntradaAnterior) cam.Add(listaNodos[i].puntoEntradaAnterior.position);
-            if (listaNodos[i].puntoSalidaSiguiente) cam.Add(listaNodos[i].puntoSalidaSiguiente.position);
+            lineaFijaPrev.positionCount = puntosAtras.Count;
+            lineaFijaPrev.SetPositions(puntosAtras.ToArray());
         }
-
-        if (puntoEntradaNull) cam.Add(puntoEntradaNull.position);
-
-        for (int i = listaNodos.Count - 1; i > 0; i--)
-        {
-            if (listaNodos[i].puntoSalidaAnterior) cam.Add(listaNodos[i].puntoSalidaAnterior.position);
-            if (listaNodos[i - 1].puntoEntradaSiguiente) cam.Add(listaNodos[i - 1].puntoEntradaSiguiente.position);
-        }
-        lineaFija.positionCount = cam.Count;
-        lineaFija.SetPositions(cam.ToArray());
     }
 
     private NodoManager ObtenerNodoReciente()
