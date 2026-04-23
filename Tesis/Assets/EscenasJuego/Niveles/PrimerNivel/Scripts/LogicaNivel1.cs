@@ -4,6 +4,11 @@ using TMPro;
 
 public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Sonidos")]
+    public AudioSource fuenteAudio; 
+    public AudioClip sonidoAcierto;
+    public AudioClip sonidoError;
+    public AudioClip sonidoCompletado;
     [Header("Sprites UI Originales")]
     public Sprite spriteTrigo;
     public Sprite spritePapa;
@@ -86,6 +91,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
             ActualizarBrillos(false, true, false, false);
             andy.Decir("¡Dirección obtenida de P! Llévala al campo INFO.");
         }
+        else if (estado < 0) { ReproducirError(); } // Solo si no ha llegado aquí
     }
 
     void AccionHuertoEntrada()
@@ -98,6 +104,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
             ActualizarBrillos(false, false, true, false);
             andy.Decir("¡Campo INFO asignado! Activa el LIGA.");
         }
+        else if (estado < 1) { ReproducirError(); }
     }
 
     void AccionHuertoSalida()
@@ -108,6 +115,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
             ActualizarBrillos(false, false, false, true);
             andy.Decir("Apunta a NULL.");
         }
+        else if (estado < 2) { ReproducirError(); } // Esto evita el doble sonido en LIGA
     }
 
     void AccionNull()
@@ -116,16 +124,31 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         {
             estado = 4;
             if (huertoScript) huertoScript.DrenarAgua();
-            GanarPuntos(10);
+            GanarPuntos(10, true); 
             ActualizarBrillos(false, false, false, false);
             andy.Decir("¡Excelente! Estructura básica creada.");
+            ReproducirNivelCompleto();
         }
+        else if (estado < 3) { ReproducirError(); }
     }
 
-    void GanarPuntos(int cant)
+    void ReproducirNivelCompleto()
+    {
+        if (fuenteAudio && sonidoCompletado)
+            for (int i = 0; i < 5; i++) fuenteAudio.PlayOneShot(sonidoCompletado);
+    }
+
+    void ReproducirError()
+    {
+        if (fuenteAudio && sonidoError) fuenteAudio.PlayOneShot(sonidoError);
+    }
+
+    void GanarPuntos(int cant, bool silencioso = false)
     {
         UIManager.puntosGlobales += cant;
         ActualizarPuntos();
+        // Solo suena si NO es silencioso
+        if (!silencioso && fuenteAudio && sonidoAcierto) fuenteAudio.PlayOneShot(sonidoAcierto);
     }
 
     void ActualizarPuntos()

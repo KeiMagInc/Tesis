@@ -5,6 +5,11 @@ using UnityEngine;
 
 public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Sonidos")]
+    public AudioSource fuenteAudio;
+    public AudioClip sonidoAcierto;
+    public AudioClip sonidoError;
+    public AudioClip sonidoCompletado;
     [Header("Sprites UI Originales")]
     public Sprite spriteTrigo;
     public Sprite spritePapa;
@@ -96,54 +101,92 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
 
     public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
     {
-        if (tipo == "Head" && pasoConexion == 0)
+        switch (tipo)
         {
-            cargandoAgua = true;
-            lineaAgua.positionCount = 2;
-            lineaAgua.SetPosition(0, puntoSalidaHead.position);
-            brilloHead.SetEncendido(false);
-            andy.Decir("Lleva el flujo a la INFO.");
-            GameObject huerto = BuscarHuerto();
-            if (huerto != null) EncenderBrilloHijo(huerto, "Info", true);
-        }
-        else if (tipo == "EntradaHuerto" && cargandoAgua)
-        {
-            managerActual = objetoTocado.GetComponentInParent<NodoManager>();
-            cargandoAgua = false;
-            lineaAgua.SetPosition(1, managerActual.puntoEntrada.position);
-            managerActual.ActivarHuerto();
-            pasoConexion = 1;
-            SumarPuntos(10);
-            EncenderBrilloHijo(managerActual.gameObject, "Info", false);
-            EncenderBrilloHijo(managerActual.gameObject, "Liga", true);
-            andy.Decir("Activa la LIGA.");
-        }
-        else if (tipo == "SalidaHuerto" && pasoConexion == 1)
-        {
-            cargandoAgua = true;
-            lineaAgua.positionCount = 4;
-            lineaAgua.SetPosition(2, managerActual.puntoSalida.position);
-            EncenderBrilloHijo(managerActual.gameObject, "Liga", false);
-            brilloNull.SetEncendido(true);
-            pasoConexion = 2;
-            andy.Decir("Apunta a NULL.");
-        }
-        else if (tipo == "Null" && pasoConexion == 2 && cargandoAgua)
-        {
-            cargandoAgua = false;
-            lineaAgua.SetPosition(3, puntoEntradaNull.position);
-            SumarPuntos(10);
-            managerActual.DrenarAgua();
-            brilloNull.SetEncendido(false);
-            UIManager.instancia.MarcarTareaCompletada(mapaIndicesUI[fase]);
-            fase++;
-            if (fase < 3) StartCoroutine(EsperarSiguiente());
-            else andy.Decir("¡Nodos completados!");
+            case "Head":
+                if (pasoConexion == 0 && !cargandoAgua)
+                {
+                    cargandoAgua = true;
+                    lineaAgua.positionCount = 2;
+                    lineaAgua.SetPosition(0, puntoSalidaHead.position);
+                    brilloHead.SetEncendido(false);
+                    andy.Decir("Lleva el flujo a la INFO.");
+                    GameObject huerto = BuscarHuerto();
+                    if (huerto != null) EncenderBrilloHijo(huerto, "Info", true);
+                }
+                // Si ya se activó, no hacemos nada (evita sonido de error)
+                break;
+
+            case "EntradaHuerto":
+                if (cargandoAgua && pasoConexion == 0)
+                {
+                    managerActual = objetoTocado.GetComponentInParent<NodoManager>();
+                    cargandoAgua = false;
+                    lineaAgua.SetPosition(1, managerActual.puntoEntrada.position);
+                    managerActual.ActivarHuerto();
+                    pasoConexion = 1;
+                    SumarPuntos(10);
+                    EncenderBrilloHijo(managerActual.gameObject, "Info", false);
+                    EncenderBrilloHijo(managerActual.gameObject, "Liga", true);
+                    andy.Decir("Activa la LIGA.");
+                }
+                else if (!cargandoAgua && pasoConexion == 0) ReproducirError();
+                break;
+
+            case "SalidaHuerto":
+                if (pasoConexion == 1)
+                {
+                    cargandoAgua = true;
+                    lineaAgua.positionCount = 4;
+                    lineaAgua.SetPosition(2, managerActual.puntoSalida.position);
+                    EncenderBrilloHijo(managerActual.gameObject, "Liga", false);
+                    brilloNull.SetEncendido(true);
+                    pasoConexion = 2;
+                    // Aquí podrías poner un sonido de acierto manual si quieres, 
+                    // pero como no sumamos puntos, no sonará nada por defecto.
+                }
+                else if (pasoConexion < 1) ReproducirError();
+                break;
+
+            case "Null":
+                if (pasoConexion == 2 && cargandoAgua)
+                {
+                    cargandoAgua = false;
+                    lineaAgua.SetPosition(3, puntoEntradaNull.position);
+                    brilloNull.SetEncendido(false);
+                    UIManager.instancia.MarcarTareaCompletada(mapaIndicesUI[fase]);
+                    fase++;
+
+                    if (fase < 3)
+                    {
+                        SumarPuntos(10); // Sonido normal de acierto
+                        StartCoroutine(EsperarSiguiente());
+                    }
+                    else
+                    {
+                        SumarPuntos(10, true); // Silencioso para que no se cruce con el de nivel completo
+                        andy.Decir("¡Nodos completados!");
+                        ReproducirNivelCompleto();
+                    }
+                }
+                else if (pasoConexion < 2) ReproducirError();
+                break;
         }
     }
 
+    void ReproducirError()
+    {
+        if (fuenteAudio && sonidoError) fuenteAudio.PlayOneShot(sonidoError);
+    }
+
     void Update() { if (cargandoAgua) lineaAgua.SetPosition(lineaAgua.positionCount - 1, lupi.position); }
-    void SumarPuntos(int cant) { UIManager.puntosGlobales += cant; ActualizarPuntos(); }
+    void SumarPuntos(int cant, bool silencioso = false)
+    {
+        UIManager.puntosGlobales += cant;
+        ActualizarPuntos();
+        if (!silencioso && fuenteAudio && sonidoAcierto) fuenteAudio.PlayOneShot(sonidoAcierto);
+    }
+
     void ActualizarPuntos() { if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString(); }
 
     GameObject BuscarHuerto()
@@ -166,6 +209,13 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                 b.SetEncendido(e);
         }
     }
+
+    void ReproducirNivelCompleto()
+    {
+        if (fuenteAudio && sonidoCompletado)
+            for (int i = 0; i < 5; i++) fuenteAudio.PlayOneShot(sonidoCompletado);
+    }
+
     void ApagarBrillos() { if (brilloHead) brilloHead.SetEncendido(false); if (brilloNull) brilloNull.SetEncendido(false); }
     IEnumerator EsperarSiguiente() { yield return new WaitForSeconds(2f); ProximoPaso(); }
 }

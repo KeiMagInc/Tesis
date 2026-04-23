@@ -6,6 +6,11 @@ using UnityEngine;
 
 public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Sonidos")]
+    public AudioSource fuenteAudio;
+    public AudioClip sonidoAcierto;
+    public AudioClip sonidoError;
+    public AudioClip sonidoCompletado;
     [Header("Sprites UI Originales")]
     public Sprite spriteTrigo;
     public Sprite spritePapa;
@@ -146,6 +151,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     {
         if (modoActual == ModoOperacion.InsertarInicio)
         {
+            for (int i = 0; i < 5; i++) fuenteAudio.PlayOneShot(sonidoCompletado);
             andy.Decir("¡Excelente trabajo! Has dominado la inserción por el frente de la lista.");
             yield return new WaitForSeconds(3f);
             modoActual = ModoOperacion.InsertarFinal;
@@ -155,6 +161,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         }
         else if (modoActual == ModoOperacion.InsertarFinal)
         {
+            for (int i = 0; i < 5; i++) fuenteAudio.PlayOneShot(sonidoCompletado);
             andy.Decir("¡Increíble! Ya sabes cómo construir una lista añadiendo elementos al final.");
             yield return new WaitForSeconds(3f);
             modoActual = ModoOperacion.EliminarInicio;
@@ -175,7 +182,9 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     {
         if (tipo == "Head" && !cargandoAgua)
         {
-            brilloHead.SetEncendido(false);
+            // APAGAR INMEDIATAMENTE
+            if (brilloHead) brilloHead.SetEncendido(false);
+
             cargandoAgua = true;
             andy.Decir("Conecta el INICIO directamente a la INFO del Trigo. Así saltaremos la Calabaza.");
             EncenderBrilloEnNodo(listaNodos[1].gameObject, "Info", true);
@@ -185,10 +194,17 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             if (objetoTocado.GetComponentInParent<NodoManager>() == listaNodos[1])
             {
                 cargandoAgua = false;
+                // Apagamos el brillo de Info del Trigo
                 EncenderBrilloEnNodo(listaNodos[1].gameObject, "Info", false);
                 andy.Decir("¡Bien! Al quitarle el agua desaparecerá de la lista.");
                 StartCoroutine(SecuenciaEliminacionExitosa(0));
             }
+            else { ReproducirError(); }
+        }
+        // Evitamos que el error suene si simplemente tocamos INICIO otra vez
+        else if (tipo != "Head")
+        {
+            ReproducirError();
         }
     }
 
@@ -211,18 +227,27 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             andy.Decir("¡Perfecto! El Trigo ahora es el final y la Papa ha sido eliminada.");
             StartCoroutine(SecuenciaEliminacionExitosa(2));
         }
+        else if (cargandoAgua) { ReproducirError(); }
     }
 
     IEnumerator SecuenciaEliminacionExitosa(int indiceNodo)
     {
-        SumarPuntos(20);
+        ApagarBrillosGlobales();
+
+        // CAMBIO 1: Silenciar el acierto para que no tape al de completado
+        SumarPuntos(20, true);
+
         listaNodos[indiceNodo].IniciarSecuenciaEliminacion();
         yield return new WaitForSeconds(1.5f);
         ActualizarLineaFijaPostEliminacion();
         UIManager.instancia.MarcarTareaCompletada((fase * 2) + 1);
         fase++;
+
         if (modoActual == ModoOperacion.EliminarInicio)
         {
+            // CAMBIO 2: Añadir sonido aquí para que suene al terminar de eliminar el primero
+            for (int i = 0; i < 5; i++) fuenteAudio.PlayOneShot(sonidoCompletado);
+
             andy.Decir("¡Adiós calabaza! Último paso...");
             yield return new WaitForSeconds(1.5f);
             modoActual = ModoOperacion.EliminarFinal;
@@ -231,12 +256,20 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         else
         {
             andy.Decir("¡Perfecto! Dominas las listas de Cairo.");
+            ReproducirNivelCompleto();
         }
+    }
+
+    void ReproducirNivelCompleto()
+    {
+        if (fuenteAudio && sonidoCompletado)
+            for (int i = 0; i < 5; i++) fuenteAudio.PlayOneShot(sonidoCompletado);
     }
 
     void LimpiarEscenaParaSiguienteAlgoritmo()
     {
         fase = 0; pasoConexion = 0; cargandoAgua = false;
+        if (lineaAgua) lineaAgua.positionCount = 0;
         lineaAgua.positionCount = 0;
         lineaFija.positionCount = 0;
         puntosCadenaFija.Clear();
@@ -251,7 +284,8 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     void FinalizarNodo()
     {
         cargandoAgua = false;
-        SumarPuntos(10);
+        bool esUltimoDeFase = (fase == 2);
+        SumarPuntos(10, esUltimoDeFase);
         managerActual.DrenarAgua();
         ApagarBrillosGlobales();
         UIManager.instancia.MarcarTareaCompletada(fase * 2); 
@@ -412,6 +446,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 if (tipo == "SalidaHuerto")
                 {
                     andy.Decir("¡No! El INICIO debe conectarse a la INFO (izquierda) para entrar al NODO.");
+                    ReproducirError();
                     return;
                 }
                 if (tipo == "EntradaHuerto" && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
@@ -461,6 +496,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 if (tipo == "SalidaHuerto" && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
                 {
                     andy.Decir("¡Error! El flujo de la lista debe entrar por la INFO (izquierda) del nuevo nodo.");
+                    ReproducirError();
                     return;
                 }
                 if (tipo == "EntradaHuerto" && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
@@ -476,6 +512,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 else
                 {
                     andy.Decir("Conecta la manguera al letrero de INFO (izquierdo) de la nueva planta.");
+                    ReproducirError();
                 }
             }
             else if (pasoConexion == 2)
@@ -568,7 +605,19 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         return null;
     }
     void EncenderBrilloEnNodo(GameObject nodo, string parte, bool encender) { if (nodo == null) return; foreach (var b in nodo.GetComponentsInChildren<EfectoLetrero>(true)) if (b.gameObject.name.ToUpper().Contains(parte.ToUpper())) b.SetEncendido(encender); }
-    void SumarPuntos(int cant) { UIManager.puntosGlobales += cant; if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString(); }
+    void SumarPuntos(int cant, bool silencioso = false)
+    {
+        UIManager.puntosGlobales += cant;
+        if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();
+        // Sonido de acierto
+        if (!silencioso && fuenteAudio && sonidoAcierto) fuenteAudio.PlayOneShot(sonidoAcierto);
+    }
+
+
+    void ReproducirError()
+    {
+        if (fuenteAudio && sonidoError) fuenteAudio.PlayOneShot(sonidoError);
+    }
     void ApagarBrillosGlobales() { if (brilloHead) brilloHead.SetEncendido(false); if (brilloNull) brilloNull.SetEncendido(false); EfectoLetrero[] todos = Object.FindObjectsByType<EfectoLetrero>(FindObjectsSortMode.None); foreach (var b in todos) b.SetEncendido(false); }
     IEnumerator EsperarSiguiente() { yield return new WaitForSeconds(2f); ProximoPaso(); }
 }
