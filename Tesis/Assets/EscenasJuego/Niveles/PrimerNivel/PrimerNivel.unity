@@ -52497,7 +52497,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.25
+  m_Volume: 0.15
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -65860,6 +65860,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 400b2d2352f125d43865c8d5c81f2278, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioBienvenida: {fileID: 8300000, guid: 1bb01310432c82148aa6e107579b601b, type: 3}
+  audioDireccionObtenida: {fileID: 8300000, guid: 2a01eecb9ba73cb4fbcfb775b30bb78a, type: 3}
+  audioSemillasAsignadas: {fileID: 8300000, guid: fbc2cee530b82f2498090ca90edb5868, type: 3}
+  audioCanalActivado: {fileID: 8300000, guid: 5c5e8229ca28f6243984b5700f36f12e, type: 3}
+  audioCosechaASalvo: {fileID: 8300000, guid: 65ba134c6befca742a18bcd9fee901d8, type: 3}
+  audioErrorHead: {fileID: 8300000, guid: 13520805ff9e6864f91867afeeada714, type: 3}
+  audioErrorInfo: {fileID: 8300000, guid: a634b6949f1fa51489bf93fbd71ab333, type: 3}
+  audioErrorLiga: {fileID: 8300000, guid: 03a0b9639aad4a749bf72ece9304c804, type: 3}
+  audioErrorNull: {fileID: 8300000, guid: d7e937618a1c2c442b3d398e4352bfc2, type: 3}
   fuenteAudio: {fileID: 686502030}
   sonidoAcierto: {fileID: 8300000, guid: 98863497d94d52b40b3ab0e2db327e07, type: 3}
   sonidoError: {fileID: 8300000, guid: 824e3d297c0e52540852102b31c7850c, type: 3}
@@ -67047,7 +67056,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.25
+  m_Volume: 0.15
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -67639,7 +67648,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.25
+  m_Volume: 0.15
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -88911,6 +88920,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -2253911629886400664, guid: 780d9d867d30c904fba92b45cb5d9520, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1873500765}
+    - targetCorrespondingSourceObject: {fileID: -2253911629886400664, guid: 780d9d867d30c904fba92b45cb5d9520, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1873500767}
   m_SourcePrefab: {fileID: -8435245712485981826, guid: 780d9d867d30c904fba92b45cb5d9520, type: 3}
 --- !u!4 &1227960335 stripped
 Transform:
@@ -89370,7 +89382,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.25
+  m_Volume: 0.15
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -91909,7 +91921,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.25
+  m_Volume: 0.15
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -95357,12 +95369,111 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa8e3d6f90845a742b33675391561c9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fuenteVoz: {fileID: 1873500767}
+  velocidadTexto: 0.03
   objetivo: {fileID: 191083641}
   offset: {x: -1, y: 1, z: 0}
   suavidad: 5
   panelDialogo: {fileID: 249468135}
   textoMensaje: {fileID: 477818415}
   tiempoVisible: 4
+--- !u!82 &1873500767
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1873500763}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &1894616716 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8514544348411615620, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}

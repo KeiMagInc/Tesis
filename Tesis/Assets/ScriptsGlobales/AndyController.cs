@@ -6,6 +6,10 @@ namespace Mundo2
 {
     public class AndyController : MonoBehaviour
     {
+        [Header("Audio y Efectos de Texto")]
+        public AudioSource fuenteVoz; // Añade un AudioSource a Andy y arrástralo aquí
+        public float velocidadTexto = 0.03f; // Tiempo que tarda en aparecer cada letra
+        private Coroutine rutinaEscribir;
         [Header("Configuración de Seguimiento")]
         public Transform objetivo; // Lupi
         public Vector3 offset = new Vector3(-1f, 1f, 0f);
@@ -38,20 +42,37 @@ namespace Mundo2
 
         // Esta es la función que llamaremos para proyectar los mensajes en el rectángulo
         // Dentro de AndyController.cs
-        public void Decir(string mensaje)
+        public void Decir(string mensaje, AudioClip clipVoz = null)
         {
             if (panelDialogo != null && textoMensaje != null)
             {
-                // COMENTA O BORRA ESTAS LÍNEAS:
-                // if (rutinaOcultar != null) StopCoroutine(rutinaOcultar);
-
                 panelDialogo.SetActive(true);
-                textoMensaje.text = mensaje;
 
-                // COMENTA O BORRA ESTA LÍNEA TAMBIÉN:
-                // rutinaOcultar = StartCoroutine(OcultarDialogo());
+                // 1. Detenemos cualquier texto o audio anterior
+                if (rutinaEscribir != null) StopCoroutine(rutinaEscribir);
+                if (fuenteVoz != null) fuenteVoz.Stop();
+
+                // 2. Reproducimos el nuevo audio de IA (si se envió uno)
+                if (clipVoz != null && fuenteVoz != null)
+                {
+                    fuenteVoz.clip = clipVoz;
+                    fuenteVoz.Play();
+                }
+
+                // 3. Iniciamos el efecto letra por letra
+                rutinaEscribir = StartCoroutine(EscribirTexto(mensaje));
             }
             Debug.Log("<color=yellow>ANDY DICE: </color>" + mensaje);
+        }
+
+        private IEnumerator EscribirTexto(string mensaje)
+        {
+            textoMensaje.text = ""; // Vaciamos el texto inicial
+            foreach (char letra in mensaje.ToCharArray())
+            {
+                textoMensaje.text += letra; // Añadimos una letra
+                yield return new WaitForSeconds(velocidadTexto); // Esperamos una fracción de segundo
+            }
         }
     }
 }
