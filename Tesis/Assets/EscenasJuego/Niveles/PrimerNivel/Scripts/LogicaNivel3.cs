@@ -151,7 +151,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     {
         if (modoActual == ModoOperacion.InsertarInicio)
         {
-            for (int i = 0; i < 5; i++) fuenteAudio.PlayOneShot(sonidoCompletado);
+            ReproducirNivelCompleto();
             andy.Decir("¡Excelente trabajo! Has dominado la inserción por el frente de la lista.");
             yield return new WaitForSeconds(3f);
             modoActual = ModoOperacion.InsertarFinal;
@@ -161,7 +161,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         }
         else if (modoActual == ModoOperacion.InsertarFinal)
         {
-            for (int i = 0; i < 5; i++) fuenteAudio.PlayOneShot(sonidoCompletado);
+            ReproducirNivelCompleto();
             andy.Decir("¡Increíble! Ya sabes cómo construir una lista añadiendo elementos al final.");
             yield return new WaitForSeconds(3f);
             modoActual = ModoOperacion.EliminarInicio;
@@ -246,7 +246,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         if (modoActual == ModoOperacion.EliminarInicio)
         {
             // CAMBIO 2: Añadir sonido aquí para que suene al terminar de eliminar el primero
-            for (int i = 0; i < 5; i++) fuenteAudio.PlayOneShot(sonidoCompletado);
+            ReproducirNivelCompleto();
 
             andy.Decir("¡Adiós calabaza! Último paso...");
             yield return new WaitForSeconds(1.5f);
@@ -263,7 +263,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     void ReproducirNivelCompleto()
     {
         if (fuenteAudio && sonidoCompletado)
-            for (int i = 0; i < 5; i++) fuenteAudio.PlayOneShot(sonidoCompletado);
+            for (int i = 0; i < 2; i++) fuenteAudio.PlayOneShot(sonidoCompletado);
     }
 
     void LimpiarEscenaParaSiguienteAlgoritmo()

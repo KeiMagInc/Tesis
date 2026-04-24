@@ -213,7 +213,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     void ReproducirNivelCompleto()
     {
         if (fuenteAudio && sonidoCompletado)
-            for (int i = 0; i < 5; i++) fuenteAudio.PlayOneShot(sonidoCompletado);
+            for (int i = 0; i < 2; i++) fuenteAudio.PlayOneShot(sonidoCompletado);
     }
 
     void ApagarBrillos() { if (brilloHead) brilloHead.SetEncendido(false); if (brilloNull) brilloNull.SetEncendido(false); }
