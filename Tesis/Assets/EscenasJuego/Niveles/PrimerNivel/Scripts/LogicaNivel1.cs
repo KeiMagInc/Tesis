@@ -10,12 +10,11 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     public AudioClip audioSemillasAsignadas;
     public AudioClip audioCanalActivado;
     public AudioClip audioCosechaASalvo;
-    public AudioClip audioErrorHead;
     public AudioClip audioErrorInfo;
     public AudioClip audioErrorLiga;
     public AudioClip audioErrorNull;
     [Header("Sonidos")]
-    public AudioSource fuenteAudio; 
+    public AudioSource fuenteAudio;
     public AudioClip sonidoAcierto;
     public AudioClip sonidoError;
     public AudioClip sonidoCompletado;
@@ -42,6 +41,9 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     public NodoManager huertoScript;
     private int estado = 0;
 
+    // --- NUEVO: Variable para evitar interacciones simultáneas ---
+    private float tiempoUltimaAccion = 0f;
+
     void Awake() => instancia = this;
 
     void OnEnable()
@@ -67,8 +69,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         ActualizarBrillos(true, false, false, false);
         if (andy != null)
         {
-            // Fusión GDD (Poste, manguera) + Cairo (Puntero P, Lista vacía)
-            andy.Decir("¡Bienvenido Lupi! Para crear nuestra primera Lista Enlazada, ve al poste principal.\nUsa 'E' en INICIO (Puntero P) para tomar la manguera de memoria.", audioBienvenida);
+            andy.Decir("¡Bienvenido Lupi! Identifica las partes del NODO, ve al poste INICIO (Puntero P). Usa 'E' para obtener la dirección de memoria del primer objeto de tipo Nodo.", audioBienvenida);
         }
         ActualizarPuntos();
     }
@@ -85,6 +86,11 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
 
     public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
     {
+        // --- NUEVO: Si ha pasado menos de 1.5 segundos desde la última acción, IGNORAR. ---
+        // Esto evita que 2 letreros se activen a la misma vez y sobreescriban a Andy.
+        if (Time.time - tiempoUltimaAccion < 1.5f) return;
+        tiempoUltimaAccion = Time.time;
+
         switch (tipo)
         {
             case "Head": AccionHead(); break;
@@ -100,13 +106,9 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         {
             estado = 1; GanarPuntos(10);
             ActualizarBrillos(false, true, false, false);
-            // Teoría Cairo: P debe apuntar al nodo.
-            andy.Decir("¡Dirección base obtenida en P! Ahora lleva el canal de luz hacia el Almacén de la parcela (Campo INFO) para asegurar nuestros datos.", audioDireccionObtenida);
+            andy.Decir("¡Dirección obtenida en P! Lleva la conexión al Almacén de la parcela INFO. Aquí guardaremos el valor de la semilla, que puede ser un dato de tipo int o string.", audioDireccionObtenida);
         }
-        else if (estado < 0)
-        {
-            ReproducirError("Error lógico: Una lista siempre nace de un Puntero principal (Inicio/P).", audioErrorHead);
-        }
+        // (Quité el error de estado < 0 aquí porque estado nunca baja de 0)
     }
 
     void AccionHuertoEntrada()
@@ -117,12 +119,11 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
             if (huertoScript) huertoScript.ActivarHuerto();
             GanarPuntos(10);
             ActualizarBrillos(false, false, true, false);
-            // GDD: El agua no va a ningún lado. Cairo: El campo LIGA debe definirse.
-            andy.Decir("¡Semillas en INFO asignadas! Pero cuidado, si la válvula (Campo LIGA) queda suelta, habrá fuga de memoria. Activa la LIGA.", audioSemillasAsignadas);
+            andy.Decir("¡Dato guardado en INFO! Ahora ve a la válvula LIGA. Recuerda: LIGA no guarda textos ni números, es una variable de tipo Nodo que debe apuntar al siguiente huerto.", audioSemillasAsignadas);
         }
         else if (estado < 1)
         {
-            ReproducirError("¡El Kaos acecha! No puedes guardar datos en INFO si no tienes una conexión desde el INICIO (P).", audioErrorInfo);
+            ReproducirError("¡Lupi cuidado! No puedes guardar datos en INFO si no tienes una conexión desde el INICIO (P).", audioErrorInfo);
         }
     }
 
@@ -132,12 +133,11 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         {
             estado = 3; GanarPuntos(10);
             ActualizarBrillos(false, false, false, true);
-            // Cairo: Si no hay más nodos, apuntar a NIL/NULL.
-            andy.Decir("¡Canal LIGA activado! Como es nuestro único huerto, arrastra la manguera al pozo seco (NULL) para indicar el final de la lista.", audioCanalActivado);
+            andy.Decir("¡Referencia LIGA activada! Como no tenemos otro Nodo para conectar, arrastra la manguera al pozo final NULL. Así indicamos que este es el final de la lista.", audioCanalActivado);
         }
         else if (estado < 2)
         {
-            ReproducirError("Secuencia incorrecta. Primero debes llenar el Almacén (INFO) antes de manipular la válvula de salida (LIGA).", audioErrorLiga);
+            ReproducirError("Secuencia incorrecta. Primero debes llenar el Almacén INFO antes de manipular la válvula de salida LIGA.", audioErrorLiga);
         }
     }
 
@@ -149,13 +149,11 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
             if (huertoScript) huertoScript.DrenarAgua();
             GanarPuntos(10, true);
             ActualizarBrillos(false, false, false, false);
-            // Celebración final mezclando ambos conceptos.
-            andy.Decir("¡Cosecha a salvo! Has creado un nodo perfecto: Puntero P -> INFO -> LIGA apuntando a NULL. ¡Sin referencias sueltas!", audioCosechaASalvo);
-            ReproducirNivelCompleto();
+            andy.Decir("¡Excelente! Has creado un Nodo perfecto. Su INFO guarda un dato (int o string) y su LIGA (de tipo Nodo) apunta a NULL. ¡Sin fugas de memoria!", audioCosechaASalvo); ReproducirNivelCompleto();
         }
         else if (estado < 3)
         {
-            ReproducirError("Ese es el pozo NULL. Solo debes apuntar aquí usando la válvula (LIGA) del huerto para cerrar la lista.", audioErrorNull);
+            ReproducirError("Ese es el pozo NULL. Solo debes apuntar aquí usando la válvula LIGA del huerto para cerrar la lista.", audioErrorNull);
         }
     }
 
@@ -167,15 +165,14 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
 
     void ReproducirError(string mensajePista, AudioClip audioExplicacion)
     {
-        if (fuenteAudio && sonidoError) fuenteAudio.PlayOneShot(sonidoError); // Suena el "Bip"
-        if (andy != null) andy.Decir(mensajePista, audioExplicacion); // Andy habla y se escribe el texto
+        if (fuenteAudio && sonidoError) fuenteAudio.PlayOneShot(sonidoError);
+        if (andy != null) andy.Decir(mensajePista, audioExplicacion);
     }
 
     void GanarPuntos(int cant, bool silencioso = false)
     {
         UIManager.puntosGlobales += cant;
         ActualizarPuntos();
-        // Solo suena si NO es silencioso
         if (!silencioso && fuenteAudio && sonidoAcierto) fuenteAudio.PlayOneShot(sonidoAcierto);
     }
 

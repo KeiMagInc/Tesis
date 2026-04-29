@@ -65860,15 +65860,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 400b2d2352f125d43865c8d5c81f2278, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioBienvenida: {fileID: 8300000, guid: 1bb01310432c82148aa6e107579b601b, type: 3}
-  audioDireccionObtenida: {fileID: 8300000, guid: 2a01eecb9ba73cb4fbcfb775b30bb78a, type: 3}
-  audioSemillasAsignadas: {fileID: 8300000, guid: fbc2cee530b82f2498090ca90edb5868, type: 3}
-  audioCanalActivado: {fileID: 8300000, guid: 5c5e8229ca28f6243984b5700f36f12e, type: 3}
-  audioCosechaASalvo: {fileID: 8300000, guid: 65ba134c6befca742a18bcd9fee901d8, type: 3}
-  audioErrorHead: {fileID: 8300000, guid: 13520805ff9e6864f91867afeeada714, type: 3}
-  audioErrorInfo: {fileID: 8300000, guid: a634b6949f1fa51489bf93fbd71ab333, type: 3}
-  audioErrorLiga: {fileID: 8300000, guid: 03a0b9639aad4a749bf72ece9304c804, type: 3}
-  audioErrorNull: {fileID: 8300000, guid: d7e937618a1c2c442b3d398e4352bfc2, type: 3}
+  audioBienvenida: {fileID: 8300000, guid: 5b13ccbf7e503e9478f6c589467d5388, type: 3}
+  audioDireccionObtenida: {fileID: 8300000, guid: d9dd8241201f6564091a89b8fcff6884, type: 3}
+  audioSemillasAsignadas: {fileID: 8300000, guid: 626c2e1ed3d1b99498200149613d05f3, type: 3}
+  audioCanalActivado: {fileID: 8300000, guid: b33108d9b8e9a7643a849ff7c09a6521, type: 3}
+  audioCosechaASalvo: {fileID: 8300000, guid: 6276640b347726b4bb812a94e9707c2a, type: 3}
+  audioErrorInfo: {fileID: 8300000, guid: 417cab766d5dec948991312d819fecf2, type: 3}
+  audioErrorLiga: {fileID: 8300000, guid: 0198eb9d4f6112c48a9c45c6327d332d, type: 3}
+  audioErrorNull: {fileID: 8300000, guid: 82ce1c42dd8b3684d87c0ddf87cd1076, type: 3}
   fuenteAudio: {fileID: 686502030}
   sonidoAcierto: {fileID: 8300000, guid: 98863497d94d52b40b3ab0e2db327e07, type: 3}
   sonidoError: {fileID: 8300000, guid: 824e3d297c0e52540852102b31c7850c, type: 3}
