@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    [Header("Audios Diálogos Andy (Errores)")]
+    public AudioClip audioUsaSemillaPrimero;
+    public AudioClip audioAcercateMas;
     public static UIManager instancia;
     public ILogicaNivel logicaActiva;
     public static int puntosGlobales = 0;
@@ -99,7 +102,7 @@ public class UIManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(tipo) || tipo.ToLower() != semillaActiva.ToLower())
         {
-            andy.Decir("¡Usa la " + semillaActiva + " primero!");
+            andy.Decir("¡Lupi! Usa la semilla que te indica la mochila.", audioUsaSemillaPrimero);
             return;
         }
         ZonaPlantado[] zonas = Object.FindObjectsByType<ZonaPlantado>(FindObjectsSortMode.None);
@@ -124,7 +127,7 @@ public class UIManager : MonoBehaviour
                 if (logicaActiva != null) logicaActiva.AvanceSiembraExitosa();
             }
         }
-        else andy.Decir("Acércate más a la parcela.");
+        else andy.Decir("Acércate más a la parcela que corresponde la semilla.", audioAcercateMas);
     }
 
     public void ConfigurarTextosChecklist(params string[] textos)

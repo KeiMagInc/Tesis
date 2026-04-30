@@ -5,6 +5,15 @@ using UnityEngine;
 
 public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Audios Diálogos Andy")]
+    public AudioClip audioIntroMochila;
+    public AudioClip audioIntroChecklist;
+    public AudioClip audioInstruccionSiembra;
+    public AudioClip audioHuertoListo;
+    public AudioClip audioDireccionHead;
+    public AudioClip audioDatoInfo;
+    public AudioClip audioLigaAbierta;
+    public AudioClip audioFinalNivel;
     [Header("Sonidos")]
     public AudioSource fuenteAudio;
     public AudioClip sonidoAcierto;
@@ -73,12 +82,16 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     IEnumerator Intro()
     {
         yield return new WaitForSeconds(1f);
-        andy.Decir("¡Lupi! Abre tu mochila para ver las semillas.");
+        andy.Decir("¡Lupi! El Kaos ha borrado el rastro de la cosecha. Abre tu mochila y revisa las semillas para restaurar los Nodos de este valle.", audioIntroMochila);
         UIManager.instancia.MostrarMochilaSolo(true);
+        if (audioIntroMochila != null) yield return new WaitForSeconds(audioIntroMochila.length);
         yield return new WaitUntil(() => UIManager.instancia.panelParcelas.activeSelf);
-        andy.Decir("Bien. Ahora revisa las tareas pendientes.");
+        andy.Decir("¡Lupifantástico!. Consulta el pergamino de objetivos. Debemos plantar los huertos en el orden lógico para que la Lista no se pierda en la memoria.", audioIntroChecklist);
         UIManager.instancia.MostrarChecklistSolo(true);
-        yield return new WaitForSeconds(2.5f);
+        if (audioIntroChecklist != null)
+            yield return new WaitForSeconds(audioIntroChecklist.length + 0.5f);
+        else
+            yield return new WaitForSeconds(2.5f); 
         ProximoPaso();
     }
 
@@ -87,7 +100,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         if (fase >= nombresNodos.Length) return;
         string semillaActual = nombresNodos[fase];
         UIManager.instancia.SetSemillaPalpitar(semillaActual);
-        andy.Decir("Siembra el " + semillaActual);
+        andy.Decir("Planta el huerto. Recuerda que cada huerto es un Nodo que necesita un valor en su Almacén INFO.", audioInstruccionSiembra);
         pasoConexion = 0;
         lineaAgua.positionCount = 0;
     }
@@ -95,7 +108,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     public void AvanceSiembraExitosa()
     {
         UIManager.instancia.SetSemillaPalpitar("");
-        andy.Decir("Busca P (INICIO).");
+        andy.Decir("¡Huerto listo! Ahora busca el poste de INICIO (P) para obtener la dirección de memoria inicial.", audioHuertoListo);
         brilloHead.SetEncendido(true);
     }
 
@@ -110,7 +123,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                     lineaAgua.positionCount = 2;
                     lineaAgua.SetPosition(0, puntoSalidaHead.position);
                     brilloHead.SetEncendido(false);
-                    andy.Decir("Lleva el flujo a la INFO.");
+                    andy.Decir("¡Dirección obtenida! Conecta la manguera de luz al Almacén INFO para asignar el dato al Nodo actual.", audioDireccionHead);
                     GameObject huerto = BuscarHuerto();
                     if (huerto != null) EncenderBrilloHijo(huerto, "Info", true);
                 }
@@ -128,7 +141,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                     SumarPuntos(10);
                     EncenderBrilloHijo(managerActual.gameObject, "Info", false);
                     EncenderBrilloHijo(managerActual.gameObject, "Liga", true);
-                    andy.Decir("Activa la LIGA.");
+                    andy.Decir("Dato guardado con éxito. Ahora abre la válvula LIGA, este canal de riego es el puntero que conectará con el siguiente destino.", audioDatoInfo);
                 }
                 else if (!cargandoAgua && pasoConexion == 0) ReproducirError();
                 break;
@@ -140,10 +153,9 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                     lineaAgua.positionCount = 4;
                     lineaAgua.SetPosition(2, managerActual.puntoSalida.position);
                     EncenderBrilloHijo(managerActual.gameObject, "Liga", false);
+                    andy.Decir("El canal está abierto. Arrastra el enlace hasta el pozo NULL para finalizar esta secuencia.", audioLigaAbierta);
                     brilloNull.SetEncendido(true);
                     pasoConexion = 2;
-                    // Aquí podrías poner un sonido de acierto manual si quieres, 
-                    // pero como no sumamos puntos, no sonará nada por defecto.
                 }
                 else if (pasoConexion < 1) ReproducirError();
                 break;
@@ -165,7 +177,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                     else
                     {
                         SumarPuntos(10, true); // Silencioso para que no se cruce con el de nivel completo
-                        andy.Decir("¡Nodos completados!");
+                        andy.Decir("¡Excelente trabajo, Arquitecto de referencias! Has creado tres Nodos perfectos y el flujo llega al pozo NULL sin fugas de memoria.", audioFinalNivel);
                         ReproducirNivelCompleto();
                     }
                 }
