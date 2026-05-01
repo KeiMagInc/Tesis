@@ -183,11 +183,12 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                     else
                     {
                         SumarPuntos(10, true); // Silencioso para que no se cruce con el de nivel completo
-                        if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null)
+                        if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null && KaosController.instancia != null)
                         {
                             barreraSiguiente.Abrir();
                             checkpointFinal.AparecerYActivar();
                             controladorInsignia.MostrarInsignia(insigniaDeEsteNivel);
+                            KaosController.instancia.RecibirDanoYDesaparecer("CreacionReferencias");
                         }
                         andy.Decir("¡Excelente trabajo, Arquitecto de referencias! Has creado tres Nodos perfectos y el flujo llega al pozo NULL sin fugas de memoria.", audioFinalNivel);
                         ReproducirNivelCompleto();

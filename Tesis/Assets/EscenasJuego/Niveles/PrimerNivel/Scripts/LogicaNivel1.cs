@@ -155,11 +155,12 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
             if (huertoScript) huertoScript.DrenarAgua();
             GanarPuntos(10, true);
             ActualizarBrillos(false, false, false, false);
-            if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null)
+            if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null && KaosController.instancia != null)
             {
                 barreraSiguiente.Abrir();
                 checkpointFinal.AparecerYActivar();
                 controladorInsignia.MostrarInsignia(insigniaDeEsteNivel);
+                KaosController.instancia.RecibirDanoYDesaparecer("AnatomiaComponentes");
             }
             andy.Decir("¡Excelente, Analista de estructuras! Has creado un Nodo perfecto. Su INFO guarda un dato (int o string) y su LIGA (de tipo Nodo) apunta a NULL. ¡Sin fugas de memoria!", audioCosechaASalvo); 
             ReproducirNivelCompleto();

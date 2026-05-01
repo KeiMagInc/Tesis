@@ -550,11 +550,12 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         }
         else
         {
-            if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null)
+            if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null && KaosController.instancia != null)
             {
                 barreraSiguiente.Abrir();
                 checkpointFinal.AparecerYActivar();
                 controladorInsignia.MostrarInsignia(insigniaDeEsteNivel);
+                KaosController.instancia.RecibirDanoYDesaparecer("ListasDobles");
             }
             andy.Decir("¡Felicidades! Has completado todas las operaciones de Listas Dobles.");
             ReproducirNivelCompleto();

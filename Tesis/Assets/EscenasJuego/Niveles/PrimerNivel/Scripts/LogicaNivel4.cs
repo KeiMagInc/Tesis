@@ -332,11 +332,12 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                     }
                     else
                     {
-                        if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null)
+                        if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null && KaosController.instancia != null)
                         {
                             barreraSiguiente.Abrir();
                             checkpointFinal.AparecerYActivar();
                             controladorInsignia.MostrarInsignia(insigniaDeEsteNivel);
+                            KaosController.instancia.RecibirDanoYDesaparecer("ListasCirculares");
                         }
                         andy.Decir("¡Lista circular actualizada con éxito! El inicio ahora es la Papa.");
                         ReproducirNivelCompleto();

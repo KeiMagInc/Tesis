@@ -12,6 +12,9 @@ public class KaosController : MonoBehaviour
         public Transform puntoA;
         public Transform puntoB;
     }
+    public static KaosController instancia; 
+    public static List<string> nivelesTerminados = new List<string>(); 
+    private bool recibiendoDano = false;
     private Material materialOriginal;
     [Header("Material Silueta")]
     public Material materialSilueta;
@@ -37,9 +40,10 @@ public class KaosController : MonoBehaviour
     private float escalaActualBase;
     void Awake()
     {
+        instancia = this; 
         lupi = GameObject.FindGameObjectWithTag("Player");
         sr = GetComponent<SpriteRenderer>();
-        materialOriginal = sr.material; 
+        materialOriginal = sr.material;
         escalaActualBase = escalaInicial;
         escalaUltimoFrame = escalaInicial;
     }
@@ -54,10 +58,17 @@ public class KaosController : MonoBehaviour
     }
     void DetectarZonaPorLista()
     {
-        if (lupi == null) return;
+        if (lupi == null || recibiendoDano) return;
         foreach (var zona in listaZonas)
         {
-            if (zona.triggerCamara != null && zona.triggerCamara.OverlapPoint(lupi.transform.position))            {
+            if (zona.triggerCamara != null && zona.triggerCamara.OverlapPoint(lupi.transform.position))
+            {
+                if (nivelesTerminados.Contains(zona.nombreDeLaZona))
+                {
+                    sr.enabled = false; 
+                    return;
+                }
+                sr.enabled = true; 
                 if (triggerActual != zona.triggerCamara)
                 {
                     triggerActual = zona.triggerCamara;
@@ -66,6 +77,31 @@ public class KaosController : MonoBehaviour
                 return;
             }
         }
+    }
+    public void RecibirDanoYDesaparecer(string nombreNivel)
+    {
+        if (!recibiendoDano)
+        {
+            if (!nivelesTerminados.Contains(nombreNivel))
+                nivelesTerminados.Add(nombreNivel);
+            StartCoroutine(AnimacionMuerteKaos());
+        }
+    }
+    System.Collections.IEnumerator AnimacionMuerteKaos()
+    {
+        recibiendoDano = true;
+        estaAnimando = true;
+        if (sr != null && materialSilueta != null) sr.material = materialSilueta;
+        float tiempo = 0;
+        while (tiempo < 1.0f) 
+        {
+            sr.color = (sr.color == Color.red) ? Color.clear : Color.red;
+            yield return new WaitForSeconds(0.1f);
+            tiempo += 0.1f;
+        }
+        sr.enabled = false; 
+        recibiendoDano = false;
+        estaAnimando = false;
     }
     void AsignarNuevaZona(ConfiguracionZona nuevaZona)
     {
