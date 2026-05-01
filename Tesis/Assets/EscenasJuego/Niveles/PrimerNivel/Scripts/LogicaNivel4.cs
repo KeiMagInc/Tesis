@@ -6,6 +6,13 @@ using UnityEngine;
 
 public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Sonidos")]
+    public AudioSource fuenteAudio;
+    public AudioClip sonidoAcierto;
+    public AudioClip sonidoError;
+    public AudioClip sonidoCompletado;
+    [Header("Progreso")]
+    public BarreraProgreso barreraSiguiente;
     public static LogicaNivel4 instancia;
     [Header("Sprites UI")]
     public Sprite spriteCalabaza;
@@ -320,12 +327,23 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                         StartCoroutine(EsperarSiguienteEliminar());
                     }
                     else
-                    {
+                    {                        
+                        if (barreraSiguiente != null)
+                        {
+                            barreraSiguiente.Abrir();
+                        }
                         andy.Decir("¡Lista circular actualizada con éxito! El inicio ahora es la Papa.");
+                        ReproducirNivelCompleto();
                     }
                 }
             }
         }
+    }
+
+    void ReproducirNivelCompleto()
+    {
+        if (fuenteAudio && sonidoCompletado)
+            for (int i = 0; i < 2; i++) fuenteAudio.PlayOneShot(sonidoCompletado);
     }
 
     void ActualizarLineaFijaPostEliminacion()

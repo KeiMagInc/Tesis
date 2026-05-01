@@ -6,6 +6,13 @@ using UnityEngine;
 
 public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Sonidos")]
+    public AudioSource fuenteAudio;
+    public AudioClip sonidoAcierto;
+    public AudioClip sonidoError;
+    public AudioClip sonidoCompletado;
+    [Header("Progreso")]
+    public BarreraProgreso barreraSiguiente;
     public static LogicaNivel5 instancia;
     public AndyController andy;
     public TextMeshProUGUI textoPuntos;
@@ -539,8 +546,20 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         }
         else
         {
+            if (barreraSiguiente != null)
+            {
+                barreraSiguiente.Abrir();
+                Debug.Log("¡Último desafío de la Sierra completado!");
+            }
             andy.Decir("¡Felicidades! Has completado todas las operaciones de Listas Dobles.");
+            ReproducirNivelCompleto();
         }
+    }
+
+    void ReproducirNivelCompleto()
+    {
+        if (fuenteAudio && sonidoCompletado)
+            for (int i = 0; i < 2; i++) fuenteAudio.PlayOneShot(sonidoCompletado);
     }
 
     // Funciones Gráficas y Limpieza por Distancia

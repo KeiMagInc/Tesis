@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Progreso")]
+    public BarreraProgreso barreraSiguiente;
     [Header("Sonidos")]
     public AudioSource fuenteAudio;
     public AudioClip sonidoAcierto;
@@ -254,7 +256,11 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             ProximoPaso();
         }
         else
-        {
+        {            
+            if (barreraSiguiente != null)
+            {
+                barreraSiguiente.Abrir();
+            }
             andy.Decir("¡Perfecto! Dominas las listas de Cairo.");
             ReproducirNivelCompleto();
         }
