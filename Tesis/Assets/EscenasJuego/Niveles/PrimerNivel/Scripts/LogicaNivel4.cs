@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Insignias")]
+    public ControladorInsignia controladorInsignia;
+    public Sprite insigniaDeEsteNivel;
     public Checkpoint checkpointFinal;
     [Header("Sonidos")]
     public AudioSource fuenteAudio;
@@ -329,10 +332,11 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                     }
                     else
                     {
-                        if (barreraSiguiente != null && checkpointFinal != null)
+                        if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null)
                         {
                             barreraSiguiente.Abrir();
                             checkpointFinal.AparecerYActivar();
+                            controladorInsignia.MostrarInsignia(insigniaDeEsteNivel);
                         }
                         andy.Decir("¡Lista circular actualizada con éxito! El inicio ahora es la Papa.");
                         ReproducirNivelCompleto();

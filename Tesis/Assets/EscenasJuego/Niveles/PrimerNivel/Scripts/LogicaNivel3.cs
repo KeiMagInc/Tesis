@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Insignias")]
+    public ControladorInsignia controladorInsignia;
+    public Sprite insigniaDeEsteNivel;
     public Checkpoint checkpointFinal;
     [Header("Progreso")]
     public BarreraProgreso barreraSiguiente;
@@ -258,10 +261,11 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         }
         else
         {
-            if (barreraSiguiente != null && checkpointFinal != null)
+            if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null)
             {
                 barreraSiguiente.Abrir();
                 checkpointFinal.AparecerYActivar();
+                controladorInsignia.MostrarInsignia(insigniaDeEsteNivel);
             }
             andy.Decir("¡Perfecto! Dominas las listas de Cairo.");
             ReproducirNivelCompleto();

@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Insignias")]
+    public ControladorInsignia controladorInsignia;
+    public Sprite insigniaDeEsteNivel;
     public Checkpoint checkpointFinal;
     [Header("Sonidos")]
     public AudioSource fuenteAudio;
@@ -547,10 +550,11 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         }
         else
         {
-            if (barreraSiguiente != null && checkpointFinal != null)
+            if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null)
             {
                 barreraSiguiente.Abrir();
                 checkpointFinal.AparecerYActivar();
+                controladorInsignia.MostrarInsignia(insigniaDeEsteNivel);
             }
             andy.Decir("¡Felicidades! Has completado todas las operaciones de Listas Dobles.");
             ReproducirNivelCompleto();

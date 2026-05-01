@@ -1,10 +1,19 @@
 fileFormatVersion: 2
-guid: d98ce6cbd1466744b9decb697f00bf3c
+guid: 44d0b981ea56a3c41a6fea919cf10bd6
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2797219186245131464
-    second: Interfaz2_0
+      213: -4123710091714066996
+    second: HUD Puntos_0
+  - first:
+      213: 3464050560958120079
+    second: HUD Puntos_1
+  - first:
+      213: -774529191815962496
+    second: HUD Puntos_2
+  - first:
+      213: 3544024299874350095
+    second: HUD Puntos_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,12 +55,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
-  spriteMeshType: 0
+  spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -96,17 +105,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Interfaz2_0
+      name: HUD Puntos_0
       rect:
         serializedVersion: 2
-        x: 35
-        y: 14
-        width: 28
-        height: 24
+        x: 119
+        y: 186
+        width: 242
+        height: 80
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +137,74 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 833a3fc68f74e29d0800000000000000
-      internalID: -2797219186245131464
+      spriteID: cc580ba1583a5c6c0800000000000000
+      internalID: -4123710091714066996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD Puntos_1
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 90
+        width: 186
+        height: 92
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f80c6e1c1a7c21030800000000000000
+      internalID: 3464050560958120079
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD Puntos_2
+      rect:
+        serializedVersion: 2
+        x: 171
+        y: 55
+        width: 68
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 080a3adbdc15045f0800000000000000
+      internalID: -774529191815962496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HUD Puntos_3
+      rect:
+        serializedVersion: 2
+        x: 241
+        y: 55
+        width: 68
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f04fc5dd257ee2130800000000000000
+      internalID: 3544024299874350095
       vertices: []
       indices: 
       edges: []
@@ -125,7 +213,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +223,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Interfaz2_0: -2797219186245131464
+      HUD Puntos_0: -4123710091714066996
+      HUD Puntos_1: 3464050560958120079
+      HUD Puntos_2: -774529191815962496
+      HUD Puntos_3: 3544024299874350095
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 65a18ada79027424286a7e67655cdfcc
+guid: 5005f64025f263447acc7317898b0b42
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7692532965039022663
-    second: MarcoCreditos_0
+      213: -8556057885812432577
+    second: SupervisorFlujoCircular_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -96,17 +96,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: MarcoCreditos_0
+      name: SupervisorFlujoCircular_0
       rect:
         serializedVersion: 2
-        x: 244
-        y: 51
-        width: 793
-        height: 600
+        x: 0
+        y: 0
+        width: 312
+        height: 346
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9bddddb6602ae3590800000000000000
-      internalID: -7692532965039022663
+      spriteID: f31687e4fa6c24980800000000000000
+      internalID: -8556057885812432577
       vertices: []
       indices: 
       edges: []
@@ -135,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      MarcoCreditos_0: -7692532965039022663
+      SupervisorFlujoCircular_0: -8556057885812432577
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

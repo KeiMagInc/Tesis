@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 2be3a161681de884daf6e355430a0791
+guid: 0f28a8c58a1ee8b4fadc6e22b6c6d976
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2950670615974519247
-    second: HistoriaParte1_0
+      213: -5931077577829324559
+    second: "T\xE9cnicoCaminosDobles_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,17 +96,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: HistoriaParte1_0
+      name: "T\xE9cnicoCaminosDobles_0"
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1440
-        height: 823
+        width: 306
+        height: 332
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: fc1285aba43e2f820800000000000000
-      internalID: 2950670615974519247
+      spriteID: 1f8e23efd5490bda0800000000000000
+      internalID: -5931077577829324559
       vertices: []
       indices: 
       edges: []
@@ -135,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      HistoriaParte1_0: 2950670615974519247
+      "T\xE9cnicoCaminosDobles_0": -5931077577829324559
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
