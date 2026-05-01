@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
 {
+    public Checkpoint checkpointFinal;
     [Header("Sonidos")]
     public AudioSource fuenteAudio;
     public AudioClip sonidoAcierto;
@@ -327,10 +328,11 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                         StartCoroutine(EsperarSiguienteEliminar());
                     }
                     else
-                    {                        
-                        if (barreraSiguiente != null)
+                    {
+                        if (barreraSiguiente != null && checkpointFinal != null)
                         {
                             barreraSiguiente.Abrir();
+                            checkpointFinal.AparecerYActivar();
                         }
                         andy.Decir("¡Lista circular actualizada con éxito! El inicio ahora es la Papa.");
                         ReproducirNivelCompleto();

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
 {
+    public Checkpoint checkpointFinal;
     [Header("Progreso")]
     public BarreraProgreso barreraSiguiente; // Arrastra aquí el objeto BarrerasProgreso del mapa
     [Header("Audios Diálogos Andy")]
@@ -179,9 +180,10 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                     else
                     {
                         SumarPuntos(10, true); // Silencioso para que no se cruce con el de nivel completo
-                        if (barreraSiguiente != null)
+                        if (barreraSiguiente != null && checkpointFinal != null)
                         {
                             barreraSiguiente.Abrir();
+                            checkpointFinal.AparecerYActivar();
                         }
                         andy.Decir("¡Excelente trabajo, Arquitecto de referencias! Has creado tres Nodos perfectos y el flujo llega al pozo NULL sin fugas de memoria.", audioFinalNivel);
                         ReproducirNivelCompleto();

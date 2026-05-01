@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
 {
+    public Checkpoint checkpointFinal;
     [Header("Progreso")]
     public BarreraProgreso barreraSiguiente;
     [Header("Sonidos")]
@@ -256,10 +257,11 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             ProximoPaso();
         }
         else
-        {            
-            if (barreraSiguiente != null)
+        {
+            if (barreraSiguiente != null && checkpointFinal != null)
             {
                 barreraSiguiente.Abrir();
+                checkpointFinal.AparecerYActivar();
             }
             andy.Decir("¡Perfecto! Dominas las listas de Cairo.");
             ReproducirNivelCompleto();
