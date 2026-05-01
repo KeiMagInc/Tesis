@@ -271,7 +271,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Lupi_Player_Final_Controller
+  m_Name: LupiController
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: moveX
