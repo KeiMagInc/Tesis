@@ -51901,11 +51901,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 19.5
+      value: 29.5
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.540001
+      value: 18.54
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -97432,6 +97432,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0976d74c87dbcc8488da2c02840c663d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioErrorNoRio: {fileID: 8300000, guid: 44f8d850bb2bcba44af74ee077da82ef, type: 3}
+  audioErrorNoLigaAnterior: {fileID: 8300000, guid: eef53ad395e422741a19a52eeceb750a, type: 3}
+  audioErrorNoInfoNueva: {fileID: 8300000, guid: 75f3149166fb9e44f921386f60770258, type: 3}
+  audioErrorNoCerrarCiclo: {fileID: 8300000, guid: e24aec5ce0f71564bb9263a776f47384, type: 3}
+  audioErrorEliminacion: {fileID: 8300000, guid: efe6472b61e43e840a7bea24fe843e00, type: 3}
+  audioErrorNoInfoNuevaNodo: {fileID: 8300000, guid: def150f3023f44d4c826f13cff34b274, type: 3}
+  audioErrorEliminacionFinal: {fileID: 8300000, guid: c2beb2cfe6de2504a9a72306c97338f6, type: 3}
+  audioErrorNoLigaAnteriorCerrar: {fileID: 8300000, guid: ee58d01734af81244b59231c10232769, type: 3}
+  audioIntroCircular: {fileID: 8300000, guid: 33c9eea0690cdd14f82ab02e4dcf30b8, type: 3}
+  audioPrimerNodoCircular: {fileID: 8300000, guid: 3ef130edefc243c4289f0529298c0d57, type: 3}
+  audioInsertarIntermedio: {fileID: 8300000, guid: 357385e536808aa48861fa5bd6829b1f, type: 3}
+  audioCerrarCiclo: {fileID: 8300000, guid: a0624937bca059f4881ddcd3684770f6, type: 3}
+  audioIntroEliminar: {fileID: 8300000, guid: 6de2e579cbe168e45a99381d55f9098e, type: 3}
+  audioEliminarFinal: {fileID: 8300000, guid: 1debb1ddb6512744cb13890ad1f0ec6d, type: 3}
+  audioEliminarInicio: {fileID: 8300000, guid: 63e2b45b829fd1645ba30a91f358a86c, type: 3}
+  audioPrepararNodo: {fileID: 8300000, guid: ca01c00cf31201f4991a88ac8dcdc879, type: 3}
+  audioSembrar: {fileID: 8300000, guid: 88711bbf55f16414d9910e9be83f8946, type: 3}
+  audioExitoCiclo: {fileID: 8300000, guid: a37b9d1ed98c4004982ac32cbd4ebfd2, type: 3}
+  audioExitoTotal: {fileID: 8300000, guid: c70d73b5db6337d40b4b3faccf452662, type: 3}
   controladorInsignia: {fileID: 192750249}
   insigniaDeEsteNivel: {fileID: -8556057885812432577, guid: 5005f64025f263447acc7317898b0b42, type: 3}
   checkpointFinal: {fileID: 1803596388538438346}

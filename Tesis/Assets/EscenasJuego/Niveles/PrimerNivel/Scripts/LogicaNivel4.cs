@@ -6,6 +6,27 @@ using UnityEngine;
 
 public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Audios de Error")]
+    public AudioClip audioErrorNoRio;
+    public AudioClip audioErrorNoLigaAnterior;
+    public AudioClip audioErrorNoInfoNueva;
+    public AudioClip audioErrorNoCerrarCiclo;
+    public AudioClip audioErrorEliminacion;
+    public AudioClip audioErrorNoInfoNuevaNodo;
+    public AudioClip audioErrorEliminacionFinal;
+    public AudioClip audioErrorNoLigaAnteriorCerrar;
+    [Header("Audios Diálogos Andy")]
+    public AudioClip audioIntroCircular;
+    public AudioClip audioPrimerNodoCircular;
+    public AudioClip audioInsertarIntermedio;
+    public AudioClip audioCerrarCiclo;
+    public AudioClip audioIntroEliminar;
+    public AudioClip audioEliminarFinal;
+    public AudioClip audioEliminarInicio;
+    public AudioClip audioPrepararNodo;
+    public AudioClip audioSembrar;
+    public AudioClip audioExitoCiclo;
+    public AudioClip audioExitoTotal;
     [Header("Insignias")]
     public ControladorInsignia controladorInsignia;
     public Sprite insigniaDeEsteNivel;
@@ -48,7 +69,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     private string[] nombresNodos = { "Calabaza", "Papa", "Trigo", "Zanahoria", "Rabano" };
     private enum ModoOperacion { Insertar, Eliminar }
     private ModoOperacion modoActual = ModoOperacion.Insertar;
-    private int indiceAEliminar = 4; 
+    private int indiceAEliminar = 4;
 
     void Awake() => instancia = this;
 
@@ -113,30 +134,24 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         }
         ApagarBrillos();
     }
-
     IEnumerator SecuenciaIntro()
     {
         yield return new WaitForSeconds(0.5f);
-        andy.Decir("¡Algoritmo 8.10! Vamos a construir una LISTA CIRCULAR de 5 cultivos.");
-        yield return new WaitForSeconds(2.5f);
-        andy.Decir("Abre tu mochila y comencemos por la derecha.");
+        andy.Decir("¡Lupi! Para que el riego de Tahuantindata sea eterno, aplicaremos las Listas Circulares que una estructura donde la vida fluye sin principio ni fin.", audioIntroCircular);
+        yield return new WaitForSeconds(audioIntroCircular.length + 0.5f);
+        andy.Decir("Abre tu mochila. Cada semilla será un nuevo Nodo en este ciclo sagrado.", audioPrepararNodo);
         UIManager.instancia.MostrarMochilaSolo(true);
         yield return new WaitUntil(() => UIManager.instancia.panelParcelas.activeSelf);
         UIManager.instancia.MostrarChecklistSolo(true);
         ProximoPasoSiembra();
     }
-
     void ProximoPasoSiembra()
     {
         if (fase < nombresNodos.Length)
         {
             UIManager.instancia.SetSemillaPalpitar(nombresNodos[fase]);
-            andy.Decir("Siembra " + nombresNodos[fase] + " en la posición indicada.");
+            andy.Decir("Siembra la semilla en la parcela. Cada semilla es un NODO del ciclo de Tahuantindata.", audioSembrar);
             subPaso = 0; 
-        }
-        else
-        {
-            andy.Decir("¡Increíble! Has completado el ciclo circular de los 5 cultivos.");
         }
     }
 
@@ -159,16 +174,18 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         }
         if (nodoActual != null)
         {
-            subPaso = 1; 
+            subPaso = 1;
             if (fase == 0)
             {
                 brilloRio.SetEncendido(true);
-                andy.Decir("Recoge agua del RÍO para el primer nodo.");
+                // Concepto Joyanes: Nodo que se apunta a sí mismo al inicio
+                andy.Decir("Como es el primer NODO, el puntero de acceso LIGA debe inicializarse apuntando a sí mismo.", audioPrimerNodoCircular);
             }
             else
             {
                 EncenderBrilloHijo(listaNodos[fase - 1].gameObject, "Liga", true);
-                andy.Decir("Ahora conecta el LIGA de la planta anterior a la ENTRADA de la nueva.");
+                // Concepto Joyanes: Reasignación de enlace
+                andy.Decir("Para insertar elementos, debemos actualizar el campo LIGA del NODO anterior hacia el nuevo componente de la Lista.", audioInsertarIntermedio);
             }
         }
     }
@@ -180,13 +197,14 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
             if (nodoActual == null) return;
             NodoManager managerTocado = objetoTocado.GetComponentInParent<NodoManager>();
 
-            if (!cargandoAgua)
+            if (!cargandoAgua) // PASO: Recoger agua (puntero)
             {
                 if (fase == 0 && (tipo == "LC" || tipo == "Head"))
                 {
                     cargandoAgua = true;
                     brilloRio.SetEncendido(false);
                     EncenderBrilloHijo(nodoActual.gameObject, "Info", true);
+                    // Opcional: Sonido de "click" o recojo.
                 }
                 else if (fase > 0 && tipo == "SalidaHuerto" && managerTocado == listaNodos[fase - 1])
                 {
@@ -205,15 +223,23 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                     EncenderBrilloHijo(nodoActual.gameObject, "Liga", false);
                     GameObject destino = (fase == 0) ? nodoActual.gameObject : listaNodos[0].gameObject;
                     EncenderBrilloHijo(destino, "Info", true);
-                    andy.Decir("¡Agua recogida! Llévala a la ENTRADA para cerrar el círculo.");
+                    andy.Decir("¡Escencial mi querido Lupi! Para mantener la circularidad, el enlace del último NODO debe apuntar siempre al primero de la estructura.", audioCerrarCiclo);
+                }
+                else
+                {
+                    ReproducirError();
+                    if (fase == 0) andy.Decir("¡Cuidado Lupi! Para iniciar la Lista Circular, debemos recoger el flujo sagrado directamente del INICIO.", audioErrorNoRio);
+                    else if (subPaso == 0 || subPaso == 1) andy.Decir("El algoritmo indica que el puntero debe nacer de la LIGA del NODO anterior para mantener la secuencia.", audioErrorNoLigaAnterior);
+                    else andy.Decir("Para cerrar el círculo, activa la LIGA de la última parcela sembrada.", audioErrorNoLigaAnteriorCerrar);
                 }
             }
-            else
+            else // PASO: Entregar agua (conectar puntero)
             {
                 if (tipo == "EntradaHuerto")
                 {
                     if (subPaso == 1 && managerTocado == nodoActual)
                     {
+                        // ACIERTO: Ya suena automáticamente porque llamas a SumarPuntos(10)
                         cargandoAgua = false;
                         nodoActual.ActivarHuerto();
                         SumarPuntos(10);
@@ -228,14 +254,30 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                         bool esCorrecto = (fase == 0 && managerTocado == nodoActual) || (fase > 0 && managerTocado == listaNodos[0]);
                         if (esCorrecto)
                         {
+                            // ACIERTO: Ya suena automáticamente dentro de FinalizarCicloFase() porque ahí llamas a SumarPuntos
                             cargandoAgua = false;
-                            puntosConfirmados.Add(nodoActual.puntoSalida.position);     
-                            puntosConfirmados.Add(managerTocado.puntoEntrada.position);  
+                            puntosConfirmados.Add(nodoActual.puntoSalida.position);
+                            puntosConfirmados.Add(managerTocado.puntoEntrada.position);
                             DibujarLineaFija();
                             EncenderBrilloHijo(managerTocado.gameObject, "Info", false);
                             FinalizarCicloFase();
                         }
+                        else
+                        {
+                            ReproducirError();
+                            andy.Decir("¡Error de circularidad! El último enlace debe retornar al primer NODO para que el flujo sea perpetuo.", audioErrorNoCerrarCiclo);
+                        }
                     }
+                    else
+                    {
+                        ReproducirError();
+                        andy.Decir("Ese no es el destino correcto. El agua debe entrar por el campo INFO del nuevo NODO.", audioErrorNoInfoNuevaNodo);
+                    }
+                }
+                else
+                {
+                    ReproducirError();
+                    andy.Decir("¡No pierdas el flujo! Debes llevar el puntero al campo INFO para conectar la estructura.", audioErrorNoInfoNueva);
                 }
             }
         }
@@ -243,7 +285,6 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         {
             LogicaEliminar(tipo, objetoTocado);
         }
-        
     }
 
     void FinalizarCicloFase()
@@ -268,10 +309,19 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
 
     IEnumerator PrepararEliminacion()
     {
-        andy.Decir("¡Increíble! Ahora aprenderemos el Algoritmo 8.10.2: ELIMINAR nodos.");
-        yield return new WaitForSeconds(3f);
+        andy.Decir("¡Lupifantástico! La armonía ha vuelto. Has completado una estructura circular donde la vida y el agua fluyen en un retorno perpetuo.", audioExitoCiclo);
+        // 2. ESPERA obligatoria para que termine el primer audio
+        if (audioExitoCiclo != null)
+            yield return new WaitForSeconds(audioExitoCiclo.length + 0.5f);
+        else
+            yield return new WaitForSeconds(3f); // Tiempo de respaldo
+        andy.Decir("¡Impresionante! Pero el Kaos ha infectado los NODOS, es momento de eliminarlos liberando memoria sin romper la armonía del flujo.", audioIntroEliminar);
+        if (audioIntroEliminar != null)
+            yield return new WaitForSeconds(audioIntroEliminar.length + 0.5f);
+        else
+            yield return new WaitForSeconds(3f);
         modoActual = ModoOperacion.Eliminar;
-        fase = 0; 
+        fase = 0;
         UIManager.instancia.ConfigurarTextosChecklist(
                 "",
                 "Eliminar rábano",
@@ -284,14 +334,16 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
 
     void ProximoPasoEliminar()
     {
-        if (indiceAEliminar == 4) 
+        if (indiceAEliminar == 4)
         {
-            andy.Decir("Para eliminar el RÁBANO, conecta la ZANAHORIA directamente a la CALABAZA.");
+            // Explicación técnica Joyanes: Enlazar anterior con siguiente
+            andy.Decir("El rábano se ha marchitado. Reasigna el enlace de la zanahoria hacia la calabaza para que el sistema libere la memoria ocupada.", audioEliminarFinal);
             EncenderBrilloHijo(listaNodos[3].gameObject, "Liga", true);
         }
-        else 
+        else
         {
-            andy.Decir("Ahora eliminaremos el inicio. Conecta la ZANAHORIA a la PAPA.");
+            // Explicación técnica: Cambio del puntero de acceso LC
+            andy.Decir("¡Alerta Lupi! Ahora Kaos ha infectado la calabaza. Debemos realizar una Eliminación para proteger el resto de la estructura.", audioEliminarInicio);
             EncenderBrilloHijo(listaNodos[3].gameObject, "Liga", true);
         }
     }
@@ -308,6 +360,11 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                 EncenderBrilloHijo(listaNodos[3].gameObject, "Liga", false);
                 int destino = (indiceAEliminar == 4) ? 0 : 1;
                 EncenderBrilloHijo(listaNodos[destino].gameObject, "Info", true);
+            }
+            else
+            {
+                ReproducirError();
+                andy.Decir("Para eliminar un NODO sin romper el ciclo, debemos reasignar el enlace de la parcela anterior.", audioErrorEliminacion);
             }
         }
         else
@@ -339,9 +396,14 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                             controladorInsignia.MostrarInsignia(insigniaDeEsteNivel);
                             KaosController.instancia.RecibirDanoYDesaparecer("ListasCirculares");
                         }
-                        andy.Decir("¡Lista circular actualizada con éxito! El inicio ahora es la Papa.");
+                        andy.Decir("¡Victoria Supervisor de Flujo Circular! Eliminamos el NODO, liberamos la memoria y actualizamos el puntero LIGA.", audioExitoTotal);
                         ReproducirNivelCompleto();
                     }
+                }
+                else
+                {
+                    ReproducirError();
+                    andy.Decir("¡Lupi cuidado! Si conectas al puntero equivocado, el ciclo de Tahuantindata se perderá en el vacío.", audioErrorEliminacionFinal);
                 }
             }
         }
@@ -419,6 +481,17 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         if (brilloRio) brilloRio.SetEncendido(false);
         foreach (var b in Object.FindObjectsByType<EfectoLetrero>(FindObjectsSortMode.None)) b.SetEncendido(false);
     }
-    void SumarPuntos(int cant) { UIManager.puntosGlobales += cant; if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString(); }
+    void SumarPuntos(int cant) { 
+        UIManager.puntosGlobales += cant; 
+        if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();
+        if (fuenteAudio && sonidoAcierto) fuenteAudio.PlayOneShot(sonidoAcierto);
+    }
+    void ReproducirError()
+    {
+        if (fuenteAudio && sonidoError)
+        {
+            fuenteAudio.PlayOneShot(sonidoError);
+        }
+    }
     IEnumerator EsperarSiguiente() { yield return new WaitForSeconds(2f); ProximoPasoSiembra(); }
 }

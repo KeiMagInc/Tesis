@@ -27,11 +27,11 @@ public class KaosController : MonoBehaviour
     public List<ConfiguracionZona> listaZonas;
     [Header("Ajustes de Movimiento")]
     public float velocidad = 2f;
-    public float distanciaDeFrenado = 0.2f; 
+    public float distanciaDeFrenado = 0.2f;
     [Header("Evolución (Tamaño)")]
     public float escalaInicial = 2.5f;
     public float escalaMinima = 0.3f;
-    public float reduccionPorPunto = 0.01f;
+    public float reduccionPorPunto = 0.002f;
     private Transform puntoA_Actual;
     private Transform puntoB_Actual;
     private Transform destinoActual;
