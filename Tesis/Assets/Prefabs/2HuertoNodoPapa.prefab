@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2250400793531471313}
   - component: {fileID: 1848415800215981193}
+  - component: {fileID: 2876340519714738447}
   m_Layer: 0
   m_Name: PuntoEntrada
   m_TagString: Untagged
@@ -78,6 +79,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.5, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &2876340519714738447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 668096943620094687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2174c40f7532ef48b20f9a87f4379bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  identificador: EntradaHuerto
 --- !u!1 &776164675174373067
 GameObject:
   m_ObjectHideFlags: 0
@@ -176,7 +190,6 @@ GameObject:
   - component: {fileID: 6801623386641726986}
   - component: {fileID: 4233625125665758415}
   - component: {fileID: 9328321732198063}
-  - component: {fileID: 3891139716719805920}
   m_Layer: 0
   m_Name: 2HuertoNodoPapa
   m_TagString: Planta
@@ -279,19 +292,6 @@ MonoBehaviour:
   retrasoEntreSembrios: 0.3
   spriteSeco: {fileID: 2382208071769853359, guid: ae3d64d5427b9994eac1b88a8d48604a, type: 3}
   spriteVivo: {fileID: -1840190759907527076, guid: 1e7ce091677f6f045bd54fc9cee3c726, type: 3}
---- !u!114 &3891139716719805920
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 839396964857267429}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2174c40f7532ef48b20f9a87f4379bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  identificador: EntradaHuerto
 --- !u!1 &1077177690419212729
 GameObject:
   m_ObjectHideFlags: 0

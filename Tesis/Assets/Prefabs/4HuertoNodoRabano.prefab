@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2250400793531471313}
   - component: {fileID: 1848415800215981193}
+  - component: {fileID: 3713618208360768349}
   m_Layer: 0
   m_Name: PuntoEntrada
   m_TagString: Untagged
@@ -78,6 +79,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.5, y: 0.8}
   m_EdgeRadius: 0
+--- !u!114 &3713618208360768349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 668096943620094687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2174c40f7532ef48b20f9a87f4379bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  identificador: EntradaHuerto
 --- !u!1 &776164675174373067
 GameObject:
   m_ObjectHideFlags: 0
@@ -176,7 +190,6 @@ GameObject:
   - component: {fileID: 6801623386641726986}
   - component: {fileID: 4233625125665758415}
   - component: {fileID: 9328321732198063}
-  - component: {fileID: 6379953041187587078}
   m_Layer: 0
   m_Name: 4HuertoNodoRabano
   m_TagString: Planta
@@ -279,19 +292,6 @@ MonoBehaviour:
   retrasoEntreSembrios: 0.3
   spriteSeco: {fileID: -5953878577670561019, guid: fe686bfbd8240a541a9a21729f34aff2, type: 3}
   spriteVivo: {fileID: -8339912874213387208, guid: 05cab3f7bb3315345ac73e7b6b15eb27, type: 3}
---- !u!114 &6379953041187587078
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 839396964857267429}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2174c40f7532ef48b20f9a87f4379bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  identificador: EntradaHuerto
 --- !u!1 &1077177690419212729
 GameObject:
   m_ObjectHideFlags: 0

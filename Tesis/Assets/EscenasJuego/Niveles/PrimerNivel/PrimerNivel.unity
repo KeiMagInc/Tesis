@@ -51901,7 +51901,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.5
+      value: 19.5
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -92938,6 +92938,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d46c787d74e8d4642a9a94299dafc4fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioLlevaLigaANullFinal: {fileID: 8300000, guid: 115bb144cc4178448bb581065230e1fe, type: 3}
+  audioNodoFisicoListoFinal: {fileID: 8300000, guid: 47df64ea27151a149b924d0d12245d99, type: 3}
+  audioConectarLigaAInfo: {fileID: 8300000, guid: 46395d75e52b5084c808aed6b8a6d4ae, type: 3}
+  audioErrorConexionInfo: {fileID: 8300000, guid: d387b89e2a5184541867a778e8b58937, type: 3}
+  audioErrorLigaNuevaParcela: {fileID: 8300000, guid: d3ea9e95878293945beabf8dbb10c7b2, type: 3}
+  audioErrorLigaPorNull: {fileID: 8300000, guid: bb4ca9d562dcfeb4b8ce3c6151f921ef, type: 3}
+  audioFaltaSiembra: {fileID: 8300000, guid: e704d8b8efe20a14db549d87e9f182c2, type: 3}
+  audioErrorLigaPorInfo: {fileID: 8300000, guid: 1446149710adbd54985e60a62174ad7c, type: 3}
+  audioLlevaAguaAInfo: {fileID: 8300000, guid: 59abb0f747edd6947a32cabc9608a647, type: 3}
+  audioActivaLigaNueva: {fileID: 8300000, guid: ed52b12239623c6448c48873798e8d9a, type: 3}
+  audioLlevaLigaANull: {fileID: 8300000, guid: a0c822562b310674b8bedd9e6eb55363, type: 3}
+  audioNodoFisicoListo: {fileID: 8300000, guid: 7de433a9281443d4d9c3f5405192fee4, type: 3}
+  audioIntroInsertarInicio: {fileID: 8300000, guid: 2d1b55e25135c0a40b068e07287acb18, type: 3}
+  audioIntroInsertarFinal: {fileID: 8300000, guid: 59115d4fe11e0cc4a9cccb9b82f99d24, type: 3}
+  audioIntroEliminarInicio: {fileID: 8300000, guid: 537e2a6a7ca9ef847b727e464ee1f70d, type: 3}
+  audioPrepararNodo: {fileID: 8300000, guid: df8ed82a7e677e443a28d851cfe96415, type: 3}
+  audioSiembraInstruccion: {fileID: 8300000, guid: 884c6636cef53174a9313de60591142a, type: 3}
+  audioTocaInicioEliminar: {fileID: 8300000, guid: 239d500c9257b9b4682753747702bb61, type: 3}
+  audioTocaLigaEliminar: {fileID: 8300000, guid: 5ca2e6f0eebd3094b94417e35060d71d, type: 3}
+  audioExitoReasignarHead: {fileID: 8300000, guid: ddbd27d62511beb4cbf425e8b7c1a667, type: 3}
+  audioExitoFlujoFinal: {fileID: 8300000, guid: 0eeb9a837225dbb42b27174c18340f9d, type: 3}
+  audioApuntaInicioEliminar: {fileID: 8300000, guid: 90793417c5a05314d87d8a631b2ce87b, type: 3}
+  audioConexionSeguraEliminar: {fileID: 8300000, guid: 42e474fe9df9ff94692258c183300777, type: 3}
+  audioApuntaNullEliminar: {fileID: 8300000, guid: 51d27fc30a8d7384aa50a7cb0bac1c0e, type: 3}
+  audioCerradoListaEliminar: {fileID: 8300000, guid: faeca8aba08bf1749a9cba42de431be9, type: 3}
+  audioAdiosNodo: {fileID: 8300000, guid: 06b760dc45fc6b04791830d6fd9a8b63, type: 3}
+  audioExitoTotalNivel: {fileID: 8300000, guid: 6ffd13a97d5bebe4cbf2f3decbd9f211, type: 3}
   controladorInsignia: {fileID: 1925434712}
   insigniaDeEsteNivel: {fileID: -5632649560908633532, guid: 37144d046defd104cb351a68353d4fc3, type: 3}
   checkpointFinal: {fileID: 493115344}

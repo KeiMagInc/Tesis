@@ -98,7 +98,6 @@ GameObject:
   - component: {fileID: 6801623386641726986}
   - component: {fileID: 4233625125665758415}
   - component: {fileID: 9328321732198063}
-  - component: {fileID: 732110373867760337}
   m_Layer: 0
   m_Name: 5HuertoNodoRemolacha
   m_TagString: Planta
@@ -203,19 +202,6 @@ MonoBehaviour:
   retrasoEntreSembrios: 0.3
   spriteSeco: {fileID: 2901771626556814720, guid: b715a1b6d99b11542a54df942343b987, type: 3}
   spriteVivo: {fileID: 30920674132646118, guid: a623576d500de0f44aa35f47cbb2b79b, type: 3}
---- !u!114 &732110373867760337
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 839396964857267429}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2174c40f7532ef48b20f9a87f4379bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  identificador: EntradaHuerto
 --- !u!1 &1077177690419212729
 GameObject:
   m_ObjectHideFlags: 0
