@@ -31,7 +31,7 @@ public class KaosController : MonoBehaviour
     [Header("Evolución (Tamaño)")]
     public float escalaInicial = 2.5f;
     public float escalaMinima = 0.3f;
-    public float reduccionPorPunto = 0.002f;
+    public float reduccionPorPunto = 0.0005f;
     private Transform puntoA_Actual;
     private Transform puntoB_Actual;
     private Transform destinoActual;
