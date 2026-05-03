@@ -152,10 +152,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         UIManager.instancia.MostrarMochilaSolo(false);
         UIManager.instancia.MostrarChecklistSolo(false);
         yield return new WaitForSeconds(0.5f);
-
-        // 1. Creamos una variable para saber qué audio esperar
         AudioClip clipReproducido = null;
-
         if (modoActual == ModoOperacion.InsertarInicio)
         {
             clipReproducido = audioInsertarInicio;
@@ -171,21 +168,16 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             clipReproducido = audioIntroEliminarDoble;
             andy.Decir("¡Alerta Lupi! El Kaos ha infectado la cabecera. Debemos eliminar el primer NODO para sanar el flujo bidireccional.", clipReproducido);
         }
-
-        // 2. AHORA SÍ: Esperamos el audio que realmente está sonando
         if (clipReproducido != null)
             yield return new WaitForSeconds(clipReproducido.length + 0.5f);
         else
             yield return new WaitForSeconds(3.0f);
-
-        // 3. Siguiente diálogo
         if (modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal)
         {
             andy.Decir("Cada semilla es un NODO con dos enlaces. Abre tu mochila para preparar la siembra.", audioPrepararNodoDoble);
             UIManager.instancia.MostrarMochilaSolo(true);
             yield return new WaitUntil(() => UIManager.instancia.panelParcelas.activeSelf);
         }
-
         UIManager.instancia.MostrarChecklistSolo(true);
         ProximoPaso();
     }
