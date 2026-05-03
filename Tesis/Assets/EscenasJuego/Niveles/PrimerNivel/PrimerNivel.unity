@@ -96595,6 +96595,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6307189b7081ca94c9b26f812fa8bb09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioConectarSalidaAnterior: {fileID: 8300000, guid: 1db0d5614fa63244c834de72a573afeb, type: 3}
+  audioErrorEliminacionInicio: {fileID: 8300000, guid: fa776cf67eb8fd342893d57b6a4a03f2, type: 3}
+  audioErrorEliminacion: {fileID: 8300000, guid: 6ec0a1880ab12c449a03e73ce0c6f8bf, type: 3}
+  audioErrorEliminacionFinalNull: {fileID: 8300000, guid: 8a7169b193444ed409250b15ac09a623, type: 3}
+  audioErrorEliminacionFinal: {fileID: 8300000, guid: a43ccdffac0874b4e8d94eba9663fdd5, type: 3}
+  audioErrorNoRio: {fileID: 8300000, guid: 97b7bd58ac40c234fba09b03de6648e3, type: 3}
+  audioErrorNoLigaAnterior: {fileID: 8300000, guid: a0073c18c1705e34b8da17ff00abf9b2, type: 3}
+  audioMoverInicioError: {fileID: 8300000, guid: 205e400ee4f0f7547813f7361a717188, type: 3}
+  audioErrorNoInfoNueva: {fileID: 8300000, guid: 51185ec500514f143bd7cecdb3f89901, type: 3}
+  audioFelicidadesInsertarInicio: {fileID: 8300000, guid: 7e2c3920a3e11244a8a53fa08acb6415, type: 3}
+  audioFelicidadesInsertarFinal: {fileID: 8300000, guid: e160b08d601e91145a08c7d87d77b5c8, type: 3}
+  audioFelicidadesEliminarInicio: {fileID: 8300000, guid: e2cb4ec35a858904eaeca4ab68cb0ef7, type: 3}
+  audioFelicidadesFinalNivel: {fileID: 8300000, guid: 9575bcca1bd2aa64ab269b1e1d8cce1f, type: 3}
+  audioRecogerHeadEliminar: {fileID: 8300000, guid: 95822779d69155b44ba8bc8b2411edd3, type: 3}
+  audioConectarZanahoriaDesdeHead: {fileID: 8300000, guid: 533916afd35f58f47bb149a34b499696, type: 3}
+  audioRecogerNullEliminar: {fileID: 8300000, guid: 1a438c1227e49f742aedf93f56e6b46a, type: 3}
+  audioConectarZanahoriaDesdeNull: {fileID: 8300000, guid: aa5a878c547793d49a00542000ce8112, type: 3}
+  audioPrimerNodoDobleInsertarFinal: {fileID: 8300000, guid: 5869c4f0761a5ef459d5c8b3b033ce4b, type: 3}
+  audioVinculoRetroceso: {fileID: 8300000, guid: a68e022ddbaf91643a0344c9874b0c24, type: 3}
+  audioCerrarSiguienteANull: {fileID: 8300000, guid: e5dbe0f28a5f5a34ca478e8e890974ce, type: 3}
+  audioDeNullANodo: {fileID: 8300000, guid: 82a25e4e7f03b374283176be8d6f3b06, type: 3}
+  audioSiguienteANull: {fileID: 8300000, guid: dad3189f23d9ba0439eb13793d9a09df, type: 3}
+  audioConectarASiguiente: {fileID: 8300000, guid: ed5547d49b232c941ad598c88225e0b2, type: 3}
+  audioActualizarNull: {fileID: 8300000, guid: b143f92f9f7fd5a498fb3c9c89c2b56a, type: 3}
+  audioExitoInsercionFinal: {fileID: 8300000, guid: a6e086124eed45746997ddac18af766a, type: 3}
+  audioConectarSiguienteAlNuevo: {fileID: 8300000, guid: d0b0b71e552b6bd49b5d823086d4315e, type: 3}
+  audioMoverInicioACabecera: {fileID: 8300000, guid: b6d7f710ba38dad42b52a7d370ddf476, type: 3}
+  audioCerrarSiguienteConNull: {fileID: 8300000, guid: f0a20dca0becb2241881244b9b0552f8, type: 3}
+  audioConectarSiguienteAlNodo: {fileID: 8300000, guid: f7272456f585349429d7af8bdc2179d9, type: 3}
+  audioExitoTotalInicio: {fileID: 8300000, guid: 7e084a59d3091e34199f4dd4e3f24128, type: 3}
+  audioEliminarInicio: {fileID: 8300000, guid: 6036c3a76ac7db840b53d63b48c0da92, type: 3}
+  audioEliminarFinal: {fileID: 8300000, guid: 77bce1c1f4ecfbd458448e61de7201e6, type: 3}
+  audioPrimerNodoDobleInicio: {fileID: 8300000, guid: 52fb91f976df2ae4aa09a6c692e36be0, type: 3}
+  audioConectarAnteriorSalida: {fileID: 8300000, guid: f5d8cb1cf24f95b48b17313da74d0556, type: 3}
+  audioInsertarInicio: {fileID: 8300000, guid: bd93b6e51cd82434b9107c0e1496b86d, type: 3}
+  audioInsertarFinal: {fileID: 8300000, guid: 2d60b65e406a06a42bbb4ea4478351b5, type: 3}
+  audioPrepararNodoDoble: {fileID: 8300000, guid: ee7944bede4b71243bca559a61c391a4, type: 3}
+  audioSiembraInstruccion: {fileID: 8300000, guid: 61932c74aad8d0647a230b2a3fe4ed4a, type: 3}
+  audioPrimerNodoDoble: {fileID: 8300000, guid: 56b3cc27714b2ca4faa1576eb1f063e9, type: 3}
+  audioConectarAnterior: {fileID: 8300000, guid: 1d3bce60b687f4649b2af8b1f31d24e1, type: 3}
+  audioConectarSiguiente: {fileID: 8300000, guid: ba964368b67a32a409b8ed196af1c96a, type: 3}
+  audioMoverInicio: {fileID: 8300000, guid: a9d979452addc7d4baee8ff84cfc2674, type: 3}
+  audioCerrarConNull: {fileID: 8300000, guid: 80edfa38e4b82db4097e359a8994ccc3, type: 3}
+  audioExitoInicio: {fileID: 8300000, guid: 83f22e8e4c2d7e24d99cc1a0887bd62f, type: 3}
+  audioExitoFinal: {fileID: 8300000, guid: 30974918115f5f644be3f2de5197275a, type: 3}
+  audioIntroEliminarDoble: {fileID: 8300000, guid: 633ca3313d43f6b4a8372cabedce3041, type: 3}
   controladorInsignia: {fileID: 538215109}
   insigniaDeEsteNivel: {fileID: -5931077577829324559, guid: 0f28a8c58a1ee8b4fadc6e22b6c6d976, type: 3}
   checkpointFinal: {fileID: 0}
