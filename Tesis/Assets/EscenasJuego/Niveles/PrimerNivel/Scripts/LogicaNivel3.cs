@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-
 public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
 {
     [Header("Audios Diálogos Andy")]
@@ -115,21 +114,21 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         if (modoActual == ModoOperacion.InsertarInicio)
         {
             UIManager.instancia.ConfigurarTextosChecklist(
-                "Derecha: sembrar papa",
+                "new Nodo(\"Papa\");",
                 "",
-                "Centro: sembrar trigo",
+                "new Nodo(\"Trigo\");",
                 "",
-                "Izquierda: sembrar calabaza"
+                "new Nodo(\"Calabaza\");"
             );
         }
         else if (modoActual == ModoOperacion.InsertarFinal)
         {
             UIManager.instancia.ConfigurarTextosChecklist(
-                "Izquierda: sembrar calabaza",
+                "new Nodo(\"Calabaza\");",
                 "",
-                "Centro: sembrar trigo",
+                "new Nodo(\"Trigo\");",
                 "",
-                "Derecha: sembrar papa"
+                "new Nodo(\"Papa\");"
             );
         }
     }
@@ -219,7 +218,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             modoActual = ModoOperacion.EliminarInicio;
             fase = 0;
             UIManager.instancia.ResetBotones();
-            UIManager.instancia.ConfigurarTextosChecklist("", "Eliminar Calabaza", "", "Eliminar Papa", "");
+            UIManager.instancia.ConfigurarTextosChecklist("", "delete(Calabaza);", "", "delete(Papa);", "");
             StartCoroutine(Intro());
         }
     }
@@ -268,34 +267,25 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     }
     IEnumerator SecuenciaEliminacionExitosa(int indiceNodo)
     {
-        // 1. Primero esperamos un momento a que termine el diálogo de "Conexión Segura" 
-        // que se activó justo antes de llamar a esta corrutina.
         AudioClip audioPrevio = (modoActual == ModoOperacion.EliminarInicio) ? audioConexionSeguraEliminar : audioCerradoListaEliminar;
         if (audioPrevio != null) yield return new WaitForSeconds(audioPrevio.length);
-
         ApagarBrillosGlobales();
-        SumarPuntos(20, true);
-
-        // El nodo desaparece
+        SumarPuntos(10, true);
         listaNodos[indiceNodo].IniciarSecuenciaEliminacion();
         yield return new WaitForSeconds(1.5f);
-
         ActualizarLineaFijaPostEliminacion();
         UIManager.instancia.MarcarTareaCompletada((fase * 2) + 1);
         fase++;
-
         if (modoActual == ModoOperacion.EliminarInicio)
         {
             ReproducirNivelCompleto();
             andy.Decir("El primer NODO ha sido removido con éxito. ¡Vamos por el último paso Lupi!", audioAdiosNodo);
-            // CORRECCIÓN AQUÍ: Esperar el tiempo exacto del audio
             if (audioAdiosNodo != null)
                 yield return new WaitForSeconds(audioAdiosNodo.length + 0.5f);
             else
                 yield return new WaitForSeconds(3.5f);
-
             modoActual = ModoOperacion.EliminarFinal;
-            ProximoPaso(); // Ahora ProximoPaso no interrumpirá el audio anterior
+            ProximoPaso(); 
         }
         else
         {
@@ -308,8 +298,6 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             }
             andy.Decir("¡Excelente Analista de Enlaces Simples! Has dominado las operaciones de Inserción y Eliminación en Listas Simples. El valle está a salvo.", audioExitoTotalNivel);
             ReproducirNivelCompleto();
-
-            // También esperamos al audio final por si acaso
             if (audioExitoTotalNivel != null)
                 yield return new WaitForSeconds(audioExitoTotalNivel.length + 0.5f);
         }
@@ -560,23 +548,18 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     }
     void LogicaInsertarFinal(string tipo, GameObject objetoTocado)
     {
-        // DEBUG CLAVE: Mira la consola de Unity al tocar la liga. Si dice "Tipo recibido: EntradaHuerto", el problema está en el Inspector de Unity.
         Debug.Log("InsertarFinal -> Objeto tocado: " + objetoTocado.name + " | Tipo recibido: " + tipo);
-
         if (managerActual == null) return;
-
         if (cargandoAgua)
         {
-            if (pasoConexion == 0) // Conectando a la nueva planta
+            if (pasoConexion == 0) 
             {
-                // BLOQUEO DE ERROR: INICIO -> LIGA (Añadido "Liga" por seguridad)
                 if (tipo == "SalidaHuerto" || tipo == "Liga")
                 {
                     andy.Decir("¡Error de direccionamiento! El puntero debe apuntar al campo INFO para entrar al nuevo NODO.", audioErrorLigaPorInfo);
                     ReproducirError();
-                    return; // IMPORTANTE: Esto evita que se gane el punto
+                    return; 
                 }
-                // ÉXITO: Entrar por INFO del nodo correcto
                 else if (tipo == "EntradaHuerto" && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
                 {
                     EncenderBrilloEnNodo(managerActual.gameObject, "Info", false);
@@ -587,14 +570,13 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                     EncenderBrilloEnNodo(managerActual.gameObject, "Liga", true);
                     andy.Decir("¡Contenido asignado! Ahora activa el puntero LIGA de este NODO para conectarlo con la lista existente.", audioActivaLigaNueva);
                 }
-                // ERROR: Tocó otra cosa u otro nodo
                 else
                 {
                     andy.Decir("¡Cuidado Lupi! Para integrar el NODO, el enlace debe apuntar obligatoriamente a su campo INFO.", audioErrorConexionInfo);
                     ReproducirError();
                 }
             }
-            else if (pasoConexion == 2) // Llevando LIGA -> NULL
+            else if (pasoConexion == 2) 
             {
                 if (tipo == "Null") FinalizarNodo();
                 else
@@ -604,7 +586,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 }
             }
         }
-        else // Recogiendo agua
+        else 
         {
             if (pasoConexion == 0)
             {
@@ -614,7 +596,6 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                     EncenderBrilloEnNodo(managerAnterior.gameObject, "Liga", false);
                     cargandoAgua = true;
                 }
-
                 if (cargandoAgua)
                 {
                     EncenderBrilloEnNodo(managerActual.gameObject, "Info", true);

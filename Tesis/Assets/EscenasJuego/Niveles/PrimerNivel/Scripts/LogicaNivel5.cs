@@ -133,18 +133,18 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         {
             UIManager.instancia.SetPrefabs(prefabRemolacha, prefabZanahoria, prefabRabano);
             UIManager.instancia.ConfigurarBotonesUI(new Sprite[] { spriteRemolacha, spriteZanahoria, spriteRabano }, nombresNodosInicio);
-            UIManager.instancia.ConfigurarTextosChecklist("Sembrar remolacha", "", "Sembrar zanahoria", "", "Sembrar rábano");
+            UIManager.instancia.ConfigurarTextosChecklist("new Nodo(\"Remolacha\");", "", "new Nodo(\"Zanahoria\");", "", "new Nodo(\"Rábano\");");
         }
         else if (modoActual == ModoOperacion.InsertarFinal)
         {
             UIManager.instancia.SetPrefabs(prefabRabano, prefabZanahoria, prefabRemolacha);
             UIManager.instancia.ConfigurarBotonesUI(new Sprite[] { spriteRabano, spriteZanahoria, spriteRemolacha }, nombresNodosFinal);
-            UIManager.instancia.ConfigurarTextosChecklist("Sembrar rábano", "", "Sembrar zanahoria", "", "Sembrar remolacha");
+            UIManager.instancia.ConfigurarTextosChecklist("new Nodo(\"Rábano\");", "", "new Nodo(\"Zanahoria\");", "", "new Nodo(\"Remolacha\");");
         }
         else if (modoActual == ModoOperacion.EliminarInicio)
         {
             UIManager.instancia.ResetBotones();
-            UIManager.instancia.ConfigurarTextosChecklist("", "Eliminar Rábano", "", "Eliminar Remolacha", "");
+            UIManager.instancia.ConfigurarTextosChecklist("", "delete(Rábano)", "", "delete(Remolacha)", "");
         }
     }
     IEnumerator IntroNivel5()
@@ -683,7 +683,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     IEnumerator SecuenciaEliminacionExito(NodoManager nodo, int numeroTareaUI)
     {
         ApagarBrillosGlobales();
-        SumarPuntos(30);
+        SumarPuntos(10);
         nodo.IniciarSecuenciaEliminacion();
         yield return new WaitForSeconds(2f);
         UIManager.instancia.MarcarTareaCompletada(numeroTareaUI);

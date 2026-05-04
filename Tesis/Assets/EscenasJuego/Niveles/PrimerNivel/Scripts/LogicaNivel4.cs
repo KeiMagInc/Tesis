@@ -70,9 +70,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     private enum ModoOperacion { Insertar, Eliminar }
     private ModoOperacion modoActual = ModoOperacion.Insertar;
     private int indiceAEliminar = 4;
-
     void Awake() => instancia = this;
-
     void OnEnable()
     {
         if (UIManager.instancia == null) return;
@@ -86,7 +84,6 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         ResetearNivel();
         StartCoroutine(SecuenciaIntro());
     }
-
     void OnDisable()
     {
         if (UIManager.instancia != null && UIManager.instancia.logicaActiva == (ILogicaNivel)this)
@@ -95,7 +92,6 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         }
         ResetearNivel();
     }
-
     public void ResetearNivel()
     {
         modoActual = ModoOperacion.Insertar;
@@ -125,11 +121,11 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         {
             UIManager.instancia.ResetBotones();
             UIManager.instancia.ConfigurarTextosChecklist(
-                "Sembrar calabaza",
-                "Sembrar papa",
-                "Sembrar trigo",
-                "Sembrar zanahoria",
-                "Sembrar rábano"
+                "new Nodo(\"Calabaza\");",
+                "new Nodo(\"Papa\");",
+                "new Nodo(\"Trigo\");",
+                "new Nodo(\"Zanahoria\");",
+                "new Nodo(\"Rábano\");"
             );
         }
         ApagarBrillos();
@@ -154,13 +150,11 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
             subPaso = 0; 
         }
     }
-
     public void AvanceSiembraExitosa()
     {
         UIManager.instancia.SetSemillaPalpitar("");
         StartCoroutine(EsperarYAsignarNodo());
     }
-
     IEnumerator EsperarYAsignarNodo()
     {
         yield return new WaitForSeconds(0.2f);
@@ -178,33 +172,28 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
             if (fase == 0)
             {
                 brilloRio.SetEncendido(true);
-                // Concepto Joyanes: Nodo que se apunta a sí mismo al inicio
                 andy.Decir("Como es el primer NODO, el puntero de acceso LIGA debe inicializarse apuntando a sí mismo.", audioPrimerNodoCircular);
             }
             else
             {
                 EncenderBrilloHijo(listaNodos[fase - 1].gameObject, "Liga", true);
-                // Concepto Joyanes: Reasignación de enlace
                 andy.Decir("Para insertar elementos, debemos actualizar el campo LIGA del NODO anterior hacia el nuevo componente de la Lista.", audioInsertarIntermedio);
             }
         }
     }
-
     public void AccionEnLetrero(string tipo, GameObject objetoTocado)
     {
         if (modoActual == ModoOperacion.Insertar)
         {
             if (nodoActual == null) return;
             NodoManager managerTocado = objetoTocado.GetComponentInParent<NodoManager>();
-
-            if (!cargandoAgua) // PASO: Recoger agua (puntero)
+            if (!cargandoAgua) 
             {
                 if (fase == 0 && (tipo == "LC" || tipo == "Head"))
                 {
                     cargandoAgua = true;
                     brilloRio.SetEncendido(false);
                     EncenderBrilloHijo(nodoActual.gameObject, "Info", true);
-                    // Opcional: Sonido de "click" o recojo.
                 }
                 else if (fase > 0 && tipo == "SalidaHuerto" && managerTocado == listaNodos[fase - 1])
                 {
@@ -233,13 +222,12 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                     else andy.Decir("Para cerrar el círculo, activa la LIGA de la última parcela sembrada.", audioErrorNoLigaAnteriorCerrar);
                 }
             }
-            else // PASO: Entregar agua (conectar puntero)
+            else 
             {
                 if (tipo == "EntradaHuerto")
                 {
                     if (subPaso == 1 && managerTocado == nodoActual)
                     {
-                        // ACIERTO: Ya suena automáticamente porque llamas a SumarPuntos(10)
                         cargandoAgua = false;
                         nodoActual.ActivarHuerto();
                         SumarPuntos(10);
@@ -254,7 +242,6 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                         bool esCorrecto = (fase == 0 && managerTocado == nodoActual) || (fase > 0 && managerTocado == listaNodos[0]);
                         if (esCorrecto)
                         {
-                            // ACIERTO: Ya suena automáticamente dentro de FinalizarCicloFase() porque ahí llamas a SumarPuntos
                             cargandoAgua = false;
                             puntosConfirmados.Add(nodoActual.puntoSalida.position);
                             puntosConfirmados.Add(managerTocado.puntoEntrada.position);
@@ -286,10 +273,9 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
             LogicaEliminar(tipo, objetoTocado);
         }
     }
-
     void FinalizarCicloFase()
     {
-        SumarPuntos(15);
+        SumarPuntos(10);
         if (nodoActual != null) nodoActual.DrenarAgua();
         listaNodos.Add(nodoActual);
         UIManager.instancia.MarcarTareaCompletada(fase);
@@ -306,15 +292,13 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
             StartCoroutine(PrepararEliminacion());
         }
     }
-
     IEnumerator PrepararEliminacion()
     {
         andy.Decir("¡Lupifantástico! La armonía ha vuelto. Has completado una estructura circular donde la vida y el agua fluyen en un retorno perpetuo.", audioExitoCiclo);
-        // 2. ESPERA obligatoria para que termine el primer audio
         if (audioExitoCiclo != null)
             yield return new WaitForSeconds(audioExitoCiclo.length + 0.5f);
         else
-            yield return new WaitForSeconds(3f); // Tiempo de respaldo
+            yield return new WaitForSeconds(3f); 
         andy.Decir("¡Impresionante! Pero el Kaos ha infectado los NODOS, es momento de eliminarlos liberando memoria sin romper la armonía del flujo.", audioIntroEliminar);
         if (audioIntroEliminar != null)
             yield return new WaitForSeconds(audioIntroEliminar.length + 0.5f);
@@ -324,34 +308,29 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         fase = 0;
         UIManager.instancia.ConfigurarTextosChecklist(
                 "",
-                "Eliminar rábano",
+                "delete(Rábano)",
                 "",
-                "Eliminar calabaza",
+                "delete(Calabaza)",
                 ""
             );
         ProximoPasoEliminar();
     }
-
     void ProximoPasoEliminar()
     {
         if (indiceAEliminar == 4)
         {
-            // Explicación técnica Joyanes: Enlazar anterior con siguiente
             andy.Decir("El rábano se ha marchitado. Reasigna el enlace de la zanahoria hacia la calabaza para que el sistema libere la memoria ocupada.", audioEliminarFinal);
             EncenderBrilloHijo(listaNodos[3].gameObject, "Liga", true);
         }
         else
         {
-            // Explicación técnica: Cambio del puntero de acceso LC
             andy.Decir("¡Alerta Lupi! Ahora Kaos ha infectado la calabaza. Debemos realizar una Eliminación para proteger el resto de la estructura.", audioEliminarInicio);
             EncenderBrilloHijo(listaNodos[3].gameObject, "Liga", true);
         }
     }
-
     void LogicaEliminar(string tipo, GameObject objetoTocado)
     {
         NodoManager managerTocado = objetoTocado.GetComponentInParent<NodoManager>();
-
         if (!cargandoAgua)
         {
             if (tipo == "SalidaHuerto" && managerTocado == listaNodos[3])
@@ -378,7 +357,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                     EncenderBrilloHijo(listaNodos[destino].gameObject, "Info", false);
                     int objetivo = (indiceAEliminar == 4) ? 4 : 0;
                     listaNodos[objetivo].IniciarSecuenciaEliminacion();
-                    SumarPuntos(25);
+                    SumarPuntos(10);
                     UIManager.instancia.MarcarTareaCompletada((fase * 2) + 1);
                     ActualizarLineaFijaPostEliminacion();
                     if (indiceAEliminar == 4)
@@ -408,13 +387,11 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
             }
         }
     }
-
     void ReproducirNivelCompleto()
     {
         if (fuenteAudio && sonidoCompletado)
             for (int i = 0; i < 2; i++) fuenteAudio.PlayOneShot(sonidoCompletado);
     }
-
     void ActualizarLineaFijaPostEliminacion()
     {
         List<Vector3> pts = new List<Vector3>();
@@ -443,15 +420,12 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         lineaFija.SetPositions(pts.ToArray());
         puntosConfirmados.Clear();
     }
-
     IEnumerator EsperarSiguienteEliminar() { yield return new WaitForSeconds(2f); ProximoPasoEliminar(); }
-
     void DibujarLineaFija()
     {
         lineaFija.positionCount = puntosConfirmados.Count;
         lineaFija.SetPositions(puntosConfirmados.ToArray());
     }
-
     void Update()
     {
         if (cargandoAgua && lupi != null)
@@ -468,14 +442,12 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         }
         else lineaAgua.positionCount = 0;
     }
-
     void EncenderBrilloHijo(GameObject n, string parte, bool activar)
     {
         if (n == null) return;
         foreach (var b in n.GetComponentsInChildren<EfectoLetrero>(true))
             if (b.name.ToUpper().Contains(parte.ToUpper())) b.SetEncendido(activar);
     }
-
     void ApagarBrillos()
     {
         if (brilloRio) brilloRio.SetEncendido(false);

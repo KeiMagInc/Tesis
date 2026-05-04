@@ -1,7 +1,6 @@
 using UnityEngine;
 using Mundo2;
 using TMPro;
-
 public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
 {
     [Header("Insignias")]
@@ -46,12 +45,8 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     public EfectoLetrero brilloNull;
     public NodoManager huertoScript;
     private int estado = 0;
-
-    // --- NUEVO: Variable para evitar interacciones simultáneas ---
     private float tiempoUltimaAccion = 0f;
-
     void Awake() => instancia = this;
-
     void OnEnable()
     {
         if (UIManager.instancia == null) return;
@@ -61,12 +56,10 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         UIManager.instancia.panelParcelas.SetActive(false);
         ResetearNivel();
     }
-
     void OnDisable()
     {
         ResetearNivelSilencioso();
     }
-
     public void ResetearNivel()
     {
         estado = 0;
@@ -79,7 +72,6 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         }
         ActualizarPuntos();
     }
-
     public void ResetearNivelSilencioso()
     {
         estado = 0;
@@ -87,13 +79,9 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         if (huertoScript != null) huertoScript.ResetearNodo();
         ActualizarBrillos(false, false, false, false);
     }
-
     public void AvanceSiembraExitosa() { }
-
     public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
     {
-        // --- NUEVO: Si ha pasado menos de 1.5 segundos desde la última acción, IGNORAR. ---
-        // Esto evita que 2 letreros se activen a la misma vez y sobreescriban a Andy.
         if (Time.time - tiempoUltimaAccion < 1.5f) return;
         tiempoUltimaAccion = Time.time;
 
@@ -105,25 +93,22 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
             case "Null": AccionNull(); break;
         }
     }
-
     void AccionHead()
     {
         if (estado == 0)
         {
-            estado = 1; GanarPuntos(10);
+            estado = 1; SumarPuntos(10);
             ActualizarBrillos(false, true, false, false);
             andy.Decir("¡Dirección obtenida en P! Lleva la conexión al Almacén de la parcela INFO. Aquí guardaremos el valor de la semilla, que puede ser un dato de tipo int o string.", audioDireccionObtenida);
         }
-        // (Quité el error de estado < 0 aquí porque estado nunca baja de 0)
     }
-
     void AccionHuertoEntrada()
     {
         if (estado == 1)
         {
             estado = 2;
             if (huertoScript) huertoScript.ActivarHuerto();
-            GanarPuntos(10);
+            SumarPuntos(10);
             ActualizarBrillos(false, false, true, false);
             andy.Decir("¡Dato guardado en INFO! Ahora ve a la válvula LIGA. Recuerda: LIGA no guarda textos ni números, es una variable de tipo Nodo que debe apuntar al siguiente huerto.", audioSemillasAsignadas);
         }
@@ -132,12 +117,11 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
             ReproducirError("¡Lupi cuidado! No puedes guardar datos en INFO si no tienes una conexión desde el INICIO (P).", audioErrorInfo);
         }
     }
-
     void AccionHuertoSalida()
     {
         if (estado == 2)
         {
-            estado = 3; GanarPuntos(10);
+            estado = 3; SumarPuntos(10);
             ActualizarBrillos(false, false, false, true);
             andy.Decir("¡Referencia LIGA activada! Como no tenemos otro Nodo para conectar, arrastra la manguera al pozo final NULL. Así indicamos que este es el final de la lista.", audioCanalActivado);
         }
@@ -146,14 +130,13 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
             ReproducirError("Secuencia incorrecta. Primero debes llenar el Almacén INFO antes de manipular la válvula de salida LIGA.", audioErrorLiga);
         }
     }
-
     void AccionNull()
     {
         if (estado == 3)
         {
             estado = 4;
             if (huertoScript) huertoScript.DrenarAgua();
-            GanarPuntos(10, true);
+            SumarPuntos(10, true);
             ActualizarBrillos(false, false, false, false);
             if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null && KaosController.instancia != null)
             {
@@ -170,7 +153,6 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
             ReproducirError("Ese es el pozo NULL. Solo debes apuntar aquí usando la válvula LIGA del huerto para cerrar la lista.", audioErrorNull);
         }
     }
-
     void ReproducirNivelCompleto()
     {
         if (fuenteAudio && sonidoCompletado)
@@ -183,7 +165,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         if (andy != null) andy.Decir(mensajePista, audioExplicacion);
     }
 
-    void GanarPuntos(int cant, bool silencioso = false)
+    void SumarPuntos(int cant, bool silencioso = false)
     {
         UIManager.puntosGlobales += cant;
         ActualizarPuntos();
@@ -202,7 +184,6 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         if (brilloLiga) brilloLiga.SetEncendido(pun);
         if (brilloNull) brilloNull.SetEncendido(nul);
     }
-
     void Update()
     {
         if (lupi == null || lineaAgua == null) return;

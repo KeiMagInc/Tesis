@@ -2,7 +2,6 @@ using Mundo2;
 using System.Collections;
 using TMPro;
 using UnityEngine;
-
 public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
 {
     [Header("Insignias")]
@@ -10,8 +9,9 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     public Sprite insigniaDeEsteNivel;
     public Checkpoint checkpointFinal;
     [Header("Progreso")]
-    public BarreraProgreso barreraSiguiente; // Arrastra aquí el objeto BarrerasProgreso del mapa
+    public BarreraProgreso barreraSiguiente;
     [Header("Audios Diálogos Andy")]
+    public AudioClip audioErrorEntradaLiga;
     public AudioClip audioIntroMochila;
     public AudioClip audioIntroChecklist;
     public AudioClip audioInstruccionSiembra;
@@ -48,10 +48,8 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     private int pasoConexion = 0;
     private bool cargandoAgua = false;
     private NodoManager managerActual;
-    private int[] mapaIndicesUI = { 0, 2, 4 };
-    
+    private int[] mapaIndicesUI = { 0, 2, 4 };    
     void Awake() => instancia = this;
-
     void OnEnable()
     {
         if (UIManager.instancia == null) return;
@@ -64,16 +62,15 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         UIManager.instancia.MostrarMochilaSolo(false);
         UIManager.instancia.MostrarChecklistSolo(false);
         UIManager.instancia.ConfigurarTextosChecklist(
-            "Izquierda: sembrar trigo",
-            "",                          
-            "Derecha: sembrar calabaza", 
-            "",                          
-            "Centro: sembrar papa"   
+            "new Nodo(\"Trigo\");",
+            "",
+            "new Nodo(\"Calabaza\");",
+            "",
+            "new Nodo(\"Papa\");"
         );
         ActualizarPuntos();
         StartCoroutine(Intro());
     }
-
     public void ResetearNivel()
     {
         fase = 0; pasoConexion = 0; cargandoAgua = false;
@@ -84,7 +81,6 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         foreach (var z in zonas) z.ResetearZona();
         foreach (var p in GameObject.FindGameObjectsWithTag("Planta")) Destroy(p);
     }
-
     IEnumerator Intro()
     {
         yield return new WaitForSeconds(1f);
@@ -110,14 +106,12 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         pasoConexion = 0;
         lineaAgua.positionCount = 0;
     }
-
     public void AvanceSiembraExitosa()
     {
         UIManager.instancia.SetSemillaPalpitar("");
         andy.Decir("¡Huerto listo! Ahora busca el poste de INICIO (P) para obtener la dirección de memoria inicial.", audioHuertoListo);
         brilloHead.SetEncendido(true);
     }
-
     public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
     {
         switch (tipo)
@@ -133,9 +127,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                     GameObject huerto = BuscarHuerto();
                     if (huerto != null) EncenderBrilloHijo(huerto, "Info", true);
                 }
-                // Si ya se activó, no hacemos nada (evita sonido de error)
                 break;
-
             case "EntradaHuerto":
                 if (cargandoAgua && pasoConexion == 0)
                 {
@@ -151,7 +143,13 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                 }
                 else if (!cargandoAgua && pasoConexion == 0) ReproducirError();
                 break;
-
+            case "EntradaLiga":
+                if (cargandoAgua && pasoConexion == 0)
+                {
+                    ReproducirError();
+                    andy.Decir("¡Cuidado Lupi! El puntero de INICIO debe apuntar al Almacén INFO para inicializar el NODO, no a su válvula LIGA.", audioErrorEntradaLiga);
+                }
+                break;
             case "SalidaHuerto":
                 if (pasoConexion == 1)
                 {
@@ -165,7 +163,6 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                 }
                 else if (pasoConexion < 1) ReproducirError();
                 break;
-
             case "Null":
                 if (pasoConexion == 2 && cargandoAgua)
                 {
@@ -174,15 +171,14 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                     brilloNull.SetEncendido(false);
                     UIManager.instancia.MarcarTareaCompletada(mapaIndicesUI[fase]);
                     fase++;
-
                     if (fase < 3)
                     {
-                        SumarPuntos(10); // Sonido normal de acierto
+                        SumarPuntos(10);
                         StartCoroutine(EsperarSiguiente());
                     }
                     else
                     {
-                        SumarPuntos(10, true); // Silencioso para que no se cruce con el de nivel completo
+                        SumarPuntos(10, true); 
                         if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null && KaosController.instancia != null)
                         {
                             barreraSiguiente.Abrir();
@@ -195,15 +191,13 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                     }
                 }
                 else if (pasoConexion < 2) ReproducirError();
-                break;
+                break;            
         }
     }
-
     void ReproducirError()
     {
         if (fuenteAudio && sonidoError) fuenteAudio.PlayOneShot(sonidoError);
     }
-
     void Update() { if (cargandoAgua) lineaAgua.SetPosition(lineaAgua.positionCount - 1, lupi.position); }
     void SumarPuntos(int cant, bool silencioso = false)
     {
@@ -211,9 +205,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         ActualizarPuntos();
         if (!silencioso && fuenteAudio && sonidoAcierto) fuenteAudio.PlayOneShot(sonidoAcierto);
     }
-
     void ActualizarPuntos() { if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString(); }
-
     GameObject BuscarHuerto()
     {
         string buscado = nombresNodos[fase].ToLower();
@@ -224,7 +216,6 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         }
         return null;
     }
-
     void EncenderBrilloHijo(GameObject r, string n, bool e)
     {
         if (!r) return;
@@ -234,13 +225,11 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                 b.SetEncendido(e);
         }
     }
-
     void ReproducirNivelCompleto()
     {
         if (fuenteAudio && sonidoCompletado)
             for (int i = 0; i < 2; i++) fuenteAudio.PlayOneShot(sonidoCompletado);
     }
-
     void ApagarBrillos() { if (brilloHead) brilloHead.SetEncendido(false); if (brilloNull) brilloNull.SetEncendido(false); }
     IEnumerator EsperarSiguiente() { yield return new WaitForSeconds(2f); ProximoPaso(); }
 }
