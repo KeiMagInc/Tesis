@@ -467,6 +467,8 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         {
             UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
             if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();
+            if (KaosController.instancia != null)
+                KaosController.instancia.ReaccionarAError();
         }
     }
     IEnumerator EsperarSiguiente() { yield return new WaitForSeconds(2f); ProximoPasoSiembra(); }

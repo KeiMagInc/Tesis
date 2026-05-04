@@ -200,7 +200,9 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         if (!KaosController.nivelesTerminados.Contains("CreacionReferencias"))
         {
             UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
-            ActualizarPuntos();
+            if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();
+            if (KaosController.instancia != null)
+                KaosController.instancia.ReaccionarAError();
         }
     }
     void Update() { if (cargandoAgua) lineaAgua.SetPosition(lineaAgua.positionCount - 1, lupi.position); }

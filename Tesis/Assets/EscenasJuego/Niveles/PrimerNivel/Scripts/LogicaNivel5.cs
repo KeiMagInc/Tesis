@@ -719,6 +719,8 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         {
             UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
             if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();
+            if (KaosController.instancia != null)
+                KaosController.instancia.ReaccionarAError();
         }
     }
     void ReproducirNivelCompleto()

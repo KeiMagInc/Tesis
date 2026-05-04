@@ -1,6 +1,7 @@
-using UnityEngine;
-using System.Collections.Generic;
 using Mundo2;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class KaosController : MonoBehaviour
 {
@@ -55,6 +56,38 @@ public class KaosController : MonoBehaviour
         {
             Patrullar();
         }
+    }
+    public void ReaccionarAError()
+    {
+        if (recibiendoDano || estaAnimando || !sr.enabled) return;
+        StartCoroutine(EfectoCastigoVisual());
+    }
+    IEnumerator EfectoCastigoVisual()
+    {
+        estaAnimando = true;
+        if (sr != null && materialSilueta != null)
+        {
+            sr.material = materialSilueta;
+            sr.color = new Color(0f, 0.5f, 1f, 1f); 
+        }
+        float escalaTemporal = escalaActualBase;
+        float tiempoPaso = 0.07f;
+        for (int i = 0; i < 2; i++)
+        {
+            escalaActualBase = escalaTemporal * 1.15f;
+            AplicarEscalaVisual();
+            yield return new WaitForSeconds(tiempoPaso);
+            escalaActualBase = escalaTemporal;
+            AplicarEscalaVisual();
+            yield return new WaitForSeconds(tiempoPaso);
+        }
+        if (sr != null)
+        {
+            sr.material = materialOriginal;
+            sr.color = Color.white;
+        }
+        estaAnimando = false;
+        ActualizarTamanoBase();
     }
     void DetectarZonaPorLista()
     {

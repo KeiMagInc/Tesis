@@ -166,7 +166,9 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         if (!KaosController.nivelesTerminados.Contains("AnatomiaComponentes"))
         {
             UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
-            ActualizarPuntos();
+            if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();
+            if (KaosController.instancia != null)
+                KaosController.instancia.ReaccionarAError();
         }
     }
 
