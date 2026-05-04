@@ -462,9 +462,11 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     }
     void ReproducirError()
     {
-        if (fuenteAudio && sonidoError)
+        if (fuenteAudio && sonidoError) fuenteAudio.PlayOneShot(sonidoError);
+        if (!KaosController.nivelesTerminados.Contains("ListasCirculares"))
         {
-            fuenteAudio.PlayOneShot(sonidoError);
+            UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
+            if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();
         }
     }
     IEnumerator EsperarSiguiente() { yield return new WaitForSeconds(2f); ProximoPasoSiembra(); }

@@ -668,6 +668,11 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     void ReproducirError()
     {
         if (fuenteAudio && sonidoError) fuenteAudio.PlayOneShot(sonidoError);
+        if (!KaosController.nivelesTerminados.Contains("ListasSimples"))
+        {
+            UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
+            if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();
+        }
     }
     void ApagarBrillosGlobales() { if (brilloHead) brilloHead.SetEncendido(false); if (brilloNull) brilloNull.SetEncendido(false); EfectoLetrero[] todos = Object.FindObjectsByType<EfectoLetrero>(FindObjectsSortMode.None); foreach (var b in todos) b.SetEncendido(false); }
     IEnumerator EsperarSiguiente() { yield return new WaitForSeconds(2f); ProximoPaso(); }

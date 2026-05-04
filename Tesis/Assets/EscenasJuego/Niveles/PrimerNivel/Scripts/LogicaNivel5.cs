@@ -714,9 +714,11 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     }
     void ReproducirError()
     {
-        if (fuenteAudio && sonidoError)
+        if (fuenteAudio && sonidoError) fuenteAudio.PlayOneShot(sonidoError);
+        if (!KaosController.nivelesTerminados.Contains("ListasDobles"))
         {
-            fuenteAudio.PlayOneShot(sonidoError);
+            UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
+            if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();
         }
     }
     void ReproducirNivelCompleto()
