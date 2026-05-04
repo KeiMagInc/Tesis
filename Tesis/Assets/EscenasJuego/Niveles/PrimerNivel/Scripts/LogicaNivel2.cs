@@ -201,6 +201,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     void Update() { if (cargandoAgua) lineaAgua.SetPosition(lineaAgua.positionCount - 1, lupi.position); }
     void SumarPuntos(int cant, bool silencioso = false)
     {
+        if (KaosController.nivelesTerminados.Contains("CreacionReferencias")) return;
         UIManager.puntosGlobales += cant;
         ActualizarPuntos();
         if (!silencioso && fuenteAudio && sonidoAcierto) fuenteAudio.PlayOneShot(sonidoAcierto);

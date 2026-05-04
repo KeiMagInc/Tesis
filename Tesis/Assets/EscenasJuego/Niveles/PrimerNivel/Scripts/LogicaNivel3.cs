@@ -660,6 +660,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     void EncenderBrilloEnNodo(GameObject nodo, string parte, bool encender) { if (nodo == null) return; foreach (var b in nodo.GetComponentsInChildren<EfectoLetrero>(true)) if (b.gameObject.name.ToUpper().Contains(parte.ToUpper())) b.SetEncendido(encender); }
     void SumarPuntos(int cant, bool silencioso = false)
     {
+        if (KaosController.nivelesTerminados.Contains("ListasSimples")) return;
         UIManager.puntosGlobales += cant;
         if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();
         if (!silencioso && fuenteAudio && sonidoAcierto) fuenteAudio.PlayOneShot(sonidoAcierto);

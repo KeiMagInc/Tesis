@@ -167,6 +167,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
 
     void SumarPuntos(int cant, bool silencioso = false)
     {
+        if (KaosController.nivelesTerminados.Contains("AnatomiaComponentes")) return;
         UIManager.puntosGlobales += cant;
         ActualizarPuntos();
         if (!silencioso && fuenteAudio && sonidoAcierto) fuenteAudio.PlayOneShot(sonidoAcierto);

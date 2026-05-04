@@ -453,7 +453,9 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         if (brilloRio) brilloRio.SetEncendido(false);
         foreach (var b in Object.FindObjectsByType<EfectoLetrero>(FindObjectsSortMode.None)) b.SetEncendido(false);
     }
-    void SumarPuntos(int cant) { 
+    void SumarPuntos(int cant)
+    {
+        if (KaosController.nivelesTerminados.Contains("ListasCirculares")) return;
         UIManager.puntosGlobales += cant; 
         if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();
         if (fuenteAudio && sonidoAcierto) fuenteAudio.PlayOneShot(sonidoAcierto);

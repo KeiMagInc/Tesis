@@ -671,7 +671,6 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                 yield return new WaitForSeconds(audioFelicidadesInsertarFinal.length + 0.5f);
             else
                 yield return new WaitForSeconds(4f);
-
             modoActual = ModoOperacion.EliminarInicio;
             fase = 0;
             pasoConexion = 0;
@@ -817,7 +816,8 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             }
         }
     }
-    void SumarPuntos(int c) { 
+    void SumarPuntos(int c) {
+        if (KaosController.nivelesTerminados.Contains("ListasDobles")) return;
         UIManager.puntosGlobales += c; 
         if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();
         ReproducirAcierto();
