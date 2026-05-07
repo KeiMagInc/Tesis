@@ -1,11 +1,33 @@
-using Mundo2;
+ï»¿using Mundo2;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
 {
-    [Header("Audios Diálogos Andy")]
+    [Header("Audios DiÃ¡logos Andy")]
+    public AudioClip audioNodoListoPInicio;
+    public AudioClip audioNodoListoQInicio;
+    public AudioClip audioNodoListoPFinal;
+    public AudioClip audioNodoListoQFinal;
+    public AudioClip audioEliminarInicioP;
+    public AudioClip audioEliminarFinalLiga;
+    public AudioClip audioLlevaQAInfo;
+    public AudioClip audioActivaLigaPFinal;
+    public AudioClip audioActivaLigaQFinal;
+    public AudioClip audioLlevaPANull;
+    public AudioClip audioLlevaQANull;
+    public AudioClip audioSiembraPInfo;
+    public AudioClip audioSiembraQInfo;
+    public AudioClip audioLlevaPAInfo;
+    public AudioClip audioFaltaSiembraP;
+    public AudioClip audioFaltaSiembraQ;
+    public AudioClip audioLlevaAguaAInfoP;
+    public AudioClip audioLlevaAguaAInfoQ;
+    public AudioClip audioActivaLigaP;
+    public AudioClip audioActivaLigaQ;
+    public AudioClip audioLlevaLigaANull;
+    public AudioClip audioConectarLigaAInfoQ;
     public AudioClip audioLlevaLigaANullFinal;
     public AudioClip audioNodoFisicoListoFinal;
     public AudioClip audioConectarLigaAInfo;
@@ -16,7 +38,6 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     public AudioClip audioErrorLigaPorInfo;
     public AudioClip audioLlevaAguaAInfo;
     public AudioClip audioActivaLigaNueva;
-    public AudioClip audioLlevaLigaANull;
     public AudioClip audioNodoFisicoListo;
     public AudioClip audioIntroInsertarInicio;
     public AudioClip audioIntroInsertarFinal;
@@ -56,7 +77,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     public Transform lupi;
     private enum ModoOperacion { InsertarInicio, InsertarFinal, EliminarInicio, EliminarFinal }
     private ModoOperacion modoActual = ModoOperacion.InsertarInicio;
-    [Header("Prefabs Específicos Nivel 3")]
+    [Header("Prefabs EspecÃ­ficos Nivel 3")]
     public GameObject prefabPapaN3;
     public GameObject prefabTrigoN3;
     public GameObject prefabCalabazaN3;
@@ -74,6 +95,8 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     private List<Vector3> puntosCadenaFija = new List<Vector3>();
     private string[] nombresNodosInicio = { "Papa", "Trigo", "Calabaza" };
     private string[] nombresNodosFinal = { "Calabaza", "Trigo", "Papa" };
+
+
     void Awake() => instancia = this;
     void OnEnable()
     {
@@ -139,17 +162,17 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         if (modoActual == ModoOperacion.InsertarInicio)
         {
             clipReproducido = audioIntroInsertarInicio;
-            andy.Decir("¡Atención Lupi! Kaos ha borrado todas las parcelas. Debemos aplicar una INSERCIÓN AL INICIO para expandir la lista desde su cabecera.", clipReproducido);
+            andy.Decir("Â¡AtenciÃ³n Lupi! Kaos ha borrado todas las parcelas. Debemos aplicar una INSERCIÃ“N AL INICIO para expandir la lista desde su cabecera.", clipReproducido);
         }
         else if (modoActual == ModoOperacion.InsertarFinal)
         {
             clipReproducido = audioIntroInsertarFinal;
-            andy.Decir("¡Lupifantástico! Ahora aprenderemos la INSERCIÓN AL FINAL. Debemos extender el rastro de la cosecha hasta el último rincón del valle.", clipReproducido);
+            andy.Decir("Â¡LupifantÃ¡stico! Ahora aprenderemos la INSERCIÃ“N AL FINAL. Debemos extender el rastro de la cosecha hasta el Ãºltimo rincÃ³n del valle.", clipReproducido);
         }
         else if (modoActual == ModoOperacion.EliminarInicio)
         {
             clipReproducido = audioIntroEliminarInicio;
-            andy.Decir("¡Alerta! El Kaos ha infectado el primer Nodo. Debemos realizar una Eliminación para proteger el resto de la estructura.", clipReproducido);
+            andy.Decir("Â¡Alerta! El Kaos ha infectado el primer NODO. Debemos realizar una ELIMINACIÃ“N para proteger el resto de la estructura.", clipReproducido);
         }
         if (clipReproducido != null)
             yield return new WaitForSeconds(clipReproducido.length + 0.5f);
@@ -159,7 +182,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         {
             UIManager.instancia.MostrarMochilaSolo(true);
             yield return new WaitForSeconds(0.5f);
-            andy.Decir("Primero, prepara el nuevo NODO. Abre la mochila y elije una semilla para asignar un valor al campo INFO de esta parcela.", audioPrepararNodo);
+            andy.Decir("Primero, prepara el nuevo NODO. Abre la mochila y elije una semilla para asignar un valor al campo P.INFO de esta parcela.", audioPrepararNodo);
             if (audioPrepararNodo != null)
                 yield return new WaitForSeconds(audioPrepararNodo.length + 0.2f);
             else
@@ -176,18 +199,26 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             string[] nombres = (modoActual == ModoOperacion.InsertarInicio) ? nombresNodosInicio : nombresNodosFinal;
             if (fase < nombres.Length)
             {
-                andy.Decir("Siembra la semilla para definir el contenido INFO del NODO.", audioSiembraInstruccion);
+                if (fase == 0)
+                {
+                    andy.Decir("Siembra la semilla para definir el contenido P^.INFO de la cabecera.", audioSiembraPInfo);
+                }
+                else
+                {
+                    andy.Decir("Siembra la semilla para definir el contenido Q^.INFO del nuevo NODO.", audioSiembraQInfo);
+                }
+
                 UIManager.instancia.SetSemillaPalpitar(nombres[fase]);
             }
         }
         else if (modoActual == ModoOperacion.EliminarInicio)
         {
-            andy.Decir("Enlaza el poste de INICIO. Vamos a liberar el enlace que apunta al NODO corrupto.", audioTocaInicioEliminar);
+            andy.Decir("Enlaza el poste inicial P. Vamos a redirigir el puntero hacia P^.LIGA para liberar el NODO corrupto.", audioEliminarInicioP);
             brilloHead.SetEncendido(true);
         }
         else if (modoActual == ModoOperacion.EliminarFinal)
         {
-            andy.Decir("El último NODO está perdido. Abre la válvula LIGA del Trigo para redirigir el flujo.", audioTocaLigaEliminar);
+            andy.Decir("El Ãºltimo NODO estÃ¡ perdido. Debemos modificar el campo LIGA del penÃºltimo NODO para que apunte a NULL.", audioEliminarFinalLiga);
             EncenderBrilloEnNodo(listaNodos[1].gameObject, "Liga", true);
         }
         pasoConexion = 0;
@@ -197,7 +228,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         if (modoActual == ModoOperacion.InsertarInicio)
         {
             ReproducirNivelCompleto();
-            andy.Decir("¡Lo lograste! Has reasignado el puntero INICIO correctamente. La lista ahora comienza con un nuevo elemento.", audioExitoReasignarHead);
+            andy.Decir("Â¡Lo lograste! Has reasignado el puntero INICIO correctamente. La lista ahora comienza con un nuevo elemento.", audioExitoReasignarHead);
             if (audioExitoReasignarHead != null)
                 yield return new WaitForSeconds(audioExitoReasignarHead.length + 0.5f);
             else
@@ -210,7 +241,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         else if (modoActual == ModoOperacion.InsertarFinal)
         {
             ReproducirNivelCompleto();
-            andy.Decir("¡Fantástico Lupi! Ahora el flujo recorre toda la estructura hasta el nuevo NODO final.", audioExitoFlujoFinal);
+            andy.Decir("Â¡FantÃ¡stico Lupi! Ahora el flujo recorre toda la estructura hasta el nuevo NODO final.", audioExitoFlujoFinal);
             if (audioExitoFlujoFinal != null)
                 yield return new WaitForSeconds(audioExitoFlujoFinal.length + 0.5f);
             else
@@ -228,7 +259,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         {
             if (brilloHead) brilloHead.SetEncendido(false);
             cargandoAgua = true;
-            andy.Decir("Apunta el puntero de INICIO directamente a la INFO del Trigo. Saltaremos el NODO infectado.", audioApuntaInicioEliminar);
+            andy.Decir("Haremos que la variable auxiliar Q apunte a P. Ahora redefinamos el inicio.", audioApuntaInicioEliminar);
             EncenderBrilloEnNodo(listaNodos[1].gameObject, "Info", true);
         }
         else if (tipo == "EntradaHuerto" && cargandoAgua)
@@ -237,7 +268,8 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             {
                 cargandoAgua = false;
                 EncenderBrilloEnNodo(listaNodos[1].gameObject, "Info", false);
-                andy.Decir("¡Conexión segura! El NODO infectado ha sido desplazado de la secuencia lógica.", audioConexionSeguraEliminar);
+                andy.Decir("Â¡Puntero redefinido! P ahora contiene la direcciÃ³n de Q^.LIGA.", audioConexionSeguraEliminar);
+
                 StartCoroutine(SecuenciaEliminacionExitosa(0));
             }
             else { ReproducirError(); }
@@ -253,14 +285,15 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 EncenderBrilloEnNodo(listaNodos[1].gameObject, "Liga", false);
                 cargandoAgua = true;
                 brilloNull.SetEncendido(true);
-                andy.Decir("Para eliminar el último Nodo, apunta la LIGA del elemento anterior hacia NULL.", audioApuntaNullEliminar);
+                andy.Decir("Hemos recorrido la lista hasta que Q es el Ãºltimo y T el penÃºltimo. Ahora, para desconectar a Q, haz que T^.LIGA apunte a NULL.", audioApuntaNullEliminar);
             }
+            else { ReproducirError(); }
         }
         else if (tipo == "Null" && cargandoAgua)
         {
             cargandoAgua = false;
             brilloNull.SetEncendido(false);
-            andy.Decir("¡Perfecto Lupi! Has cerrado la lista en el NODO anterior, eliminando el rastro de Kaos.", audioCerradoListaEliminar);
+            andy.Decir("Â¡AsignaciÃ³n exitosa! T^.LIGA ahora es NULL El nodo Q ha sido aislado de la estructura.", audioCerradoListaEliminar);
             StartCoroutine(SecuenciaEliminacionExitosa(2));
         }
         else if (cargandoAgua) { ReproducirError(); }
@@ -279,7 +312,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         if (modoActual == ModoOperacion.EliminarInicio)
         {
             ReproducirNivelCompleto();
-            andy.Decir("El primer NODO ha sido removido con éxito. ¡Vamos por el último paso Lupi!", audioAdiosNodo);
+            andy.Decir("El primer NODO ha sido removido con Ã©xito. Â¡Vamos por el Ãºltimo paso Lupi!", audioAdiosNodo);
             if (audioAdiosNodo != null)
                 yield return new WaitForSeconds(audioAdiosNodo.length + 0.5f);
             else
@@ -296,7 +329,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 controladorInsignia.MostrarInsignia(insigniaDeEsteNivel);
                 KaosController.instancia.RecibirDanoYDesaparecer("ListasSimples");
             }
-            andy.Decir("¡Excelente Analista de Enlaces Simples! Has dominado las operaciones de Inserción y Eliminación en Listas Simples. El valle está a salvo.", audioExitoTotalNivel);
+            andy.Decir("Â¡Excelente Analista de Enlaces Simples! Has dominado las operaciones de INSERCIÃ“N y ELIMINACIÃ“N en Listas Simples. El valle estÃ¡ a salvo.", audioExitoTotalNivel);
             ReproducirNivelCompleto();
             if (audioExitoTotalNivel != null)
                 yield return new WaitForSeconds(audioExitoTotalNivel.length + 0.5f);
@@ -466,7 +499,10 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         Debug.Log("Objeto tocado: " + objetoTocado.name + " | Tipo recibido: " + tipo);
         if (managerActual == null && (tipo == "Head" || tipo == "EntradaHuerto"))
         {
-            andy.Decir("¡Despacio Lupi! Primero debemos definir el valor del campo INFO sembrando la semilla indicada.", audioFaltaSiembra);
+            if (fase == 0)
+                andy.Decir("Â¡Despacio Lupi! Primero debemos definir el valor del campo P^.INFO sembrando la semilla indicada.", audioFaltaSiembraP);
+            else
+                andy.Decir("Â¡Despacio Lupi! Primero debemos definir el valor del campo Q^.INFO sembrando la semilla para el nuevo NODO.", audioFaltaSiembraQ);
             return;
         }
         if (cargandoAgua)
@@ -475,7 +511,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             {
                 if (tipo == "SalidaHuerto" || tipo == "Liga")
                 {
-                    andy.Decir("¡Error de direccionamiento! El puntero debe apuntar al campo INFO para entrar al nuevo NODO.", audioErrorLigaPorInfo);
+                    andy.Decir("Â¡Error de direccionamiento! El puntero debe apuntar al campo P.INFO para entrar al nuevo NODO.", audioErrorLigaPorInfo);
                     ReproducirError();
                     return;
                 }
@@ -487,11 +523,14 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                     cargandoAgua = false;
                     pasoConexion = 1;
                     EncenderBrilloEnNodo(managerActual.gameObject, "Liga", true);
-                    andy.Decir("¡Contenido asignado! Ahora activa el puntero LIGA de este NODO para conectarlo con la lista existente.", audioActivaLigaNueva);
+                    if (fase == 0)
+                        andy.Decir("Â¡Contenido asignado! Ahora activa el puntero P^.LIGA de la cabecera para definir el final de la estructura.", audioActivaLigaP);
+                    else
+                        andy.Decir("Â¡Contenido asignado! Ahora activa el puntero Q^.LIGA de este nuevo NODO para conectarlo con la lista existente.", audioActivaLigaQ);
                 }
                 else
                 {
-                    andy.Decir("¡Cuidado Lupi! El enlace debe ir al campo INFO de la nueva parcela para inicializar el NODO.", audioErrorConexionInfo);
+                    andy.Decir("Â¡Cuidado Lupi! El enlace debe ir al campo P.INFO de la nueva parcela para inicializar el NODO.", audioErrorConexionInfo);
                     ReproducirError();
                 }
             }
@@ -509,11 +548,11 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 {
                     if (fase == 0)
                     {
-                        andy.Decir("Como este es el final de la estructura, su campo LIGA debe apuntar hacia NULL.", audioErrorLigaPorNull);
+                        andy.Decir("Como este es el final de la estructura, su campo P.LIGA debe apuntar hacia NULL.", audioErrorLigaPorNull);
                     }
                     else
                     {
-                        andy.Decir("¡Error de direccionamiento! El puntero LIGA debe conectarse al campo INFO de la siguiente parcela.", audioErrorLigaNuevaParcela);
+                        andy.Decir("Â¡Error de direccionamiento! El puntero P.LIGA debe conectarse al campo P.INFO de la siguiente parcela.", audioErrorLigaNuevaParcela);
                     }
                     ReproducirError();
                 }
@@ -526,7 +565,11 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 brilloHead.SetEncendido(false);
                 cargandoAgua = true;
                 EncenderBrilloEnNodo(managerActual.gameObject, "Info", true);
-                andy.Decir("Recogiste la dirección de memoria. Llévala al campo INFO de la nueva parcela para inicializar el NODO.", audioLlevaAguaAInfo);
+
+                if (fase == 0)
+                    andy.Decir("Recogiste la direcciÃ³n de memoria para el puntero inicial P. LlÃ©vala al campo P^.INFO.", audioLlevaAguaAInfoP);
+                else
+                    andy.Decir("Recogiste una direcciÃ³n para el nuevo NODO Q. LlÃ©vala al campo Q^.INFO para crear el nuevo elemento.", audioLlevaAguaAInfoQ);
             }
             else if (tipo == "SalidaHuerto" && pasoConexion == 1 && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
             {
@@ -536,12 +579,12 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 if (fase == 0)
                 {
                     brilloNull.SetEncendido(true);
-                    andy.Decir("Como es el primer elemento de la estructura, su campo LIGA debe apuntar hacia NULL.", audioLlevaLigaANull);
+                    andy.Decir("Como es el primer elemento de la estructura, su campo P.LIGA debe apuntar hacia NULL.", audioLlevaLigaANull);
                 }
                 else
                 {
                     EncenderBrilloEnNodo(managerAnterior.gameObject, "Info", true);
-                    andy.Decir("Ahora conecta este NODO con el resto de la estructura.", audioConectarLigaAInfo);
+                    andy.Decir("Ahora conecta el puntero Q^.LIGA al campo INFO de la cabecera actual (P).", audioConectarLigaAInfoQ);
                 }
             }
         }
@@ -556,7 +599,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             {
                 if (tipo == "SalidaHuerto" || tipo == "Liga")
                 {
-                    andy.Decir("¡Error de direccionamiento! El puntero debe apuntar al campo INFO para entrar al nuevo NODO.", audioErrorLigaPorInfo);
+                    andy.Decir("Â¡Error de direccionamiento! El puntero debe apuntar al campo P.INFO para entrar al nuevo NODO.", audioErrorLigaPorInfo);
                     ReproducirError();
                     return; 
                 }
@@ -568,11 +611,14 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                     cargandoAgua = false;
                     pasoConexion = 1;
                     EncenderBrilloEnNodo(managerActual.gameObject, "Liga", true);
-                    andy.Decir("¡Contenido asignado! Ahora activa el puntero LIGA de este NODO para conectarlo con la lista existente.", audioActivaLigaNueva);
+                    if (fase == 0)
+                        andy.Decir("Â¡Contenido asignado a P^.INFO! Ahora activa P^.LIGA. Como es el primer NODO, tambiÃ©n inicializamos P en T.", audioActivaLigaPFinal);
+                    else
+                        andy.Decir("Â¡Contenido asignado a Q^.INFO! Ahora activa Q^.LIGA para cerrar el nuevo NODO.", audioActivaLigaQFinal);
                 }
                 else
                 {
-                    andy.Decir("¡Cuidado Lupi! Para integrar el NODO, el enlace debe apuntar obligatoriamente a su campo INFO.", audioErrorConexionInfo);
+                    andy.Decir("Â¡Cuidado Lupi! Para integrar el NODO, el enlace debe apuntar obligatoriamente a su campo P.INFO.", audioErrorConexionInfo);
                     ReproducirError();
                 }
             }
@@ -581,7 +627,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 if (tipo == "Null") FinalizarNodo();
                 else
                 {
-                    andy.Decir("Como este es el final de la estructura, su campo LIGA debe apuntar hacia NULL.", audioLlevaLigaANullFinal);
+                    andy.Decir("Como este es el final de la estructura, su campo P.LIGA debe apuntar hacia NULL.", audioLlevaLigaANullFinal);
                     ReproducirError();
                 }
             }
@@ -599,7 +645,10 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 if (cargandoAgua)
                 {
                     EncenderBrilloEnNodo(managerActual.gameObject, "Info", true);
-                    andy.Decir("Recogiste la dirección de memoria. Llévala al campo INFO de la nueva parcela para inicializar el nodo.", audioLlevaAguaAInfo);
+                    if (fase == 0)
+                        andy.Decir("Recogiste la direcciÃ³n para la cabecera P. LlÃ©vala al campo P^.INFO.", audioLlevaPAInfo);
+                    else
+                        andy.Decir("Recogiste la direcciÃ³n para el nuevo NODO Q. LlÃ©vala al campo Q^.INFO.", audioLlevaQAInfo);
                 }
             }
             else if (tipo == "SalidaHuerto" && pasoConexion == 1 && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
@@ -608,7 +657,10 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 cargandoAgua = true;
                 pasoConexion = 2;
                 brilloNull.SetEncendido(true);
-                andy.Decir("Como este es el final de la estructura, su campo LIGA debe apuntar hacia NULL.", audioLlevaLigaANullFinal);
+                if (fase == 0)
+                    andy.Decir("Este es el final actual. Lleva la conexiÃ³n al pozo NULL.", audioLlevaPANull);
+                else
+                    andy.Decir("Este nuevo NODO serÃ¡ el Ãºltimo. Lleva la conexiÃ³n a NULL.", audioLlevaQANull);
             }
         }
     }
@@ -628,17 +680,32 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             if (modoActual == ModoOperacion.InsertarInicio || (modoActual == ModoOperacion.InsertarFinal && fase == 0))
             {
                 brilloHead.SetEncendido(true);
-                andy.Decir("¡Estructura física lista! Ahora recupera el puntero desde el poste de INICIO para establecer el enlace lógico.", audioNodoFisicoListo);
+                if (fase == 0)
+                {
+                    andy.Decir("Â¡Estructura fÃ­sica de la cabecera P lista! Ahora recupera la direcciÃ³n desde el poste para inicializar la Lista.", audioNodoListoPInicio);
+                }
+                else
+                {
+                    andy.Decir("Â¡Estructura fÃ­sica de Q lista! Recupera una nueva direcciÃ³n desde el poste para este nuevo NODO.", audioNodoListoQInicio);
+                }
             }
-            else if (modoActual == ModoOperacion.InsertarFinal && fase > 0)
+            else if (modoActual == ModoOperacion.InsertarFinal)
             {
-                EncenderBrilloEnNodo(managerAnterior.gameObject, "Liga", true);
-                andy.Decir("¡Estructura física lista! Ahora recupera el puntero desde la LIGA de la parcela anterior para extender la lista.", audioNodoFisicoListoFinal);
+                if (fase == 0)
+                {
+                    brilloHead.SetEncendido(true);
+                    andy.Decir("Â¡Estructura fÃ­sica de la cabecera P lista! Recupera la direcciÃ³n desde el poste de inicio.", audioNodoListoPFinal);
+                }
+                else
+                {
+                    EncenderBrilloEnNodo(managerAnterior.gameObject, "Liga", true);
+                    andy.Decir("Â¡Estructura fÃ­sica de Q lista! Ahora activa el puntero LIGA del Ãºltimo nodo (T) para enlazarlo con el nuevo elemento.", audioNodoListoQFinal);
+                }
             }
         }
         else
         {
-            Debug.LogError("No se encontró el nodo en la escena.");
+            Debug.LogError("No se encontrÃ³ el NODO en la escena.");
         }
     }
     NodoManager BuscarNuevoNodoEnEscena()

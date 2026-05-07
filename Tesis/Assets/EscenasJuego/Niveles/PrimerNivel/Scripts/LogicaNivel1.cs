@@ -68,7 +68,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         ActualizarBrillos(true, false, false, false);
         if (andy != null)
         {
-            andy.Decir("¡Bienvenido Lupi! Identifica las partes del NODO, ve al poste INICIO (Puntero P). Usa 'E' para obtener la dirección de memoria del primer objeto de tipo Nodo.", audioBienvenida);
+            andy.Decir("¡Bienvenido Lupi! Identifica las partes del NODO, ve al poste INICIO. Usa 'E' para obtener la dirección de memoria del primer objeto de tipo NODO.", audioBienvenida);
         }
         ActualizarPuntos();
     }
@@ -99,7 +99,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         {
             estado = 1; SumarPuntos(10);
             ActualizarBrillos(false, true, false, false);
-            andy.Decir("¡Dirección obtenida en P! Lleva la conexión al Almacén de la parcela INFO. Aquí guardaremos el valor de la semilla, que puede ser un dato de tipo int o string.", audioDireccionObtenida);
+            andy.Decir("¡Dirección obtenida en P! Lleva la conexión al P.INFO, aquí guardaremos el valor de la semilla, que puede ser un dato de tipo int o string.", audioDireccionObtenida);
         }
     }
     void AccionHuertoEntrada()
@@ -110,11 +110,11 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
             if (huertoScript) huertoScript.ActivarHuerto();
             SumarPuntos(10);
             ActualizarBrillos(false, false, true, false);
-            andy.Decir("¡Dato guardado en INFO! Ahora ve a la válvula LIGA. Recuerda: LIGA no guarda textos ni números, es una variable de tipo Nodo que debe apuntar al siguiente huerto.", audioSemillasAsignadas);
+            andy.Decir("¡Dato guardado en P.INFO! Ahora ve a la válvula P.LIGA. Recuerda: P.LIGA no guarda textos ni números, es una variable de tipo NODO que debe apuntar al siguiente huerto.", audioSemillasAsignadas);
         }
         else if (estado < 1)
         {
-            ReproducirError("¡Lupi cuidado! No puedes guardar datos en INFO si no tienes una conexión desde el INICIO (P).", audioErrorInfo);
+            ReproducirError("¡Lupi cuidado! No puedes guardar datos en P.INFO si no tienes una conexión desde el INICIO.", audioErrorInfo);
         }
     }
     void AccionHuertoSalida()
@@ -123,11 +123,11 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         {
             estado = 3; SumarPuntos(10);
             ActualizarBrillos(false, false, false, true);
-            andy.Decir("¡Referencia LIGA activada! Como no tenemos otro Nodo para conectar, arrastra la manguera al pozo final NULL. Así indicamos que este es el final de la lista.", audioCanalActivado);
+            andy.Decir("¡Referencia P.LIGA activada! Como no tenemos otro NODO para conectar, arrastra la manguera al pozo final NULL. Así indicamos que este es el final de la lista.", audioCanalActivado);
         }
         else if (estado < 2)
         {
-            ReproducirError("Secuencia incorrecta. Primero debes llenar el Almacén INFO antes de manipular la válvula de salida LIGA.", audioErrorLiga);
+            ReproducirError("Secuencia incorrecta. Primero debes llenar el P.INFO antes de manipular la válvula de salida P.LIGA.", audioErrorLiga);
         }
     }
     void AccionNull()
@@ -145,12 +145,12 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
                 controladorInsignia.MostrarInsignia(insigniaDeEsteNivel);
                 KaosController.instancia.RecibirDanoYDesaparecer("AnatomiaComponentes");
             }
-            andy.Decir("¡Excelente, Analista de estructuras! Has creado un Nodo perfecto. Su INFO guarda un dato (int o string) y su LIGA (de tipo Nodo) apunta a NULL. ¡Sin fugas de memoria!", audioCosechaASalvo); 
+            andy.Decir("¡Excelente, Analista de estructuras! Has creado un NODO perfecto. Su P.INFO guarda un dato (int o string) y su P.LIGA (de tipo NODO) apunta a NULL. ¡Sin fugas de memoria!", audioCosechaASalvo); 
             ReproducirNivelCompleto();
         }
         else if (estado < 3)
         {
-            ReproducirError("Ese es el pozo NULL. Solo debes apuntar aquí usando la válvula LIGA del huerto para cerrar la lista.", audioErrorNull);
+            ReproducirError("Ese es el pozo NULL. Solo debes apuntar aquí usando la válvula P.LIGA del huerto para cerrar la lista.", audioErrorNull);
         }
     }
     void ReproducirNivelCompleto()

@@ -102,14 +102,14 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         if (fase >= nombresNodos.Length) return;
         string semillaActual = nombresNodos[fase];
         UIManager.instancia.SetSemillaPalpitar(semillaActual);
-        andy.Decir("Planta el huerto. Recuerda que cada huerto es un Nodo que necesita un valor en su Almacén INFO.", audioInstruccionSiembra);
+        andy.Decir("Planta el huerto. Recuerda que cada huerto es un NODO que necesita un valor en su P.INFO.", audioInstruccionSiembra);
         pasoConexion = 0;
         lineaAgua.positionCount = 0;
     }
     public void AvanceSiembraExitosa()
     {
         UIManager.instancia.SetSemillaPalpitar("");
-        andy.Decir("¡Huerto listo! Ahora busca el poste de INICIO (P) para obtener la dirección de memoria inicial.", audioHuertoListo);
+        andy.Decir("¡Huerto listo! Ahora busca el poste de INICIO para obtener la dirección de memoria inicial.", audioHuertoListo);
         brilloHead.SetEncendido(true);
     }
     public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
@@ -123,7 +123,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                     lineaAgua.positionCount = 2;
                     lineaAgua.SetPosition(0, puntoSalidaHead.position);
                     brilloHead.SetEncendido(false);
-                    andy.Decir("¡Dirección obtenida! Conecta la manguera de luz al Almacén INFO para asignar el dato al Nodo actual.", audioDireccionHead);
+                    andy.Decir("¡Dirección obtenida! Conecta la manguera de luz a P.INFO para asignar el dato al NODO actual.", audioDireccionHead);
                     GameObject huerto = BuscarHuerto();
                     if (huerto != null) EncenderBrilloHijo(huerto, "Info", true);
                 }
@@ -139,7 +139,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                     SumarPuntos(10);
                     EncenderBrilloHijo(managerActual.gameObject, "Info", false);
                     EncenderBrilloHijo(managerActual.gameObject, "Liga", true);
-                    andy.Decir("Dato guardado con éxito. Ahora abre la válvula LIGA, este canal de riego es el puntero que conectará con el siguiente destino.", audioDatoInfo);
+                    andy.Decir("Dato guardado con éxito. Ahora abre la válvula P.LIGA, este canal de riego es el puntero que conectará con el siguiente destino.", audioDatoInfo);
                 }
                 else if (!cargandoAgua && pasoConexion == 0) ReproducirError();
                 break;
@@ -147,7 +147,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                 if (cargandoAgua && pasoConexion == 0)
                 {
                     ReproducirError();
-                    andy.Decir("¡Cuidado Lupi! El puntero de INICIO debe apuntar al Almacén INFO para inicializar el NODO, no a su válvula LIGA.", audioErrorEntradaLiga);
+                    andy.Decir("¡Cuidado Lupi! El puntero de INICIO debe apuntar a P.INFO para inicializar el NODO, no a su válvula P.LIGA.", audioErrorEntradaLiga);
                 }
                 break;
             case "SalidaHuerto":
@@ -167,6 +167,11 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                 if (pasoConexion == 2 && cargandoAgua)
                 {
                     cargandoAgua = false;
+                    lineaAgua.positionCount = 0;
+                    if (managerActual != null)
+                    {
+                        managerActual.DrenarAgua();
+                    }
                     lineaAgua.SetPosition(3, puntoEntradaNull.position);
                     brilloNull.SetEncendido(false);
                     UIManager.instancia.MarcarTareaCompletada(mapaIndicesUI[fase]);

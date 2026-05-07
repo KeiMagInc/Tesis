@@ -451,7 +451,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &752268933
 RectTransform:
   m_ObjectHideFlags: 0
@@ -936,7 +936,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c3a7fbb3b43284ea553347c73cbaea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nombreDeLaEscenaADirigir: HistoriaInicio
+  nombreDeLaEscenaADirigir: MenuInicio
 --- !u!1 &1144805991
 GameObject:
   m_ObjectHideFlags: 0
@@ -1083,7 +1083,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c3a7fbb3b43284ea553347c73cbaea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nombreDeLaEscenaADirigir: HistoriaInicio
+  nombreDeLaEscenaADirigir: MenuInicio
 --- !u!1 &1211652156
 GameObject:
   m_ObjectHideFlags: 0
@@ -1502,7 +1502,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c3a7fbb3b43284ea553347c73cbaea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nombreDeLaEscenaADirigir: HistoriaInicio
+  nombreDeLaEscenaADirigir: MenuInicio
 --- !u!1 &1541153800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1752,7 +1752,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06c3a7fbb3b43284ea553347c73cbaea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nombreDeLaEscenaADirigir: HistoriaInicio
+  nombreDeLaEscenaADirigir: MenuInicio
 --- !u!1 &2049530605
 GameObject:
   m_ObjectHideFlags: 0

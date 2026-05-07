@@ -27,6 +27,6 @@ public class MenuManager : MonoBehaviour
 
     public void Jugar()
     {
-        SceneManager.LoadScene("MapaPrincipal");
+        SceneManager.LoadScene("HistoriaInicio");
     }
 }

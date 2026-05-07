@@ -52829,7 +52829,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -6, y: -47.480255}
+  m_AnchoredPosition: {x: 77.63637, y: -47.480255}
   m_SizeDelta: {x: 225, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &243276386
@@ -52879,8 +52879,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 27
-  m_fontSizeBase: 27
+  m_fontSize: 22
+  m_fontSizeBase: 22
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -67919,7 +67919,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -6, y: 46.74054}
+  m_AnchoredPosition: {x: 77.63637, y: 46.74054}
   m_SizeDelta: {x: 225, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &722138010
@@ -67969,8 +67969,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 27
-  m_fontSizeBase: 27
+  m_fontSize: 22
+  m_fontSizeBase: 22
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -90798,13 +90798,13 @@ MonoBehaviour:
   insigniaDeEsteNivel: {fileID: -1421603152744048466, guid: e9536f9c079e8fc48b58c98ac1c3ab9c, type: 3}
   checkpointFinal: {fileID: 1109282114}
   barreraSiguiente: {fileID: 240218430}
-  audioErrorEntradaLiga: {fileID: 8300000, guid: 8b81de5d64a0625428faafe4364557f8, type: 3}
+  audioErrorEntradaLiga: {fileID: 8300000, guid: 16cd2178b3797cd458fb52330be86981, type: 3}
   audioIntroMochila: {fileID: 8300000, guid: d9d76f22bef9e364dba4e1d7432d8af5, type: 3}
   audioIntroChecklist: {fileID: 8300000, guid: a94b377bc16d05748be24f7593c9054b, type: 3}
-  audioInstruccionSiembra: {fileID: 8300000, guid: 976db9e7ed6bfe746b71705e88032b26, type: 3}
-  audioHuertoListo: {fileID: 8300000, guid: eb559d6d5b91b8c47a4f87a9dd47566f, type: 3}
-  audioDireccionHead: {fileID: 8300000, guid: fe1abd3103387e2459cea24d89dc373c, type: 3}
-  audioDatoInfo: {fileID: 8300000, guid: eeb94b723c044094c99b508900ea84be, type: 3}
+  audioInstruccionSiembra: {fileID: 8300000, guid: ec3b56f64bfd7fa49ae0bbd6380370bb, type: 3}
+  audioHuertoListo: {fileID: 8300000, guid: e1897e2cb5cffc44db0a349c905ceb6c, type: 3}
+  audioDireccionHead: {fileID: 8300000, guid: 8bc8f5b97357d1f4cb928ae0ccdf68b5, type: 3}
+  audioDatoInfo: {fileID: 8300000, guid: 4aa4917800b681c40a6796fd4eeaed93, type: 3}
   audioLigaAbierta: {fileID: 8300000, guid: 2448cf1550950c648b8b3b8480f3050a, type: 3}
   audioFinalNivel: {fileID: 8300000, guid: 494cf6a68a2f3c94db046e8f2d77498c, type: 3}
   fuenteAudio: {fileID: 1247828547}
@@ -91302,11 +91302,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1366122969537112110, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_fontSize
-      value: 27
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 1366122969537112110, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_fontSizeBase
-      value: 27
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 1366122969537112110, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_HorizontalAlignment
@@ -91444,6 +91444,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4874292936249892202, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 3854360210939188913, guid: fba56f8ddf06e9c44979431033545380, type: 3}
     - target: {fileID: 4992878883150488661, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_Name
       value: SemillaRemolacha
@@ -91454,11 +91458,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5140937685323964650, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_fontSize
-      value: 27
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 5140937685323964650, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_fontSizeBase
-      value: 27
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 5140937685323964650, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_HorizontalAlignment
@@ -91500,6 +91504,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5373701562377007356, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5410629951142309986, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_Name
       value: SemillaTrigo
@@ -91510,11 +91518,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6011285520602270788, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_fontSize
-      value: 27
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 6011285520602270788, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_fontSizeBase
-      value: 27
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 6011285520602270788, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_HorizontalAlignment
@@ -91531,6 +91539,10 @@ PrefabInstance:
     - target: {fileID: 6644564093316313226, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_LocalScale.y
       value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6644564093316313226, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 77.63637
       objectReference: {fileID: 0}
     - target: {fileID: 6644564093316313226, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -91637,12 +91649,20 @@ PrefabInstance:
       value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 7780555624463488338, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 77.63637
+      objectReference: {fileID: 0}
+    - target: {fileID: 7780555624463488338, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 93.54004
       objectReference: {fileID: 0}
     - target: {fileID: 8009915782336280996, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_LocalScale.y
       value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8009915782336280996, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 77.63637
       objectReference: {fileID: 0}
     - target: {fileID: 8009915782336280996, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -93103,6 +93123,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d46c787d74e8d4642a9a94299dafc4fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioNodoListoPInicio: {fileID: 8300000, guid: ae54ed16ae1a62d4c847381e0013c6ba, type: 3}
+  audioNodoListoQInicio: {fileID: 8300000, guid: b55d6ceb87f64414386c477ba9867ac6, type: 3}
+  audioNodoListoPFinal: {fileID: 8300000, guid: 30e06ea57960a0b448f9d96f7a8d0ef7, type: 3}
+  audioNodoListoQFinal: {fileID: 8300000, guid: 0f2a0ffca60338e409be3e4acfeac247, type: 3}
+  audioEliminarInicioP: {fileID: 8300000, guid: 8e1abc3148a4b5d45a1c5d3168e43d3a, type: 3}
+  audioEliminarFinalLiga: {fileID: 8300000, guid: 3a48c7e48f6572f4f8c926d3fda25e7d, type: 3}
+  audioLlevaQAInfo: {fileID: 8300000, guid: ddc975e71bf5eb64a87e076b91307e2c, type: 3}
+  audioActivaLigaPFinal: {fileID: 8300000, guid: 15d7c4af3676dbe4fa933b9f54e6ee5d, type: 3}
+  audioActivaLigaQFinal: {fileID: 8300000, guid: 550b0359c7bbbd74f8dc5f73303d3ee8, type: 3}
+  audioLlevaPANull: {fileID: 8300000, guid: c05877d64a9f2c34bab172b0c53e9cc4, type: 3}
+  audioLlevaQANull: {fileID: 8300000, guid: 0ba287b419a40aa41b4e11c028403658, type: 3}
+  audioSiembraPInfo: {fileID: 8300000, guid: 1cc8e04b5a8a73843898efba0b2d65a5, type: 3}
+  audioSiembraQInfo: {fileID: 8300000, guid: 5b66fd54bd1c13e4daaf46bf152fc86f, type: 3}
+  audioLlevaPAInfo: {fileID: 8300000, guid: f30357ed54df697479048639c88911fa, type: 3}
+  audioFaltaSiembraP: {fileID: 8300000, guid: a858c6ad29a419140acb75c2e51f8c4d, type: 3}
+  audioFaltaSiembraQ: {fileID: 8300000, guid: fe3f4310e7656b541abfd1359abd6939, type: 3}
+  audioLlevaAguaAInfoP: {fileID: 8300000, guid: 40f1e16a32daeca43b31af57ef9b964d, type: 3}
+  audioLlevaAguaAInfoQ: {fileID: 8300000, guid: f2dc6103dc4299e4ea26184535a9bd80, type: 3}
+  audioActivaLigaP: {fileID: 8300000, guid: f22618eafee4f8047bfb83abb342f0ad, type: 3}
+  audioActivaLigaQ: {fileID: 8300000, guid: f4da642162cd3f94782d3548fe11182d, type: 3}
+  audioLlevaLigaANull: {fileID: 8300000, guid: fcc5fc8375ecba14ca4819875da39c2d, type: 3}
+  audioConectarLigaAInfoQ: {fileID: 8300000, guid: 9d98bc920fc293145803a860403402d3, type: 3}
   audioLlevaLigaANullFinal: {fileID: 8300000, guid: 115bb144cc4178448bb581065230e1fe, type: 3}
   audioNodoFisicoListoFinal: {fileID: 8300000, guid: 47df64ea27151a149b924d0d12245d99, type: 3}
   audioConectarLigaAInfo: {fileID: 8300000, guid: 46395d75e52b5084c808aed6b8a6d4ae, type: 3}
@@ -93113,21 +93155,20 @@ MonoBehaviour:
   audioErrorLigaPorInfo: {fileID: 8300000, guid: 1446149710adbd54985e60a62174ad7c, type: 3}
   audioLlevaAguaAInfo: {fileID: 8300000, guid: 59abb0f747edd6947a32cabc9608a647, type: 3}
   audioActivaLigaNueva: {fileID: 8300000, guid: ed52b12239623c6448c48873798e8d9a, type: 3}
-  audioLlevaLigaANull: {fileID: 8300000, guid: a0c822562b310674b8bedd9e6eb55363, type: 3}
   audioNodoFisicoListo: {fileID: 8300000, guid: 7de433a9281443d4d9c3f5405192fee4, type: 3}
   audioIntroInsertarInicio: {fileID: 8300000, guid: 2d1b55e25135c0a40b068e07287acb18, type: 3}
   audioIntroInsertarFinal: {fileID: 8300000, guid: 59115d4fe11e0cc4a9cccb9b82f99d24, type: 3}
   audioIntroEliminarInicio: {fileID: 8300000, guid: 537e2a6a7ca9ef847b727e464ee1f70d, type: 3}
-  audioPrepararNodo: {fileID: 8300000, guid: df8ed82a7e677e443a28d851cfe96415, type: 3}
-  audioSiembraInstruccion: {fileID: 8300000, guid: 884c6636cef53174a9313de60591142a, type: 3}
-  audioTocaInicioEliminar: {fileID: 8300000, guid: 239d500c9257b9b4682753747702bb61, type: 3}
+  audioPrepararNodo: {fileID: 8300000, guid: fc73b42ac59ad63498ee8e2c4fd544aa, type: 3}
+  audioSiembraInstruccion: {fileID: 8300000, guid: 217828b2cc5a3784abf1b51b84418212, type: 3}
+  audioTocaInicioEliminar: {fileID: 8300000, guid: d235daf5087d1e646bf90134d291c856, type: 3}
   audioTocaLigaEliminar: {fileID: 8300000, guid: 5ca2e6f0eebd3094b94417e35060d71d, type: 3}
   audioExitoReasignarHead: {fileID: 8300000, guid: ddbd27d62511beb4cbf425e8b7c1a667, type: 3}
   audioExitoFlujoFinal: {fileID: 8300000, guid: 0eeb9a837225dbb42b27174c18340f9d, type: 3}
-  audioApuntaInicioEliminar: {fileID: 8300000, guid: 90793417c5a05314d87d8a631b2ce87b, type: 3}
-  audioConexionSeguraEliminar: {fileID: 8300000, guid: 42e474fe9df9ff94692258c183300777, type: 3}
-  audioApuntaNullEliminar: {fileID: 8300000, guid: 51d27fc30a8d7384aa50a7cb0bac1c0e, type: 3}
-  audioCerradoListaEliminar: {fileID: 8300000, guid: faeca8aba08bf1749a9cba42de431be9, type: 3}
+  audioApuntaInicioEliminar: {fileID: 8300000, guid: ea2152c7889f30449a49406748ceb2bf, type: 3}
+  audioConexionSeguraEliminar: {fileID: 8300000, guid: e3bce004ab859b2449c0612df09861c9, type: 3}
+  audioApuntaNullEliminar: {fileID: 8300000, guid: 1088864f885e4b14dbafbb08af5b7392, type: 3}
+  audioCerradoListaEliminar: {fileID: 8300000, guid: 26a5168a3cfb9c44097914394d5d2efa, type: 3}
   audioAdiosNodo: {fileID: 8300000, guid: 06b760dc45fc6b04791830d6fd9a8b63, type: 3}
   audioExitoTotalNivel: {fileID: 8300000, guid: 6ffd13a97d5bebe4cbf2f3decbd9f211, type: 3}
   controladorInsignia: {fileID: 1925434712}
