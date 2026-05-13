@@ -52012,7 +52012,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 20
+  m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -52040,7 +52040,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controlesBloqueados: 0
   walkSpeed: 4
-  runSpeed: 7
+  runSpeed: 6
+  acceleration: 40
 --- !u!70 &191083649
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
