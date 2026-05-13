@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 4763548868154059873}
   - component: {fileID: 3278752904045264080}
   m_Layer: 0
-  m_Name: Sembio 11
+  m_Name: Vaca
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -118,8 +118,8 @@ Transform:
   m_GameObject: {fileID: 776164675174373067}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.00000059604645, y: -0.041999876, z: 0}
-  m_LocalScale: {x: 6, y: 6, z: 0}
+  m_LocalPosition: {x: 0.29000056, y: -0.32, z: 0}
+  m_LocalScale: {x: 5, y: 5, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3696186982617231300}
@@ -168,7 +168,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: -5953878577670561019, guid: fe686bfbd8240a541a9a21729f34aff2, type: 3}
+  m_Sprite: {fileID: 1019254656465003142, guid: b2ee1023951a90a4b856f9705b894c44, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -191,7 +191,7 @@ GameObject:
   - component: {fileID: 4233625125665758415}
   - component: {fileID: 9328321732198063}
   m_Layer: 0
-  m_Name: 4HuertoNodoRabano
+  m_Name: 4NodoVaca
   m_TagString: Planta
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -348,7 +348,7 @@ GameObject:
   - component: {fileID: 8075921368580365852}
   - component: {fileID: 6826989942163881862}
   m_Layer: 0
-  m_Name: Sembio 12
+  m_Name: Vaca
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -363,8 +363,8 @@ Transform:
   m_GameObject: {fileID: 1861106461627545416}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.97, y: -0.041999876, z: 0}
-  m_LocalScale: {x: 6, y: 6, z: 0}
+  m_LocalPosition: {x: 1.26, y: -0.32, z: 0}
+  m_LocalScale: {x: 5, y: 5, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3696186982617231300}
@@ -413,7 +413,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: -5953878577670561019, guid: fe686bfbd8240a541a9a21729f34aff2, type: 3}
+  m_Sprite: {fileID: 1019254656465003142, guid: b2ee1023951a90a4b856f9705b894c44, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -435,7 +435,7 @@ GameObject:
   - component: {fileID: 2879797720799785473}
   - component: {fileID: 4058748954834855673}
   m_Layer: 0
-  m_Name: Sembio 10
+  m_Name: Vaca
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -450,8 +450,8 @@ Transform:
   m_GameObject: {fileID: 2078749848238065326}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.0199999, y: -0.041999876, z: 0}
-  m_LocalScale: {x: 6, y: 6, z: 0}
+  m_LocalPosition: {x: -0.7299999, y: -0.32, z: 0}
+  m_LocalScale: {x: 5, y: 5, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3696186982617231300}
@@ -500,7 +500,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: -5953878577670561019, guid: fe686bfbd8240a541a9a21729f34aff2, type: 3}
+  m_Sprite: {fileID: 1019254656465003142, guid: b2ee1023951a90a4b856f9705b894c44, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -792,7 +792,7 @@ GameObject:
   - component: {fileID: 6152943946648341281}
   - component: {fileID: 1637646766183658964}
   m_Layer: 0
-  m_Name: Sembio 4
+  m_Name: Vaca
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -807,8 +807,8 @@ Transform:
   m_GameObject: {fileID: 3668847794203586645}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.98, y: 0.96, z: 0}
-  m_LocalScale: {x: 6, y: 6, z: 0}
+  m_LocalPosition: {x: 1.27, y: 0.96, z: 0}
+  m_LocalScale: {x: 5, y: 5, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3696186982617231300}
@@ -857,7 +857,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: -5953878577670561019, guid: fe686bfbd8240a541a9a21729f34aff2, type: 3}
+  m_Sprite: {fileID: 1019254656465003142, guid: b2ee1023951a90a4b856f9705b894c44, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1694,7 +1694,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -1720,7 +1720,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3696186982617231300}
   m_Layer: 0
-  m_Name: Sembrios
+  m_Name: Vacas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2059,7 +2059,7 @@ GameObject:
   - component: {fileID: 4010915013028933056}
   - component: {fileID: 6552148906741469440}
   m_Layer: 0
-  m_Name: Sembio 5
+  m_Name: Vaca
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2074,8 +2074,8 @@ Transform:
   m_GameObject: {fileID: 7887228451221789360}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.000000834465, y: 0.96, z: 0}
-  m_LocalScale: {x: 6, y: 6, z: 0}
+  m_LocalPosition: {x: 0.2900008, y: 0.96, z: 0}
+  m_LocalScale: {x: 5, y: 5, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3696186982617231300}
@@ -2124,7 +2124,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: -5953878577670561019, guid: fe686bfbd8240a541a9a21729f34aff2, type: 3}
+  m_Sprite: {fileID: 1019254656465003142, guid: b2ee1023951a90a4b856f9705b894c44, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

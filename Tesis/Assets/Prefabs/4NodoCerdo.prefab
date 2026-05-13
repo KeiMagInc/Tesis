@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2250400793531471313}
   - component: {fileID: 1848415800215981193}
-  - component: {fileID: 1915590834091829576}
+  - component: {fileID: 6823665285234813317}
   m_Layer: 0
   m_Name: PuntoEntrada
   m_TagString: Untagged
@@ -79,7 +79,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.5, y: 0.8}
   m_EdgeRadius: 0
---- !u!114 &1915590834091829576
+--- !u!114 &6823665285234813317
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 4763548868154059873}
   - component: {fileID: 3278752904045264080}
   m_Layer: 0
-  m_Name: Sembio 11
+  m_Name: Cerdo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -118,7 +118,7 @@ Transform:
   m_GameObject: {fileID: 776164675174373067}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.00000059604645, y: -0.041999876, z: 0}
+  m_LocalPosition: {x: -0.06999946, y: -0.24, z: 0}
   m_LocalScale: {x: 6, y: 6, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -168,7 +168,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: 2382208071769853359, guid: ae3d64d5427b9994eac1b88a8d48604a, type: 3}
+  m_Sprite: {fileID: 1995238211026135775, guid: fc36a00a50267c647a0861bb89456b83, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -191,7 +191,7 @@ GameObject:
   - component: {fileID: 4233625125665758415}
   - component: {fileID: 9328321732198063}
   m_Layer: 0
-  m_Name: 4HuertoNodoPapa
+  m_Name: 4NodoCerdo
   m_TagString: Planta
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -290,8 +290,8 @@ MonoBehaviour:
   escalaNormal: {x: 3, y: 2, z: 0}
   velocidadEscala: 0.7
   retrasoEntreSembrios: 0.3
-  spriteSeco: {fileID: 2382208071769853359, guid: ae3d64d5427b9994eac1b88a8d48604a, type: 3}
-  spriteVivo: {fileID: -1840190759907527076, guid: 1e7ce091677f6f045bd54fc9cee3c726, type: 3}
+  spriteSeco: {fileID: -2495102797091314606, guid: cf1e1045b035195488e091b74524dabc, type: 3}
+  spriteVivo: {fileID: -999495800006411920, guid: 17442df15eedfd44da2ea89bb4ab7484, type: 3}
 --- !u!1 &1077177690419212729
 GameObject:
   m_ObjectHideFlags: 0
@@ -348,7 +348,7 @@ GameObject:
   - component: {fileID: 8075921368580365852}
   - component: {fileID: 6826989942163881862}
   m_Layer: 0
-  m_Name: Sembio 12
+  m_Name: Cerdo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -363,7 +363,7 @@ Transform:
   m_GameObject: {fileID: 1861106461627545416}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.97, y: -0.041999876, z: 0}
+  m_LocalPosition: {x: 0.9, y: -0.24, z: 0}
   m_LocalScale: {x: 6, y: 6, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -413,7 +413,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: 2382208071769853359, guid: ae3d64d5427b9994eac1b88a8d48604a, type: 3}
+  m_Sprite: {fileID: 1995238211026135775, guid: fc36a00a50267c647a0861bb89456b83, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -435,7 +435,7 @@ GameObject:
   - component: {fileID: 2879797720799785473}
   - component: {fileID: 4058748954834855673}
   m_Layer: 0
-  m_Name: Sembio 10
+  m_Name: Cerdo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -450,7 +450,7 @@ Transform:
   m_GameObject: {fileID: 2078749848238065326}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.0199999, y: -0.041999876, z: 0}
+  m_LocalPosition: {x: -1.0899999, y: -0.24, z: 0}
   m_LocalScale: {x: 6, y: 6, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -500,7 +500,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: 2382208071769853359, guid: ae3d64d5427b9994eac1b88a8d48604a, type: 3}
+  m_Sprite: {fileID: 1995238211026135775, guid: fc36a00a50267c647a0861bb89456b83, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -521,7 +521,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6174649838750680848}
   - component: {fileID: 8922596514882991105}
-  - component: {fileID: 5323383169833546013}
+  - component: {fileID: 659236236441498941}
   m_Layer: 0
   m_Name: PuntoSalida
   m_TagString: Untagged
@@ -590,7 +590,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.5, y: 0.5}
   m_EdgeRadius: 0
---- !u!114 &5323383169833546013
+--- !u!114 &659236236441498941
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -792,7 +792,7 @@ GameObject:
   - component: {fileID: 6152943946648341281}
   - component: {fileID: 1637646766183658964}
   m_Layer: 0
-  m_Name: Sembio 4
+  m_Name: Cerdo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -807,7 +807,7 @@ Transform:
   m_GameObject: {fileID: 3668847794203586645}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.03, y: 0.96, z: 0}
+  m_LocalPosition: {x: -1.1, y: 0.96, z: 0}
   m_LocalScale: {x: 6, y: 6, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -857,7 +857,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: 2382208071769853359, guid: ae3d64d5427b9994eac1b88a8d48604a, type: 3}
+  m_Sprite: {fileID: 1995238211026135775, guid: fc36a00a50267c647a0861bb89456b83, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1503,7 +1503,7 @@ GameObject:
   - component: {fileID: 9085063502163591082}
   - component: {fileID: 811412054768166380}
   - component: {fileID: 2425883285927305870}
-  - component: {fileID: 4821277549462179482}
+  - component: {fileID: 8440621168654398526}
   m_Layer: 5
   m_Name: LetreroInfo
   m_TagString: Untagged
@@ -1529,7 +1529,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 166, y: 80.29999}
+  m_AnchoredPosition: {x: 175.8, y: 80.29999}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &9085063502163591082
@@ -1586,7 +1586,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velocidad: 5
   amplitud: 0.1
---- !u!61 &4821277549462179482
+--- !u!61 &8440621168654398526
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1694,7 +1694,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -1720,7 +1720,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3696186982617231300}
   m_Layer: 0
-  m_Name: Sembrios
+  m_Name: Cerdos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1919,7 +1919,7 @@ GameObject:
   - component: {fileID: 1968855701838980973}
   - component: {fileID: 5178196964421556645}
   - component: {fileID: 4340155289113492184}
-  - component: {fileID: 6740894192147386212}
+  - component: {fileID: 2661856698970665466}
   m_Layer: 5
   m_Name: LetreroLiga
   m_TagString: Untagged
@@ -2002,7 +2002,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velocidad: 5
   amplitud: 0.1
---- !u!61 &6740894192147386212
+--- !u!61 &2661856698970665466
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2059,7 +2059,7 @@ GameObject:
   - component: {fileID: 4010915013028933056}
   - component: {fileID: 6552148906741469440}
   m_Layer: 0
-  m_Name: Sembio 5
+  m_Name: Cerdo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2074,7 +2074,7 @@ Transform:
   m_GameObject: {fileID: 7887228451221789360}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.000000834465, y: 0.96, z: 0}
+  m_LocalPosition: {x: -0.06999922, y: 0.96, z: 0}
   m_LocalScale: {x: 6, y: 6, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -2124,7 +2124,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: 2382208071769853359, guid: ae3d64d5427b9994eac1b88a8d48604a, type: 3}
+  m_Sprite: {fileID: 1995238211026135775, guid: fc36a00a50267c647a0861bb89456b83, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
