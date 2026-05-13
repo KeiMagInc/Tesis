@@ -5,50 +5,54 @@ using UnityEngine.SceneManagement;
 public class HistorietaManager : MonoBehaviour
 {
     [Header("Referencias a Botones")]
-    [Tooltip("Arrastra aquí el ButtonSaltar desde la jerarquía.")]
-    public Button buttonSaltar; [Tooltip("Arrastra aquí el ButtonRegresar desde la jerarquía.")]
-    public Button buttonRegresar; [Header("Configuración de Escenas")]
-    [Tooltip("Nombre exacto de la escena a la que vas al saltar/jugar.")]
-    public string escenaSiguiente = "PrimerNivel"; [Tooltip("Nombre exacto de la escena a la que regresas (ej. el Menú Principal).")]
+    public Button buttonSaltar;
+    public Button buttonRegresar;
+    [Header("Configuración de Escenas")]
+    public string escenaSiguiente = "PrimerNivel";
     public string escenaAnterior = "MenuInicio";
+    [Header("Efecto de Botones (Call to Action)")]
+    public RectTransform[] botonesParaAnimar;
+    public float intensidadPalpito = 0.05f;
+    public float velocidadPalpito = 5f;
+    private Vector3[] escalasBase;
 
     void Start()
     {
-        // Asignamos las funciones a los botones si están conectados en el Inspector
-        if (buttonSaltar != null)
+        if (botonesParaAnimar != null)
         {
-            buttonSaltar.onClick.AddListener(CargarEscenaSiguiente);
+            escalasBase = new Vector3[botonesParaAnimar.Length];
+            for (int i = 0; i < botonesParaAnimar.Length; i++)
+            {
+                if (botonesParaAnimar[i] != null)
+                {
+                    escalasBase[i] = botonesParaAnimar[i].localScale;
+                }
+            }
         }
-
-        if (buttonRegresar != null)
+        if (buttonSaltar != null) buttonSaltar.onClick.AddListener(CargarEscenaSiguiente);
+        if (buttonRegresar != null) buttonRegresar.onClick.AddListener(CargarEscenaAnterior);
+    }
+    void Update()
+    {
+        AplicarEfectoPalpito();
+    }
+    private void AplicarEfectoPalpito()
+    {
+        float factor = 1f + Mathf.Sin(Time.time * velocidadPalpito) * intensidadPalpito;
+        for (int i = 0; i < botonesParaAnimar.Length; i++)
         {
-            buttonRegresar.onClick.AddListener(CargarEscenaAnterior);
+            if (botonesParaAnimar[i] != null)
+            {
+                botonesParaAnimar[i].localScale = escalasBase[i] * factor;
+            }
         }
     }
-
-    // Función para ir al nivel
     public void CargarEscenaSiguiente()
     {
-        if (!string.IsNullOrEmpty(escenaSiguiente))
-        {
-            SceneManager.LoadScene(escenaSiguiente);
-        }
-        else
-        {
-            Debug.LogError("Falta escribir el nombre de la Escena Siguiente en el Inspector.");
-        }
+        if (!string.IsNullOrEmpty(escenaSiguiente)) SceneManager.LoadScene(escenaSiguiente);
     }
-
-    // Función para regresar al menú
     public void CargarEscenaAnterior()
     {
-        if (!string.IsNullOrEmpty(escenaAnterior))
-        {
-            SceneManager.LoadScene(escenaAnterior);
-        }
-        else
-        {
-            Debug.LogError("Falta escribir el nombre de la Escena Anterior en el Inspector.");
-        }
+        if (!string.IsNullOrEmpty(escenaAnterior)) SceneManager.LoadScene(escenaAnterior);
     }
 }

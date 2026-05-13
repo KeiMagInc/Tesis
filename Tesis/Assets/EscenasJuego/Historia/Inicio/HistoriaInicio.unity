@@ -539,6 +539,12 @@ MonoBehaviour:
   buttonRegresar: {fileID: 671925661}
   escenaSiguiente: PrimerNivel
   escenaAnterior: MenuInicio
+  musicaFondo: {fileID: 0}
+  botonesParaAnimar:
+  - {fileID: 654847990}
+  - {fileID: 671925659}
+  intensidadPalpito: 0.05
+  velocidadPalpito: 5
 --- !u!4 &616222174
 Transform:
   m_ObjectHideFlags: 0
@@ -728,6 +734,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nombreDeLaEscenaADirigir: MenuInicio
+  musicaFondo: {fileID: 0}
 --- !u!114 &671925661
 MonoBehaviour:
   m_ObjectHideFlags: 0
