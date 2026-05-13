@@ -6,6 +6,11 @@ using UnityEngine;
 
 public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Configuración de Tiempo")]
+    public int puntosMaximos = 10;
+    public int puntosMinimos = 0;
+    public float tiempoLimite = 60f;
+    private float tiempoInicioEstado;
     float ultimoTiempoClic;
     [Header("Audios Diálogos Andy - Nivel 5")]
     public AudioClip audioConectarSalidaAnterior;
@@ -106,6 +111,13 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         UIManager.instancia.MostrarChecklistSolo(false);
         ResetearNivel();
         StartCoroutine(IntroNivel5());
+    }
+    int CalcularPuntosDinamicos()
+    {
+        float tiempoTranscurrido = Time.time - tiempoInicioEstado;
+        float t = Mathf.Clamp01(tiempoTranscurrido / tiempoLimite);
+        int puntos = Mathf.RoundToInt(Mathf.Lerp(puntosMaximos, puntosMinimos, t));
+        return puntos;
     }
     public void ResetearNivel()
     {

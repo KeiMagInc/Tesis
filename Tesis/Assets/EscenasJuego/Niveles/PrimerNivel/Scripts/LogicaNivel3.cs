@@ -5,6 +5,11 @@ using TMPro;
 using UnityEngine;
 public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Configuración de Tiempo")]
+    public int puntosMaximos = 10;
+    public int puntosMinimos = 0;
+    public float tiempoLimite = 60f;
+    private float tiempoInicioEstado;
     [Header("Audios Diálogos Andy")]
     public AudioClip audioNodoListoPInicio;
     public AudioClip audioNodoListoQInicio;
@@ -95,8 +100,6 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     private List<Vector3> puntosCadenaFija = new List<Vector3>();
     private string[] nombresNodosInicio = { "Papa", "Trigo", "Calabaza" };
     private string[] nombresNodosFinal = { "Calabaza", "Trigo", "Papa" };
-
-
     void Awake() => instancia = this;
     void OnEnable()
     {
@@ -110,6 +113,13 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         UIManager.instancia.MostrarChecklistSolo(false);
         ResetearNivel();
         StartCoroutine(Intro());
+    }
+    int CalcularPuntosDinamicos()
+    {
+        float tiempoTranscurrido = Time.time - tiempoInicioEstado;
+        float t = Mathf.Clamp01(tiempoTranscurrido / tiempoLimite);
+        int puntos = Mathf.RoundToInt(Mathf.Lerp(puntosMaximos, puntosMinimos, t));
+        return puntos;
     }
     public void ResetearNivel()
     {
@@ -194,6 +204,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     }
     void ProximoPaso()
     {
+        tiempoInicioEstado = Time.time;
         if (modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal)
         {
             string[] nombres = (modoActual == ModoOperacion.InsertarInicio) ? nombresNodosInicio : nombresNodosFinal;
@@ -300,10 +311,11 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     }
     IEnumerator SecuenciaEliminacionExitosa(int indiceNodo)
     {
+        int puntos = CalcularPuntosDinamicos();
         AudioClip audioPrevio = (modoActual == ModoOperacion.EliminarInicio) ? audioConexionSeguraEliminar : audioCerradoListaEliminar;
         if (audioPrevio != null) yield return new WaitForSeconds(audioPrevio.length);
         ApagarBrillosGlobales();
-        SumarPuntos(10, true);
+        SumarPuntos(puntos, true);
         listaNodos[indiceNodo].IniciarSecuenciaEliminacion();
         yield return new WaitForSeconds(1.5f);
         ActualizarLineaFijaPostEliminacion();
@@ -356,9 +368,10 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     }
     void FinalizarNodo()
     {
+        int puntos = CalcularPuntosDinamicos();
         cargandoAgua = false;
         bool esUltimoDeFase = (fase == 2);
-        SumarPuntos(10, esUltimoDeFase);
+        SumarPuntos(puntos, esUltimoDeFase);
         managerActual.DrenarAgua();
         ApagarBrillosGlobales();
         UIManager.instancia.MarcarTareaCompletada(fase * 2);
@@ -517,11 +530,13 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 }
                 else if (tipo == "EntradaHuerto" && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
                 {
+                    int puntos = CalcularPuntosDinamicos();
                     EncenderBrilloEnNodo(managerActual.gameObject, "Info", false);
                     managerActual.ActivarHuerto();
-                    SumarPuntos(10);
+                    SumarPuntos(puntos);
                     cargandoAgua = false;
                     pasoConexion = 1;
+                    tiempoInicioEstado = Time.time;
                     EncenderBrilloEnNodo(managerActual.gameObject, "Liga", true);
                     if (fase == 0)
                         andy.Decir("¡Contenido asignado! Ahora activa el puntero P^.LIGA de la cabecera para definir el final de la estructura.", audioActivaLigaP);
@@ -605,11 +620,13 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 }
                 else if (tipo == "EntradaHuerto" && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
                 {
+                    int puntos = CalcularPuntosDinamicos();
                     EncenderBrilloEnNodo(managerActual.gameObject, "Info", false);
                     managerActual.ActivarHuerto();
-                    SumarPuntos(10);
+                    SumarPuntos(puntos);
                     cargandoAgua = false;
                     pasoConexion = 1;
+                    tiempoInicioEstado = Time.time;
                     EncenderBrilloEnNodo(managerActual.gameObject, "Liga", true);
                     if (fase == 0)
                         andy.Decir("¡Contenido asignado a P^.INFO! Ahora activa P^.LIGA. Como es el primer NODO, también inicializamos P en T.", audioActivaLigaPFinal);

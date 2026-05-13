@@ -4,6 +4,11 @@ using TMPro;
 using UnityEngine;
 public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Configuración de Tiempo")]
+    public int puntosMaximos = 10;
+    public int puntosMinimos = 0;
+    public float tiempoLimite = 60f;
+    private float tiempoInicioEstado;
     [Header("Insignias")]
     public ControladorInsignia controladorInsignia;
     public Sprite insigniaDeEsteNivel;
@@ -71,6 +76,13 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         ActualizarPuntos();
         StartCoroutine(Intro());
     }
+    int CalcularPuntosDinamicos()
+    {
+        float tiempoTranscurrido = Time.time - tiempoInicioEstado;
+        float t = Mathf.Clamp01(tiempoTranscurrido / tiempoLimite);
+        int puntos = Mathf.RoundToInt(Mathf.Lerp(puntosMaximos, puntosMinimos, t));
+        return puntos;
+    }
     public void ResetearNivel()
     {
         fase = 0; pasoConexion = 0; cargandoAgua = false;
@@ -105,6 +117,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         andy.Decir("Planta el huerto. Recuerda que cada huerto es un NODO que necesita un valor en su P.INFO.", audioInstruccionSiembra);
         pasoConexion = 0;
         lineaAgua.positionCount = 0;
+        tiempoInicioEstado = Time.time;
     }
     public void AvanceSiembraExitosa()
     {
@@ -131,12 +144,14 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
             case "EntradaHuerto":
                 if (cargandoAgua && pasoConexion == 0)
                 {
+                    int puntosDinamicos = CalcularPuntosDinamicos();
                     managerActual = objetoTocado.GetComponentInParent<NodoManager>();
                     cargandoAgua = false;
                     lineaAgua.SetPosition(1, managerActual.puntoEntrada.position);
                     managerActual.ActivarHuerto();
                     pasoConexion = 1;
-                    SumarPuntos(10);
+                    SumarPuntos(puntosDinamicos); 
+                    tiempoInicioEstado = Time.time;
                     EncenderBrilloHijo(managerActual.gameObject, "Info", false);
                     EncenderBrilloHijo(managerActual.gameObject, "Liga", true);
                     andy.Decir("Dato guardado con éxito. Ahora abre la válvula P.LIGA, este canal de riego es el puntero que conectará con el siguiente destino.", audioDatoInfo);
@@ -166,6 +181,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
             case "Null":
                 if (pasoConexion == 2 && cargandoAgua)
                 {
+                    int puntosDinamicos = CalcularPuntosDinamicos();
                     cargandoAgua = false;
                     lineaAgua.positionCount = 0;
                     if (managerActual != null)
@@ -178,12 +194,12 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                     fase++;
                     if (fase < 3)
                     {
-                        SumarPuntos(10);
+                        SumarPuntos(puntosDinamicos); 
                         StartCoroutine(EsperarSiguiente());
                     }
                     else
                     {
-                        SumarPuntos(10, true); 
+                        SumarPuntos(puntosDinamicos, true);
                         if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null && KaosController.instancia != null)
                         {
                             barreraSiguiente.Abrir();

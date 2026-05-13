@@ -6,6 +6,11 @@ using UnityEngine;
 
 public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Configuración de Tiempo")]
+    public int puntosMaximos = 10;
+    public int puntosMinimos = 0;
+    public float tiempoLimite = 60f;
+    private float tiempoInicioEstado;
     [Header("Audios de Error")]
     public AudioClip audioErrorNoRio;
     public AudioClip audioErrorNoLigaAnterior;
@@ -92,6 +97,13 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         }
         ResetearNivel();
     }
+    int CalcularPuntosDinamicos()
+    {
+        float tiempoTranscurrido = Time.time - tiempoInicioEstado;
+        float t = Mathf.Clamp01(tiempoTranscurrido / tiempoLimite);
+        int puntos = Mathf.RoundToInt(Mathf.Lerp(puntosMaximos, puntosMinimos, t));
+        return puntos;
+    }
     public void ResetearNivel()
     {
         modoActual = ModoOperacion.Insertar;
@@ -143,6 +155,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     }
     void ProximoPasoSiembra()
     {
+        tiempoInicioEstado = Time.time;
         if (fase < nombresNodos.Length)
         {
             UIManager.instancia.SetSemillaPalpitar(nombresNodos[fase]);
@@ -228,9 +241,11 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                 {
                     if (subPaso == 1 && managerTocado == nodoActual)
                     {
+                        int puntos = CalcularPuntosDinamicos();
                         cargandoAgua = false;
                         nodoActual.ActivarHuerto();
-                        SumarPuntos(10);
+                        SumarPuntos(puntos);
+                        tiempoInicioEstado = Time.time;
                         puntosConfirmados.Add(nodoActual.puntoEntrada.position);
                         DibujarLineaFija();
                         EncenderBrilloHijo(nodoActual.gameObject, "Info", false);
@@ -317,6 +332,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     }
     void ProximoPasoEliminar()
     {
+        tiempoInicioEstado = Time.time;
         if (indiceAEliminar == 4)
         {
             andy.Decir("El rábano se ha marchitado. Reasigna el enlace de la zanahoria hacia la calabaza para que el sistema libere la memoria ocupada.", audioEliminarFinal);

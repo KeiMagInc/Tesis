@@ -3,6 +3,11 @@ using Mundo2;
 using TMPro;
 public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Configuración de Tiempo")]
+    public int puntosMaximos = 10;
+    public int puntosMinimos = 0;
+    public float tiempoLimite = 60f;
+    private float tiempoInicioEstado;
     [Header("Insignias")]
     public ControladorInsignia controladorInsignia;
     public Sprite insigniaDeEsteNivel;
@@ -60,9 +65,17 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     {
         ResetearNivelSilencioso();
     }
+    int CalcularPuntosDinamicos()
+    {
+        float tiempoTranscurrido = Time.time - tiempoInicioEstado;
+        float t = Mathf.Clamp01(tiempoTranscurrido / tiempoLimite);
+        int puntos = Mathf.RoundToInt(Mathf.Lerp(puntosMaximos, puntosMinimos, t));
+        return puntos;
+    }
     public void ResetearNivel()
     {
         estado = 0;
+        tiempoInicioEstado = Time.time;
         if (lineaAgua != null) lineaAgua.positionCount = 0;
         if (huertoScript != null) huertoScript.ResetearNodo();
         ActualizarBrillos(true, false, false, false);
@@ -97,7 +110,10 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     {
         if (estado == 0)
         {
-            estado = 1; SumarPuntos(10);
+            int puntosGanados = CalcularPuntosDinamicos();
+            estado = 1; 
+            SumarPuntos(puntosGanados);
+            tiempoInicioEstado = Time.time;
             ActualizarBrillos(false, true, false, false);
             andy.Decir("¡Dirección obtenida en P! Lleva la conexión al P.INFO, aquí guardaremos el valor de la semilla, que puede ser un dato de tipo int o string.", audioDireccionObtenida);
         }
@@ -106,9 +122,11 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     {
         if (estado == 1)
         {
+            int puntosGanados = CalcularPuntosDinamicos();
             estado = 2;
             if (huertoScript) huertoScript.ActivarHuerto();
-            SumarPuntos(10);
+            SumarPuntos(puntosGanados);
+            tiempoInicioEstado = Time.time;
             ActualizarBrillos(false, false, true, false);
             andy.Decir("¡Dato guardado en P.INFO! Ahora ve a la válvula P.LIGA. Recuerda: P.LIGA no guarda textos ni números, es una variable de tipo NODO que debe apuntar al siguiente huerto.", audioSemillasAsignadas);
         }
@@ -121,7 +139,10 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     {
         if (estado == 2)
         {
-            estado = 3; SumarPuntos(10);
+            int puntosGanados = CalcularPuntosDinamicos();
+            estado = 3;
+            SumarPuntos(puntosGanados);
+            tiempoInicioEstado = Time.time;
             ActualizarBrillos(false, false, false, true);
             andy.Decir("¡Referencia P.LIGA activada! Como no tenemos otro NODO para conectar, arrastra la manguera al pozo final NULL. Así indicamos que este es el final de la lista.", audioCanalActivado);
         }
@@ -134,9 +155,10 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     {
         if (estado == 3)
         {
+            int puntosGanados = CalcularPuntosDinamicos();
             estado = 4;
             if (huertoScript) huertoScript.DrenarAgua();
-            SumarPuntos(10, true);
+            SumarPuntos(puntosGanados, true);
             ActualizarBrillos(false, false, false, false);
             if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null && KaosController.instancia != null)
             {
