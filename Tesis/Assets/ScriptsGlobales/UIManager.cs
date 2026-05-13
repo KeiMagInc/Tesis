@@ -4,9 +4,12 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.SceneManagement; 
 public class UIManager : MonoBehaviour
 {
+    [Header("Menú de Pausa")]
+    public GameObject panelPausa;
+    private bool estaPausado = false;
     [Header("Audios Diálogos Andy (Errores)")]
     public AudioClip audioUsaSemillaPrimero;
     public AudioClip audioAcercateMas;
@@ -30,7 +33,6 @@ public class UIManager : MonoBehaviour
     private Vector3[] escalasOriginales;
     private string semillaActiva = "";
     private Color colorVerdeMilitar;
-
     void Awake()
     {
         instancia = this;
@@ -44,13 +46,11 @@ public class UIManager : MonoBehaviour
                 escalasOriginales[i] = botonesSemillas[i].transform.localScale;
         }
     }
-
     public void MostrarInterfaz(bool mostrar)
     {
         MostrarMochilaSolo(mostrar);
         MostrarChecklistSolo(mostrar);
     }
-
     public void SetPrefabs(params GameObject[] prefabs)
     {
         System.Array.Clear(prefabsActuales, 0, prefabsActuales.Length);
@@ -59,12 +59,10 @@ public class UIManager : MonoBehaviour
             prefabsActuales[i] = prefabs[i];
         }
     }
-
     public void ConfigurarBotonesUI(Sprite[] imgs, string[] noms)
     {
         ConfigurarMochila(imgs, noms, prefabsActuales);
     }
-
     public void ConfigurarMochila(Sprite[] imagenes, string[] nombres, GameObject[] prefabs)
     {
         for (int i = 0; i < botonesSemillas.Length; i++)
@@ -88,7 +86,6 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-
     public void BotonPresionado(int indice)
     {
         if (indice >= 0 && indice < nombresLogicosActuales.Length)
@@ -97,7 +94,6 @@ public class UIManager : MonoBehaviour
                 IntentarSembrar(nombresLogicosActuales[indice], indice);
         }
     }
-
     public void IntentarSembrar(string tipo, int indice)
     {
         if (string.IsNullOrEmpty(tipo) || tipo.ToLower() != semillaActiva.ToLower())
@@ -129,7 +125,6 @@ public class UIManager : MonoBehaviour
         }
         else andy.Decir("Acércate más a la parcela que corresponde la semilla.", audioAcercateMas);
     }
-
     public void ConfigurarTextosChecklist(params string[] textos)
     {
         for (int i = 0; i < itemsChecklist.Length; i++)
@@ -151,7 +146,6 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-
     public void MarcarTareaCompletada(int indice)
     {
         if (indice >= 0 && indice < itemsChecklist.Length && itemsChecklist[indice] != null)
@@ -163,11 +157,26 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-
     public void SetSemillaPalpitar(string tipo) => semillaActiva = tipo;
-
+    public void AlternarPausa()
+    {
+        estaPausado = !estaPausado;
+        if (panelPausa) panelPausa.SetActive(estaPausado);
+        Time.timeScale = estaPausado ? 0f : 1f;
+    }
+    public void SalirDelJuego()
+    {
+        Time.timeScale = 1f;
+        Debug.Log("Regresando al menú de inicio...");
+        SceneManager.LoadScene("MenuInicio");
+    }
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            AlternarPausa();
+        }
+        if (estaPausado) return;
         if (string.IsNullOrEmpty(semillaActiva)) return;
         float pulse = 1f + Mathf.Sin(Time.time * 6f) * 0.12f;
         for (int i = 0; i < botonesSemillas.Length; i++)
@@ -179,7 +188,6 @@ public class UIManager : MonoBehaviour
                 botonesSemillas[i].transform.localScale = escalasOriginales[i];
         }
     }
-
     public void ResetBotones() { foreach (var b in botonesSemillas) if (b != null) b.interactable = true; if (panelParcelas) panelParcelas.SetActive(false); semillaActiva = ""; }
     public void MostrarMochilaSolo(bool m) { if (groupIconoMochila) { groupIconoMochila.alpha = m ? 1 : 0; groupIconoMochila.interactable = m; groupIconoMochila.blocksRaycasts = m; } }
     public void MostrarChecklistSolo(bool m) { if (groupChecklist) { groupChecklist.alpha = m ? 1 : 0; groupChecklist.interactable = m; groupChecklist.blocksRaycasts = m; } }
