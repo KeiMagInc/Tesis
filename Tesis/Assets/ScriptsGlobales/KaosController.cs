@@ -32,7 +32,9 @@ public class KaosController : MonoBehaviour
     [Header("Evolución (Tamaño)")]
     public float escalaInicial = 2.5f;
     public float escalaMinima = 0.3f;
-    public float reduccionPorPunto = 0.00005f;
+    [Tooltip("¿A cuántos puntos queremos que haya reducido un 20%?")]
+    public int puntosObjetivoPara20Porciento = 300;
+    private float reduccionPorPunto;
     private Transform puntoA_Actual;
     private Transform puntoB_Actual;
     private Transform destinoActual;
@@ -41,10 +43,11 @@ public class KaosController : MonoBehaviour
     private float escalaActualBase;
     void Awake()
     {
-        instancia = this; 
+        instancia = this;
         lupi = GameObject.FindGameObjectWithTag("Player");
         sr = GetComponent<SpriteRenderer>();
         materialOriginal = sr.material;
+        reduccionPorPunto = (escalaInicial * 0.20f) / puntosObjetivoPara20Porciento;
         escalaActualBase = escalaInicial;
         escalaUltimoFrame = escalaInicial;
     }

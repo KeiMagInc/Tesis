@@ -163,10 +163,12 @@ public class UIManager : MonoBehaviour
         estaPausado = !estaPausado;
         if (panelPausa) panelPausa.SetActive(estaPausado);
         Time.timeScale = estaPausado ? 0f : 1f;
+        AudioListener.pause = estaPausado;
     }
     public void SalirDelJuego()
     {
         Time.timeScale = 1f;
+        AudioListener.pause = false;
         Debug.Log("Regresando al menú de inicio...");
         SceneManager.LoadScene("MenuInicio");
     }
