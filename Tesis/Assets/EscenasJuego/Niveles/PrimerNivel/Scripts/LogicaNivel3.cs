@@ -3,11 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Posicionamiento")]
+    public Transform puntoInicioNivel;
+    [Header("Pantalla Final")]
+    public GameObject panelFinal;
+    public TextMeshProUGUI textoPuntajeFinal;
+    public TextMeshProUGUI textoAciertos;
+    public TextMeshProUGUI textoFallos;
+    private int aciertosContador = 0;
+    private int fallosContador = 0;
+    private int puntosAlIniciarNivel;
     [Header("Configuración de Tiempo")]
     public int puntosMaximos = 10;
-    public int puntosMinimos = 0;
+    public int puntosMinimos = 1;
     public float tiempoLimite = 60f;
     private float tiempoInicioEstado;
     [Header("Audios Diálogos Andy")]
@@ -104,6 +115,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     void OnEnable()
     {
         if (UIManager.instancia == null) return;
+        puntosAlIniciarNivel = UIManager.puntosGlobales;
         UIManager.instancia.logicaActiva = this;
         UIManager.instancia.SetPrefabs(prefabPapaN3, prefabTrigoN3, prefabCalabazaN3);
         Sprite[] imagenes = { spritePapa, spriteTrigo, spriteCalabaza };
@@ -114,6 +126,66 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         ResetearNivel();
         StartCoroutine(Intro());
     }
+    IEnumerator MostrarResumenFinal()
+    {
+        yield return new WaitForSeconds(3.5f);
+        if (panelFinal != null)
+        {
+            panelFinal.SetActive(true);
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            if (textoPuntajeFinal) textoPuntajeFinal.text = UIManager.puntosGlobales.ToString();
+            if (textoAciertos) textoAciertos.text = aciertosContador.ToString();
+            if (textoFallos) textoFallos.text = fallosContador.ToString();
+            Debug.Log("Panel Final activado y Lupi congelado.");
+        }
+        else
+        {
+            Debug.LogError("¡No has asignado el Panel Final en el Inspector!");
+        }
+    }
+    void CongelarLupi(bool congelar)
+    {
+        if (lupi != null)
+        {
+            var controlMovimiento = lupi.GetComponent<PlayerController>();
+            if (controlMovimiento != null) controlMovimiento.enabled = !congelar;
+
+            Rigidbody2D rb = lupi.GetComponent<Rigidbody2D>();
+            if (rb != null) rb.linearVelocity = Vector2.zero;
+        }
+    }
+    public void BotonReintentar()
+    {
+        StopAllCoroutines();
+        UIManager.puntosGlobales = puntosAlIniciarNivel;
+        ActualizarPuntos();
+        if (KaosController.instancia != null)
+            KaosController.instancia.ResetearEstadoNivel("ListasSimples");
+        if (checkpointFinal != null)
+            checkpointFinal.ResetearCheckpoint();
+        if (barreraSiguiente != null)
+            barreraSiguiente.Cerrar();
+        if (controladorInsignia != null)
+            controladorInsignia.ResetearInsignia();
+        if (panelFinal != null) panelFinal.SetActive(false);
+        CongelarLupi(false);
+        ResetearNivel(); 
+        if (lupi != null && puntoInicioNivel != null)
+            lupi.position = puntoInicioNivel.position;
+        StartCoroutine(Intro());
+    }
+    public void BotonSiguiente()
+    {
+        if (panelFinal != null) panelFinal.SetActive(false);
+        if (lupi != null)
+        {
+            var controlMovimiento = lupi.GetComponent<PlayerController>();
+            if (controlMovimiento != null) controlMovimiento.enabled = true;
+        }
+        Debug.Log("Lupi descongelado, puede avanzar al siguiente nivel en la misma escena.");
+    }
+    void ActualizarPuntos() { if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString(); }
     int CalcularPuntosDinamicos()
     {
         float tiempoTranscurrido = Time.time - tiempoInicioEstado;
@@ -123,6 +195,9 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     }
     public void ResetearNivel()
     {
+        aciertosContador = 0;
+        fallosContador = 0;
+        if (panelFinal) panelFinal.SetActive(false);
         modoActual = ModoOperacion.InsertarInicio;
         fase = 0;
         pasoConexion = 0;
@@ -341,10 +416,13 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 controladorInsignia.MostrarInsignia(insigniaDeEsteNivel);
                 KaosController.instancia.RecibirDanoYDesaparecer("ListasSimples");
             }
-            andy.Decir("¡Excelente Analista de Enlaces Simples! Has dominado las operaciones de INSERCIÓN y ELIMINACIÓN en Listas Simples. El valle está a salvo.", audioExitoTotalNivel);
+            CongelarLupi(true);
             ReproducirNivelCompleto();
+            andy.Decir("¡Excelente Analista de Enlaces Simples! Has dominado las operaciones de INSERCIÓN y ELIMINACIÓN en Listas Simples. El valle está a salvo.", audioExitoTotalNivel);
             if (audioExitoTotalNivel != null)
                 yield return new WaitForSeconds(audioExitoTotalNivel.length + 0.5f);
+            StartCoroutine(MostrarResumenFinal());
+
         }
     }
     void ReproducirNivelCompleto()
@@ -745,12 +823,14 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     void SumarPuntos(int cant, bool silencioso = false)
     {
         if (KaosController.nivelesTerminados.Contains("ListasSimples")) return;
+        aciertosContador++;
         UIManager.puntosGlobales += cant;
         if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();
         if (!silencioso && fuenteAudio && sonidoAcierto) fuenteAudio.PlayOneShot(sonidoAcierto);
     }
     void ReproducirError()
     {
+        fallosContador++;
         if (fuenteAudio && sonidoError) fuenteAudio.PlayOneShot(sonidoError);
         if (!KaosController.nivelesTerminados.Contains("ListasSimples"))
         {

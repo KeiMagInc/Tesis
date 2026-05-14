@@ -3,12 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Posicionamiento")]
+    public Transform puntoInicioNivel;
+    [Header("Pantalla Final")]
+    public GameObject panelFinal;
+    public TextMeshProUGUI textoPuntajeFinal;
+    public TextMeshProUGUI textoAciertos;
+    public TextMeshProUGUI textoFallos;
+    private int aciertosContador = 0;
+    private int fallosContador = 0;
+    private int puntosAlIniciarNivel;
     [Header("Configuración de Tiempo")]
     public int puntosMaximos = 10;
-    public int puntosMinimos = 0;
+    public int puntosMinimos = 1;
     public float tiempoLimite = 60f;
     private float tiempoInicioEstado;
     float ultimoTiempoClic;
@@ -105,6 +116,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     void OnEnable()
     {
         if (UIManager.instancia == null) return;
+        puntosAlIniciarNivel = UIManager.puntosGlobales;
         instancia = this;
         UIManager.instancia.logicaActiva = this;
         UIManager.instancia.MostrarMochilaSolo(false);
@@ -112,6 +124,66 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         ResetearNivel();
         StartCoroutine(IntroNivel5());
     }
+    IEnumerator MostrarResumenFinal()
+    {
+        yield return new WaitForSeconds(3.5f);
+        if (panelFinal != null)
+        {
+            panelFinal.SetActive(true);
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            if (textoPuntajeFinal) textoPuntajeFinal.text = UIManager.puntosGlobales.ToString();
+            if (textoAciertos) textoAciertos.text = aciertosContador.ToString();
+            if (textoFallos) textoFallos.text = fallosContador.ToString();
+            Debug.Log("Panel Final activado y Lupi congelado.");
+        }
+        else
+        {
+            Debug.LogError("¡No has asignado el Panel Final en el Inspector!");
+        }
+    }
+    void CongelarLupi(bool congelar)
+    {
+        if (lupi != null)
+        {
+            var controlMovimiento = lupi.GetComponent<PlayerController>();
+            if (controlMovimiento != null) controlMovimiento.enabled = !congelar;
+
+            Rigidbody2D rb = lupi.GetComponent<Rigidbody2D>();
+            if (rb != null) rb.linearVelocity = Vector2.zero;
+        }
+    }
+    public void BotonReintentar()
+    {
+        StopAllCoroutines();
+        UIManager.puntosGlobales = puntosAlIniciarNivel;
+        ActualizarPuntos();
+        if (KaosController.instancia != null)
+            KaosController.instancia.ResetearEstadoNivel("ListasDobles");
+        if (checkpointFinal != null)
+            checkpointFinal.ResetearCheckpoint();
+        if (barreraSiguiente != null)
+            barreraSiguiente.Cerrar();
+        if (controladorInsignia != null)
+            controladorInsignia.ResetearInsignia();
+        if (panelFinal != null) panelFinal.SetActive(false);
+        CongelarLupi(false);
+        ResetearNivel();
+        if (lupi != null && puntoInicioNivel != null)
+            lupi.position = puntoInicioNivel.position;
+        StartCoroutine(IntroNivel5());
+    }
+    public void BotonSiguiente()
+    {
+        if (panelFinal != null) panelFinal.SetActive(false);
+        if (lupi != null)
+        {
+            var controlMovimiento = lupi.GetComponent<PlayerController>();
+            if (controlMovimiento != null) controlMovimiento.enabled = true;
+        }
+        Debug.Log("Lupi descongelado, puede avanzar al siguiente nivel en la misma escena.");
+    }
+    void ActualizarPuntos() { if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString(); }
     int CalcularPuntosDinamicos()
     {
         float tiempoTranscurrido = Time.time - tiempoInicioEstado;
@@ -121,15 +193,21 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     }
     public void ResetearNivel()
     {
-        modoActual = ModoOperacion.InsertarInicio;
+        modoActual = ModoOperacion.InsertarInicio; 
         LimpiarDatosYEscena();
         ConfigurarUIParaModoActual();
     }
     void LimpiarDatosYEscena()
     {
-        fase = 0; pasoConexion = 0; cargandoAgua = false;
-        lineaAgua.positionCount = 0; lineaFija.positionCount = 0;
-        listaNodos.Clear(); managerActual = null;
+        aciertosContador = 0;
+        fallosContador = 0;
+        if (panelFinal) panelFinal.SetActive(false);
+        fase = 0; pasoConexion = 0; 
+        cargandoAgua = false;
+        lineaAgua.positionCount = 0; 
+        lineaFija.positionCount = 0;
+        listaNodos.Clear(); 
+        managerActual = null;
         LimpiarNodosEscena();
         ApagarBrillosGlobales();
         foreach (LineRenderer l in lineasFijasActivas) if (l != null) Destroy(l.gameObject);
@@ -195,6 +273,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     }
     void ProximoPaso()
     {
+        tiempoInicioEstado = Time.time;
         if (modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal)
         {
             string[] nombres = (modoActual == ModoOperacion.InsertarInicio) ? nombresNodosInicio : nombresNodosFinal;
@@ -219,6 +298,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     }
     public void AvanceSiembraExitosa()
     {
+        tiempoInicioEstado = Time.time;
         UIManager.instancia.SetSemillaPalpitar("");
         managerActual = ObtenerNodoReciente();
         if (modoActual == ModoOperacion.InsertarInicio)
@@ -623,10 +703,12 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     }
     void FinalizarPasoLigero(Vector3 origen, Vector3 destino, string brilloApagar, GameObject nodo, string palpitarApagar)
     {
+        int puntos = CalcularPuntosDinamicos();
         cargandoAgua = false;
         CrearSegmentoFijo(origen, destino);
         puntoOrigenActual = null;
-        SumarPuntos(10);
+        SumarPuntos(puntos);
+        tiempoInicioEstado = Time.time;
         EncenderBrilloEnNodo(nodo, brilloApagar, false);
         SetPalpitarVisual(nodo, palpitarApagar, false);
     }
@@ -693,8 +775,9 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     }
     IEnumerator SecuenciaEliminacionExito(NodoManager nodo, int numeroTareaUI)
     {
+        int puntos = CalcularPuntosDinamicos();
         ApagarBrillosGlobales();
-        SumarPuntos(10);
+        SumarPuntos(puntos);
         nodo.IniciarSecuenciaEliminacion();
         yield return new WaitForSeconds(2f);
         UIManager.instancia.MarcarTareaCompletada(numeroTareaUI);
@@ -714,10 +797,12 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                 barreraSiguiente.Abrir();
                 checkpointFinal.AparecerYActivar();
                 controladorInsignia.MostrarInsignia(insigniaDeEsteNivel);
-                KaosController.instancia.RecibirDanoYDesaparecer("ListasCirculares");
+                KaosController.instancia.RecibirDanoYDesaparecer("ListasDobles");
             }
+            CongelarLupi(true);
             ReproducirNivelCompleto();
-            andy.Decir("¡Victoria total Técnico de Caminos Dobles! Eres un maestro del flujo Bidireccional.", audioFelicidadesFinalNivel); 
+            andy.Decir("¡Victoria total Técnico de Caminos Dobles! Eres un maestro del flujo Bidireccional.", audioFelicidadesFinalNivel);
+            StartCoroutine(MostrarResumenFinal());
         }
     }
     void ReproducirAcierto()
@@ -726,6 +811,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     }
     void ReproducirError()
     {
+        fallosContador++;
         if (fuenteAudio && sonidoError) fuenteAudio.PlayOneShot(sonidoError);
         if (!KaosController.nivelesTerminados.Contains("ListasDobles"))
         {
@@ -834,6 +920,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     }
     void SumarPuntos(int c) {
         if (KaosController.nivelesTerminados.Contains("ListasDobles")) return;
+        aciertosContador++;
         UIManager.puntosGlobales += c; 
         if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();
         ReproducirAcierto();

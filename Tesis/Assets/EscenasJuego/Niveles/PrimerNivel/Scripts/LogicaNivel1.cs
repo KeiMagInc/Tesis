@@ -1,11 +1,23 @@
 using UnityEngine;
+using System.Collections;
 using Mundo2;
 using TMPro;
+using UnityEngine.SceneManagement;
 public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Posicionamiento")]
+    public Transform puntoInicioNivel;
+    [Header("Pantalla Final")]
+    public GameObject panelFinal;
+    public TextMeshProUGUI textoPuntajeFinal;
+    public TextMeshProUGUI textoAciertos;
+    public TextMeshProUGUI textoFallos;
+    private int aciertosContador = 0;
+    private int fallosContador = 0;
+    private int puntosAlIniciarNivel;
     [Header("Configuración de Tiempo")]
     public int puntosMaximos = 10;
-    public int puntosMinimos = 0;
+    public int puntosMinimos = 1;
     public float tiempoLimite = 60f;
     private float tiempoInicioEstado;
     [Header("Insignias")]
@@ -55,6 +67,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     void OnEnable()
     {
         if (UIManager.instancia == null) return;
+        puntosAlIniciarNivel = UIManager.puntosGlobales;
         UIManager.instancia.logicaActiva = this;
         UIManager.instancia.MostrarMochilaSolo(false);
         UIManager.instancia.MostrarChecklistSolo(false);
@@ -64,6 +77,64 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     void OnDisable()
     {
         ResetearNivelSilencioso();
+    }
+    IEnumerator MostrarResumenFinal()
+    {
+        yield return new WaitForSeconds(3.5f);
+        if (panelFinal != null)
+        {
+            panelFinal.SetActive(true);            
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            if (textoPuntajeFinal) textoPuntajeFinal.text = UIManager.puntosGlobales.ToString();
+            if (textoAciertos) textoAciertos.text = aciertosContador.ToString();
+            if (textoFallos) textoFallos.text = fallosContador.ToString();
+            Debug.Log("Panel Final activado y Lupi congelado.");
+        }
+        else
+        {
+            Debug.LogError("¡No has asignado el Panel Final en el Inspector!");
+        }
+    }
+    void CongelarLupi(bool congelar)
+    {
+        if (lupi != null)
+        {
+            var controlMovimiento = lupi.GetComponent<PlayerController>();
+            if (controlMovimiento != null) controlMovimiento.enabled = !congelar;
+
+            Rigidbody2D rb = lupi.GetComponent<Rigidbody2D>();
+            if (rb != null) rb.linearVelocity = Vector2.zero;
+        }
+    }
+    public void BotonReintentar()
+    {
+        StopAllCoroutines();
+        UIManager.puntosGlobales = puntosAlIniciarNivel;
+        ActualizarPuntos();
+        if (KaosController.instancia != null)
+            KaosController.instancia.ResetearEstadoNivel("AnatomiaComponentes");
+        if (checkpointFinal != null)
+            checkpointFinal.ResetearCheckpoint();
+        if (barreraSiguiente != null)
+            barreraSiguiente.Cerrar();
+        if (controladorInsignia != null)
+            controladorInsignia.ResetearInsignia();
+        if (panelFinal != null) panelFinal.SetActive(false);
+        CongelarLupi(false);
+        ResetearNivel();
+        if (lupi != null && puntoInicioNivel != null)
+            lupi.position = puntoInicioNivel.position;
+    }
+    public void BotonSiguiente()
+    {
+        if (panelFinal != null) panelFinal.SetActive(false);
+        if (lupi != null)
+        {
+            var controlMovimiento = lupi.GetComponent<PlayerController>();
+            if (controlMovimiento != null) controlMovimiento.enabled = true;
+        }
+        Debug.Log("Lupi descongelado, puede avanzar al siguiente nivel en la misma escena.");
     }
     int CalcularPuntosDinamicos()
     {
@@ -75,6 +146,9 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     public void ResetearNivel()
     {
         estado = 0;
+        aciertosContador = 0;
+        fallosContador = 0;
+        if (panelFinal) panelFinal.SetActive(false);
         tiempoInicioEstado = Time.time;
         if (lineaAgua != null) lineaAgua.positionCount = 0;
         if (huertoScript != null) huertoScript.ResetearNodo();
@@ -167,8 +241,10 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
                 controladorInsignia.MostrarInsignia(insigniaDeEsteNivel);
                 KaosController.instancia.RecibirDanoYDesaparecer("AnatomiaComponentes");
             }
-            andy.Decir("¡Excelente, Analista de estructuras! Has creado un NODO perfecto. Su P.INFO guarda un dato (int o string) y su P.LIGA (de tipo NODO) apunta a NULL. ¡Sin fugas de memoria!", audioCosechaASalvo); 
+            CongelarLupi(true);
             ReproducirNivelCompleto();
+            andy.Decir("¡Excelente, Analista de estructuras! Has creado un NODO perfecto. Su P.INFO guarda un dato (int o string) y su P.LIGA (de tipo NODO) apunta a NULL. ¡Sin fugas de memoria!", audioCosechaASalvo); 
+            StartCoroutine(MostrarResumenFinal());
         }
         else if (estado < 3)
         {
@@ -183,6 +259,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
 
     void ReproducirError(string mensajePista, AudioClip audioExplicacion)
     {
+        fallosContador++;
         if (fuenteAudio && sonidoError) fuenteAudio.PlayOneShot(sonidoError);
         if (andy != null) andy.Decir(mensajePista, audioExplicacion);
         if (!KaosController.nivelesTerminados.Contains("AnatomiaComponentes"))
@@ -197,15 +274,13 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     void SumarPuntos(int cant, bool silencioso = false)
     {
         if (KaosController.nivelesTerminados.Contains("AnatomiaComponentes")) return;
+        aciertosContador++;
         UIManager.puntosGlobales += cant;
         ActualizarPuntos();
         if (!silencioso && fuenteAudio && sonidoAcierto) fuenteAudio.PlayOneShot(sonidoAcierto);
     }
 
-    void ActualizarPuntos()
-    {
-        if (textoPuntos != null) textoPuntos.text = UIManager.puntosGlobales.ToString();
-    }
+    void ActualizarPuntos() { if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString(); }
 
     void ActualizarBrillos(bool ini, bool dat, bool pun, bool nul)
     {

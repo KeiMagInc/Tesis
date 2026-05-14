@@ -214,13 +214,22 @@ public class KaosController : MonoBehaviour
         }
         estaAnimando = false;
     }
-    private void OnDrawGizmos()
+    public void ResetearEstadoNivel(string nombreNivel)
     {
-        if (puntoA_Actual != null && puntoB_Actual != null)
+        if (nivelesTerminados.Contains(nombreNivel))
         {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(puntoA_Actual.position, puntoB_Actual.position);
-            Gizmos.DrawWireSphere(destinoActual.position, 0.3f);
+            nivelesTerminados.Remove(nombreNivel);
         }
+        recibiendoDano = false;
+        estaAnimando = false;
+        StopAllCoroutines(); 
+        if (sr != null)
+        {
+            sr.enabled = true; 
+            sr.material = materialOriginal;
+            sr.color = Color.white;
+        }
+        triggerActual = null;
+        Debug.Log("<color=orange>Kaos:</color> Estado reseteado para el nivel " + nombreNivel);
     }
 }
