@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 
 public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Información del Nivel UI")]
+    public string nombreDelNivel = "Listas Ciculares";
     private Color colorOriginalPuntos;
     private Vector3 escalaOriginalPuntos;
     private Coroutine rutinaEfectoPuntos;
@@ -110,6 +112,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         UIManager.instancia.MostrarMochilaSolo(false);
         UIManager.instancia.MostrarChecklistSolo(false);
         ResetearNivel();
+        ActualizarCabeceraNivel4();
         StartCoroutine(SecuenciaIntro());
     }
     void OnDisable()
@@ -119,6 +122,23 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
             UIManager.instancia.logicaActiva = null;
         }
         ResetearNivel();
+    }
+    void ActualizarCabeceraNivel4()
+    {
+        if (UIManager.instancia == null) return;
+        string operacionTexto = "";
+        if (modoActual == ModoOperacion.Insertar)
+        {
+            operacionTexto = "Inserción en Lista Circular";
+        }
+        else
+        {
+            if (indiceAEliminar == 4)
+                operacionTexto = "Eliminación por el final de la lista";
+            else
+                operacionTexto = "Eliminación por el inicio de la lista";
+        }
+        UIManager.instancia.ConfigurarCabeceraNivel(nombreDelNivel, operacionTexto);
     }
     IEnumerator AnimacionPuntos(bool esAumento)
     {
@@ -180,6 +200,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         if (panelFinal != null) panelFinal.SetActive(false);
         CongelarLupi(false);
         ResetearNivel();
+        ActualizarCabeceraNivel4();
         if (lupi != null && puntoInicioNivel != null)
             lupi.position = puntoInicioNivel.position;
         StartCoroutine(SecuenciaIntro());
@@ -415,6 +436,8 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         else
             yield return new WaitForSeconds(3f);
         modoActual = ModoOperacion.Eliminar;
+        indiceAEliminar = 4;
+        ActualizarCabeceraNivel4();
         fase = 0;
         UIManager.instancia.ConfigurarTextosChecklist(
                 "",
@@ -475,6 +498,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                     if (indiceAEliminar == 4)
                     {
                         indiceAEliminar = 0;
+                        ActualizarCabeceraNivel4();
                         fase++;
                         StartCoroutine(EsperarSiguienteEliminar());
                     }

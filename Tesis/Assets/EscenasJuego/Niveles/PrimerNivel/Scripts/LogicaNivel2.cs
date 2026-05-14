@@ -5,6 +5,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Información del Nivel UI")]
+    public string nombreDelNivel = "Creación y Referencia";
+    public string operacionDelNivel = "Identificar la dirección física y lógica";
     private Color colorOriginalPuntos;
     private Vector3 escalaOriginalPuntos;
     private Coroutine rutinaEfectoPuntos;
@@ -80,6 +83,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     void OnEnable()
     {
         if (UIManager.instancia == null) return;
+        UIManager.instancia.ConfigurarCabeceraNivel(nombreDelNivel, operacionDelNivel);
         puntosAlIniciarNivel = UIManager.puntosGlobales;
         UIManager.instancia.logicaActiva = this;
         UIManager.instancia.SetPrefabs(prefabTrigoN2, prefabCalabazaN2, prefabPapaN2);

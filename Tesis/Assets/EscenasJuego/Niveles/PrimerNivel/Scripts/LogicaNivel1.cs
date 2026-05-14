@@ -5,6 +5,9 @@ using TMPro;
 using UnityEngine.SceneManagement;
 public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Información del Nivel UI")]
+    public string nombreDelNivel = "Anatomía y Componentes";
+    public string operacionDelNivel = "Identificar las partes del nodo";
     private Color colorOriginalPuntos;
     private Vector3 escalaOriginalPuntos;
     private Coroutine rutinaEfectoPuntos;
@@ -77,6 +80,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     }
     void OnEnable()
     {
+        UIManager.instancia.ConfigurarCabeceraNivel(nombreDelNivel, operacionDelNivel);
         if (UIManager.instancia == null) return;
         puntosAlIniciarNivel = UIManager.puntosGlobales;
         UIManager.instancia.logicaActiva = this;

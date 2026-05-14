@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Información del Nivel UI")]
+    public string nombreDelNivel = "Listas Simples";
     private Color colorOriginalPuntos;
     private Vector3 escalaOriginalPuntos;
     private Coroutine rutinaEfectoPuntos;
@@ -135,7 +137,21 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         UIManager.instancia.MostrarMochilaSolo(false);
         UIManager.instancia.MostrarChecklistSolo(false);
         ResetearNivel();
+        ActualizarCabeceraSegunModo();
         StartCoroutine(Intro());
+    }
+    void ActualizarCabeceraSegunModo()
+    {
+        if (UIManager.instancia == null) return;
+        string operacionTexto = "";
+        switch (modoActual)
+        {
+            case ModoOperacion.InsertarInicio: operacionTexto = "Inserción al inicio de la lista"; break;
+            case ModoOperacion.InsertarFinal: operacionTexto = "Inserción al final de la lista"; break;
+            case ModoOperacion.EliminarInicio: operacionTexto = "Eliminación por el inicio de la lista"; break;
+            case ModoOperacion.EliminarFinal: operacionTexto = "Eliminación por el final de la lista"; break;
+        }
+        UIManager.instancia.ConfigurarCabeceraNivel(nombreDelNivel, operacionTexto);
     }
     IEnumerator AnimacionPuntos(bool esAumento)
     {
@@ -196,7 +212,8 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             controladorInsignia.ResetearInsignia();
         if (panelFinal != null) panelFinal.SetActive(false);
         CongelarLupi(false);
-        ResetearNivel(); 
+        ResetearNivel();
+        ActualizarCabeceraSegunModo();
         if (lupi != null && puntoInicioNivel != null)
             lupi.position = puntoInicioNivel.position;
         StartCoroutine(Intro());
@@ -346,6 +363,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             else
                 yield return new WaitForSeconds(5.0f);
             modoActual = ModoOperacion.InsertarFinal;
+            ActualizarCabeceraSegunModo();
             LimpiarEscenaParaSiguienteAlgoritmo();
             ActualizarTextosChecklistSegunAlgoritmo();
             StartCoroutine(Intro());
@@ -359,6 +377,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             else
                 yield return new WaitForSeconds(5.0f);
             modoActual = ModoOperacion.EliminarInicio;
+            ActualizarCabeceraSegunModo();
             fase = 0;
             UIManager.instancia.ResetBotones();
             UIManager.instancia.ConfigurarTextosChecklist("", "delete(Calabaza);", "", "delete(Papa);", "");
@@ -431,6 +450,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             else
                 yield return new WaitForSeconds(3.5f);
             modoActual = ModoOperacion.EliminarFinal;
+            ActualizarCabeceraSegunModo();
             ProximoPaso(); 
         }
         else

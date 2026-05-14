@@ -313,8 +313,8 @@ MonoBehaviour:
   escalaNormal: {x: 3, y: 2, z: 0}
   velocidadEscala: 0.7
   retrasoEntreSembrios: 0.3
-  spriteSeco: {fileID: -2495102797091314606, guid: cf1e1045b035195488e091b74524dabc, type: 3}
-  spriteVivo: {fileID: -999495800006411920, guid: 17442df15eedfd44da2ea89bb4ab7484, type: 3}
+  spriteSeco: {fileID: 1995238211026135775, guid: fc36a00a50267c647a0861bb89456b83, type: 3}
+  spriteVivo: {fileID: -4011936856358744237, guid: fc36a00a50267c647a0861bb89456b83, type: 3}
 --- !u!1 &1077177690419212729
 GameObject:
   m_ObjectHideFlags: 0

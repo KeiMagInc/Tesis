@@ -7,6 +7,9 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement; 
 public class UIManager : MonoBehaviour
 {
+    [Header("Información del Nivel")] 
+    public TextMeshProUGUI textoNombreNivel;
+    public TextMeshProUGUI textoNombreOperacion;
     [Header("Menú de Pausa")]
     public GameObject panelPausa;
     private bool estaPausado = false;
@@ -45,6 +48,14 @@ public class UIManager : MonoBehaviour
             if (botonesSemillas[i] != null)
                 escalasOriginales[i] = botonesSemillas[i].transform.localScale;
         }
+    }
+    public void ConfigurarCabeceraNivel(string nombreNivel, string operacion)
+    {
+        if (textoNombreNivel != null)
+            textoNombreNivel.text = nombreNivel; // Ejemplo: "Nivel 1"
+
+        if (textoNombreOperacion != null)
+            textoNombreOperacion.text = operacion; // Ejemplo: "Identificar partes del nodo"
     }
     public void MostrarInterfaz(bool mostrar)
     {

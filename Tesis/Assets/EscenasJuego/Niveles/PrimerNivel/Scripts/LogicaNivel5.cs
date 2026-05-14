@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 
 public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Información del Nivel UI")]
+    public string nombreDelNivel = "Listas Dobles";
     private Color colorOriginalPuntos;
     private Vector3 escalaOriginalPuntos;
     private Coroutine rutinaEfectoPuntos;
@@ -133,7 +135,21 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         UIManager.instancia.MostrarMochilaSolo(false);
         UIManager.instancia.MostrarChecklistSolo(false);
         ResetearNivel();
+        ActualizarCabeceraNivel5();
         StartCoroutine(IntroNivel5());
+    }
+    void ActualizarCabeceraNivel5()
+    {
+        if (UIManager.instancia == null) return;
+        string operacionTexto = "";
+        switch (modoActual)
+        {
+            case ModoOperacion.InsertarInicio: operacionTexto = "Inserción al inicio de la lista doble"; break;
+            case ModoOperacion.InsertarFinal: operacionTexto = "Inserción al final de la lista doble"; break;
+            case ModoOperacion.EliminarInicio: operacionTexto = "Eliminación por el inicio de la lista doble"; break;
+            case ModoOperacion.EliminarFinal: operacionTexto = "Eliminación por el final de la lista doble"; break;
+        }
+        UIManager.instancia.ConfigurarCabeceraNivel(nombreDelNivel, operacionTexto);
     }
     IEnumerator AnimacionPuntos(bool esAumento)
     {
@@ -195,6 +211,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         if (panelFinal != null) panelFinal.SetActive(false);
         CongelarLupi(false);
         ResetearNivel();
+        ActualizarCabeceraNivel5();
         if (lupi != null && puntoInicioNivel != null)
             lupi.position = puntoInicioNivel.position;
         StartCoroutine(IntroNivel5());
@@ -780,6 +797,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                 yield return new WaitForSeconds(4f);
             LimpiarDatosYEscena();
             modoActual = ModoOperacion.InsertarFinal;
+            ActualizarCabeceraNivel5();
             ConfigurarUIParaModoActual();
             StartCoroutine(IntroNivel5());
         }
@@ -792,6 +810,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             else
                 yield return new WaitForSeconds(4f);
             modoActual = ModoOperacion.EliminarInicio;
+            ActualizarCabeceraNivel5();
             fase = 0;
             pasoConexion = 0;
             cargandoAgua = false;
@@ -812,6 +831,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             if (audioFelicidadesEliminarInicio != null) yield return new WaitForSeconds(audioFelicidadesEliminarInicio.length + 0.5f);
             else yield return new WaitForSeconds(4f);
             modoActual = ModoOperacion.EliminarFinal;
+            ActualizarCabeceraNivel5();
             pasoConexion = 0;
             ConfigurarUIParaModoActual();
             ProximoPaso();
