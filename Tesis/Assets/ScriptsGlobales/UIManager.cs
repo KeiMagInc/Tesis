@@ -176,9 +176,10 @@ public class UIManager : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
-        {
             AlternarPausa();
-        }
+        if (Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.M))
+            if (!estaPausado)
+                AbrirCerrarMenuParcelas();
         if (estaPausado) return;
         if (string.IsNullOrEmpty(semillaActiva)) return;
         float pulse = 1f + Mathf.Sin(Time.time * 6f) * 0.12f;
