@@ -24,8 +24,8 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     private int puntosAlIniciarNivel;
     [Header("Configuración de Tiempo")]
     public int puntosMaximos = 10;
-    public int puntosMinimos = 1;
-    public float tiempoLimite = 60f;
+    public int puntosMinimos = 0;
+    public float tiempoLimite = 120f;
     private float tiempoInicioEstado;
     float ultimoTiempoClic;
     [Header("Audios Diálogos Andy - Nivel 5")]
