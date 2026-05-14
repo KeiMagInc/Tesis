@@ -5,6 +5,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
 {
+    private Color colorOriginalPuntos;
+    private Vector3 escalaOriginalPuntos;
+    private Coroutine rutinaEfectoPuntos;
     [Header("Posicionamiento")]
     public Transform puntoInicioNivel;
     [Header("Pantalla Final")]
@@ -64,8 +67,16 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     private int pasoConexion = 0;
     private bool cargandoAgua = false;
     private NodoManager managerActual;
-    private int[] mapaIndicesUI = { 0, 2, 4 };    
-    void Awake() => instancia = this;
+    private int[] mapaIndicesUI = { 0, 2, 4 };
+    void Awake()
+    {
+        instancia = this;
+        if (textoPuntos != null)
+        {
+            colorOriginalPuntos = textoPuntos.color;
+            escalaOriginalPuntos = textoPuntos.transform.localScale;
+        }
+    }
     void OnEnable()
     {
         if (UIManager.instancia == null) return;
@@ -87,6 +98,21 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         );
         ActualizarPuntos();
         StartCoroutine(Intro());
+    }
+    IEnumerator AnimacionPuntos(bool esAumento)
+    {
+        textoPuntos.color = esAumento ? Color.green : Color.red;
+        float tiempoPaso = 0.07f;
+        Vector3 escalaFlash = escalaOriginalPuntos * 1.3f;
+        for (int i = 0; i < 3; i++)
+        {
+            textoPuntos.transform.localScale = escalaFlash;
+            yield return new WaitForSeconds(tiempoPaso);
+            textoPuntos.transform.localScale = escalaOriginalPuntos;
+            yield return new WaitForSeconds(tiempoPaso);
+        }
+        textoPuntos.transform.localScale = escalaOriginalPuntos;
+        textoPuntos.color = colorOriginalPuntos;
     }
     IEnumerator MostrarResumenFinal()
     {
@@ -311,7 +337,9 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         if (!KaosController.nivelesTerminados.Contains("CreacionReferencias"))
         {
             UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
-            if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();
+            ActualizarPuntos();
+            if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
+            rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(false));
             if (KaosController.instancia != null)
                 KaosController.instancia.ReaccionarAError();
         }
@@ -323,6 +351,8 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         aciertosContador++;
         UIManager.puntosGlobales += cant;
         ActualizarPuntos();
+        if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
+        rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(true));
         if (!silencioso && fuenteAudio && sonidoAcierto) fuenteAudio.PlayOneShot(sonidoAcierto);
     }
     void ActualizarPuntos() { if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString(); }

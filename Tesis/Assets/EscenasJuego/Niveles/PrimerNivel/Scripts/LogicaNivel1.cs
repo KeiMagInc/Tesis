@@ -5,6 +5,9 @@ using TMPro;
 using UnityEngine.SceneManagement;
 public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
 {
+    private Color colorOriginalPuntos;
+    private Vector3 escalaOriginalPuntos;
+    private Coroutine rutinaEfectoPuntos;
     [Header("Posicionamiento")]
     public Transform puntoInicioNivel;
     [Header("Pantalla Final")]
@@ -63,7 +66,15 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     public NodoManager huertoScript;
     private int estado = 0;
     private float tiempoUltimaAccion = 0f;
-    void Awake() => instancia = this;
+    void Awake()
+    {
+        instancia = this;
+        if (textoPuntos != null)
+        {
+            colorOriginalPuntos = textoPuntos.color;
+            escalaOriginalPuntos = textoPuntos.transform.localScale;
+        }
+    }
     void OnEnable()
     {
         if (UIManager.instancia == null) return;
@@ -77,6 +88,21 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     void OnDisable()
     {
         ResetearNivelSilencioso();
+    }
+    IEnumerator AnimacionPuntos(bool esAumento)
+    {
+        textoPuntos.color = esAumento ? Color.green : Color.red;
+        float tiempoPaso = 0.07f;
+        Vector3 escalaFlash = escalaOriginalPuntos * 1.3f;
+        for (int i = 0; i < 3; i++)
+        {
+            textoPuntos.transform.localScale = escalaFlash;
+            yield return new WaitForSeconds(tiempoPaso);
+            textoPuntos.transform.localScale = escalaOriginalPuntos;
+            yield return new WaitForSeconds(tiempoPaso);
+        }
+        textoPuntos.transform.localScale = escalaOriginalPuntos;
+        textoPuntos.color = colorOriginalPuntos;
     }
     IEnumerator MostrarResumenFinal()
     {
@@ -265,7 +291,9 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         if (!KaosController.nivelesTerminados.Contains("AnatomiaComponentes"))
         {
             UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
-            if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();
+            ActualizarPuntos();
+            if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
+            rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(false));
             if (KaosController.instancia != null)
                 KaosController.instancia.ReaccionarAError();
         }
@@ -277,6 +305,8 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         aciertosContador++;
         UIManager.puntosGlobales += cant;
         ActualizarPuntos();
+        if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
+        rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(true));
         if (!silencioso && fuenteAudio && sonidoAcierto) fuenteAudio.PlayOneShot(sonidoAcierto);
     }
 
