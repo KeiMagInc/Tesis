@@ -102,6 +102,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4763548868154059873}
   - component: {fileID: 3278752904045264080}
+  - component: {fileID: 1465676948881657356}
   m_Layer: 0
   m_Name: Oveja
   m_TagString: Untagged
@@ -179,6 +180,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &1465676948881657356
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 776164675174373067}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 67c31cfe9c8504f439e84cb53a25ff6a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &839396964857267429
 GameObject:
   m_ObjectHideFlags: 0
@@ -290,8 +313,8 @@ MonoBehaviour:
   escalaNormal: {x: 3, y: 2, z: 0}
   velocidadEscala: 0.7
   retrasoEntreSembrios: 0.3
-  spriteSeco: {fileID: -4589858782877362093, guid: e94d1d8597fca4b429fcfcf674da7e9c, type: 3}
-  spriteVivo: {fileID: 2288580185458606559, guid: 03c7459553e74924d967c32ea8238e5f, type: 3}
+  spriteSeco: {fileID: 6792788541964517201, guid: 376ac2832fc9c05428caf8f767a362f5, type: 3}
+  spriteVivo: {fileID: -2894447196254621924, guid: 376ac2832fc9c05428caf8f767a362f5, type: 3}
 --- !u!1 &1077177690419212729
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,6 +370,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8075921368580365852}
   - component: {fileID: 6826989942163881862}
+  - component: {fileID: 2834025678456595312}
   m_Layer: 0
   m_Name: Oveja
   m_TagString: Untagged
@@ -424,6 +448,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &2834025678456595312
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1861106461627545416}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 67c31cfe9c8504f439e84cb53a25ff6a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2078749848238065326
 GameObject:
   m_ObjectHideFlags: 0
@@ -434,6 +480,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2879797720799785473}
   - component: {fileID: 4058748954834855673}
+  - component: {fileID: 4420459682470475131}
   m_Layer: 0
   m_Name: Oveja
   m_TagString: Untagged
@@ -511,6 +558,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &4420459682470475131
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2078749848238065326}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 67c31cfe9c8504f439e84cb53a25ff6a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2212228696518948857
 GameObject:
   m_ObjectHideFlags: 0
@@ -791,6 +860,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6152943946648341281}
   - component: {fileID: 1637646766183658964}
+  - component: {fileID: 4115242937100452885}
   m_Layer: 0
   m_Name: Oveja
   m_TagString: Untagged
@@ -868,6 +938,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &4115242937100452885
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3668847794203586645}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 67c31cfe9c8504f439e84cb53a25ff6a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4058723725317039945
 GameObject:
   m_ObjectHideFlags: 0
@@ -1720,7 +1812,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3696186982617231300}
   m_Layer: 0
-  m_Name: Ovejas
+  m_Name: Sembrios
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2058,6 +2150,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4010915013028933056}
   - component: {fileID: 6552148906741469440}
+  - component: {fileID: 3780692711177380535}
   m_Layer: 0
   m_Name: Oveja
   m_TagString: Untagged
@@ -2135,6 +2228,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &3780692711177380535
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7887228451221789360}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 67c31cfe9c8504f439e84cb53a25ff6a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8151607310606057091
 GameObject:
   m_ObjectHideFlags: 0

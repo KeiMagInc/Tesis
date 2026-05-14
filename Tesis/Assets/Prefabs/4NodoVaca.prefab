@@ -102,6 +102,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4763548868154059873}
   - component: {fileID: 3278752904045264080}
+  - component: {fileID: 7125228379486367363}
   m_Layer: 0
   m_Name: Vaca
   m_TagString: Untagged
@@ -179,6 +180,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &7125228379486367363
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 776164675174373067}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e5b6a3628b160c64e848b07304a38219, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &839396964857267429
 GameObject:
   m_ObjectHideFlags: 0
@@ -290,8 +313,8 @@ MonoBehaviour:
   escalaNormal: {x: 3, y: 2, z: 0}
   velocidadEscala: 0.7
   retrasoEntreSembrios: 0.3
-  spriteSeco: {fileID: -5953878577670561019, guid: fe686bfbd8240a541a9a21729f34aff2, type: 3}
-  spriteVivo: {fileID: -8339912874213387208, guid: 05cab3f7bb3315345ac73e7b6b15eb27, type: 3}
+  spriteSeco: {fileID: 1019254656465003142, guid: b2ee1023951a90a4b856f9705b894c44, type: 3}
+  spriteVivo: {fileID: 3887539899114314476, guid: b2ee1023951a90a4b856f9705b894c44, type: 3}
 --- !u!1 &1077177690419212729
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,6 +370,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8075921368580365852}
   - component: {fileID: 6826989942163881862}
+  - component: {fileID: 2335132870321850255}
   m_Layer: 0
   m_Name: Vaca
   m_TagString: Untagged
@@ -424,6 +448,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &2335132870321850255
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1861106461627545416}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e5b6a3628b160c64e848b07304a38219, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2078749848238065326
 GameObject:
   m_ObjectHideFlags: 0
@@ -434,6 +480,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2879797720799785473}
   - component: {fileID: 4058748954834855673}
+  - component: {fileID: 1690421336901903105}
   m_Layer: 0
   m_Name: Vaca
   m_TagString: Untagged
@@ -511,6 +558,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &1690421336901903105
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2078749848238065326}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e5b6a3628b160c64e848b07304a38219, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2212228696518948857
 GameObject:
   m_ObjectHideFlags: 0
@@ -791,6 +860,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6152943946648341281}
   - component: {fileID: 1637646766183658964}
+  - component: {fileID: 5706087940695847931}
   m_Layer: 0
   m_Name: Vaca
   m_TagString: Untagged
@@ -868,6 +938,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &5706087940695847931
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3668847794203586645}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e5b6a3628b160c64e848b07304a38219, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4058723725317039945
 GameObject:
   m_ObjectHideFlags: 0
@@ -1720,7 +1812,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3696186982617231300}
   m_Layer: 0
-  m_Name: Vacas
+  m_Name: Sembrios
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2058,6 +2150,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4010915013028933056}
   - component: {fileID: 6552148906741469440}
+  - component: {fileID: 2000299282070997865}
   m_Layer: 0
   m_Name: Vaca
   m_TagString: Untagged
@@ -2135,6 +2228,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &2000299282070997865
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7887228451221789360}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e5b6a3628b160c64e848b07304a38219, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8151607310606057091
 GameObject:
   m_ObjectHideFlags: 0

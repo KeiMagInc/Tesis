@@ -56,17 +56,17 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     public BarreraProgreso barreraSiguiente;
     public static LogicaNivel4 instancia;
     [Header("Sprites UI")]
-    public Sprite spriteCalabaza;
-    public Sprite spritePapa;
-    public Sprite spriteTrigo;
-    public Sprite spriteZanahoria;
-    public Sprite spriteRabano;
+    public Sprite spriteCodorniz;
+    public Sprite spriteGallina;
+    public Sprite spriteCerdo;
+    public Sprite spriteOveja;
+    public Sprite spriteVaca;
     [Header("Prefabs de los Nodos")]
-    public GameObject prefabCalabaza;
-    public GameObject prefabPapa;
-    public GameObject prefabTrigo;
-    public GameObject prefabZanahoria;
-    public GameObject prefabRabano;
+    public GameObject prefabCodorniz;
+    public GameObject prefabGallina;
+    public GameObject prefabCerdo;
+    public GameObject prefabOveja;
+    public GameObject prefabVaca;
     [Header("Referencias de Escena")]
     public AndyController andy;
     public TextMeshProUGUI textoPuntos;
@@ -82,7 +82,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     private int fase = 0;
     private int subPaso = 0;
     private List<Vector3> puntosConfirmados = new List<Vector3>();
-    private string[] nombresNodos = { "Calabaza", "Papa", "Trigo", "Zanahoria", "Rabano" };
+    private string[] nombresNodos = { "Codorniz", "Gallina", "Cerdo", "Oveja", "Vaca" };
     private enum ModoOperacion { Insertar, Eliminar }
     private ModoOperacion modoActual = ModoOperacion.Insertar;
     private int indiceAEliminar = 4;
@@ -92,9 +92,9 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         if (UIManager.instancia == null) return;
         puntosAlIniciarNivel = UIManager.puntosGlobales;
         UIManager.instancia.logicaActiva = this;
-        UIManager.instancia.SetPrefabs(prefabCalabaza, prefabPapa, prefabTrigo, prefabRabano, prefabZanahoria);
-        Sprite[] misSprites = { spriteCalabaza, spritePapa, spriteTrigo, spriteRabano, spriteZanahoria };
-        string[] misNombres = { "Calabaza", "Papa", "Trigo", "Rabano", "Zanahoria" };
+        UIManager.instancia.SetPrefabs(prefabCodorniz, prefabGallina, prefabCerdo, prefabOveja, prefabVaca);
+        Sprite[] misSprites = { spriteCodorniz, spriteGallina, spriteCerdo, spriteOveja, spriteVaca };
+        string[] misNombres = { "Codorniz", "Gallina", "Cerdo", "Oveja", "Vaca" };
         UIManager.instancia.ConfigurarBotonesUI(misSprites, misNombres);
         UIManager.instancia.MostrarMochilaSolo(false);
         UIManager.instancia.MostrarChecklistSolo(false);
@@ -212,9 +212,9 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     IEnumerator SecuenciaIntro()
     {
         yield return new WaitForSeconds(0.5f);
-        andy.Decir("¡Lupi! Para que el riego de Tahuantindata sea eterno, aplicaremos las Listas Circulares que una estructura donde la vida fluye sin principio ni fin.", audioIntroCircular);
+        andy.Decir("¡Lupi! Para que el bebedero de Tahuantindata nunca se agote, usaremos Listas Circulares. El agua fluirá entre los animales en un retorno perpetuo.", audioIntroCircular);
         yield return new WaitForSeconds(audioIntroCircular.length + 0.5f);
-        andy.Decir("Abre tu mochila. Cada semilla será un nuevo Nodo en este ciclo sagrado.", audioPrepararNodo);
+        andy.Decir("Abre tu mochila. Cada animal que llegue será un NODO Q dentro de este ciclo de vida.", audioPrepararNodo);
         UIManager.instancia.MostrarMochilaSolo(true);
         yield return new WaitUntil(() => UIManager.instancia.panelParcelas.activeSelf);
         UIManager.instancia.MostrarChecklistSolo(true);
@@ -226,7 +226,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         if (fase < nombresNodos.Length)
         {
             UIManager.instancia.SetSemillaPalpitar(nombresNodos[fase]);
-            andy.Decir("Siembra la semilla en la parcela. Cada semilla es un NODO del ciclo de Tahuantindata.", audioSembrar);
+            andy.Decir("Lleva al animal a su lugar en el ciclo. Su presencia definirá el campo Q^.INFO", audioSembrar);
             subPaso = 0; 
         }
     }
@@ -252,12 +252,12 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
             if (fase == 0)
             {
                 brilloRio.SetEncendido(true);
-                andy.Decir("Como es el primer NODO, el puntero de acceso LIGA debe inicializarse apuntando a sí mismo.", audioPrimerNodoCircular);
+                andy.Decir("Al ser el primer animal, el puntero de acceso P debe inicializarse apuntando a sí mismo: P^.LIGA = P", audioPrimerNodoCircular);
             }
             else
             {
                 EncenderBrilloHijo(listaNodos[fase - 1].gameObject, "Liga", true);
-                andy.Decir("Para insertar elementos, debemos actualizar el campo LIGA del NODO anterior hacia el nuevo componente de la Lista.", audioInsertarIntermedio);
+                andy.Decir("Para insertar a Q, actualizaremos la LIGA del animal anterior para que apunte a la dirección de memoria de este nuevo integrante.", audioInsertarIntermedio);
             }
         }
     }
@@ -292,14 +292,14 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                     EncenderBrilloHijo(nodoActual.gameObject, "Liga", false);
                     GameObject destino = (fase == 0) ? nodoActual.gameObject : listaNodos[0].gameObject;
                     EncenderBrilloHijo(destino, "Info", true);
-                    andy.Decir("¡Escencial mi querido Lupi! Para mantener la circularidad, el enlace del último NODO debe apuntar siempre al primero de la estructura.", audioCerrarCiclo);
+                    andy.Decir("¡Atención! Para que la lista sea circular, la LIGA del último animal debe apuntar siempre al inicio, donde se encuentra P.", audioCerrarCiclo);
                 }
                 else
                 {
                     ReproducirError();
-                    if (fase == 0) andy.Decir("¡Cuidado Lupi! Para iniciar la Lista Circular, debemos recoger el flujo sagrado directamente del INICIO.", audioErrorNoRio);
-                    else if (subPaso == 0 || subPaso == 1) andy.Decir("El algoritmo indica que el puntero debe nacer de la LIGA del NODO anterior para mantener la secuencia.", audioErrorNoLigaAnterior);
-                    else andy.Decir("Para cerrar el círculo, activa la LIGA de la última parcela sembrada.", audioErrorNoLigaAnteriorCerrar);
+                    if (fase == 0) andy.Decir("¡Cuidado Lupi! Para iniciar el ciclo de bebederos, debemos asignar el puntero de acceso P desde la fuente de agua original.", audioErrorNoRio);
+                    else if (subPaso == 0 || subPaso == 1) andy.Decir("¡Error de enlace! El algoritmo dicta que la conexión debe nacer de la LIGA del animal anterior para integrar al nuevo NODO Q.", audioErrorNoLigaAnterior);
+                    else andy.Decir("¡No pierdas el ciclo! Para cerrar la estructura circular, activa la LIGA del último animal para que retorne al inicio donde está P.", audioErrorNoLigaAnteriorCerrar);
                 }
             }
             else 
@@ -378,12 +378,12 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     }
     IEnumerator PrepararEliminacion()
     {
-        andy.Decir("¡Lupifantástico! La armonía ha vuelto. Has completado una estructura circular donde la vida y el agua fluyen en un retorno perpetuo.", audioExitoCiclo);
+        andy.Decir("¡Lupifantástico! Has creado un ciclo perfecto. El puntero P ahora nos permite recorrer todos los animales sin encontrar un final.", audioExitoCiclo);
         if (audioExitoCiclo != null)
             yield return new WaitForSeconds(audioExitoCiclo.length + 0.5f);
         else
             yield return new WaitForSeconds(3f); 
-        andy.Decir("¡Impresionante! Pero el Kaos ha infectado los NODOS, es momento de eliminarlos liberando memoria sin romper la armonía del flujo.", audioIntroEliminar);
+        andy.Decir("¡Impresionante! El Kaos ha infectado a los animales. Debemos realizar una ELIMINACIÓN, liberando la memoria del nodo sin romper el flujo.", audioIntroEliminar);
         if (audioIntroEliminar != null)
             yield return new WaitForSeconds(audioIntroEliminar.length + 0.5f);
         else
@@ -392,9 +392,9 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         fase = 0;
         UIManager.instancia.ConfigurarTextosChecklist(
                 "",
-                "delete(Rábano)",
+                "delete(Vaca)",
                 "",
-                "delete(Calabaza)",
+                "delete(Codorniz)",
                 ""
             );
         ProximoPasoEliminar();
@@ -404,12 +404,12 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         tiempoInicioEstado = Time.time;
         if (indiceAEliminar == 4)
         {
-            andy.Decir("El rábano se ha marchitado. Reasigna el enlace de la zanahoria hacia la calabaza para que el sistema libere la memoria ocupada.", audioEliminarFinal);
+            andy.Decir("La vaca se ha retirado. Usa el puntero auxiliar T para que la LIGA de la oveja apunte de regreso a las cordornices (P)", audioEliminarFinal);
             EncenderBrilloHijo(listaNodos[3].gameObject, "Liga", true);
         }
         else
         {
-            andy.Decir("¡Alerta Lupi! Ahora Kaos ha infectado la calabaza. Debemos realizar una Eliminación para proteger el resto de la estructura.", audioEliminarInicio);
+            andy.Decir("¡Emergencia! El primer animal (P) ha sido infectado. Debemos reasignar el acceso de la lista al siguiente animal antes de borrarlo.", audioEliminarInicio);
             EncenderBrilloHijo(listaNodos[3].gameObject, "Liga", true);
         }
     }
@@ -428,7 +428,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
             else
             {
                 ReproducirError();
-                andy.Decir("Para eliminar un NODO sin romper el ciclo, debemos reasignar el enlace de la parcela anterior.", audioErrorEliminacion);
+                andy.Decir("¡Error de eliminación! Para remover un animal sin romper el ciclo, debemos reasignar la LIGA del animal anterior (T) hacia el sucesor del nodo infectado.", audioErrorEliminacion);
             }
         }
         else
@@ -463,7 +463,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                         }
                         CongelarLupi(true);
                         ReproducirNivelCompleto();
-                        andy.Decir("¡Victoria Supervisor de Flujo Circular! Eliminamos el NODO, liberamos la memoria y actualizamos el puntero LIGA.", audioExitoTotal);                        
+                        andy.Decir("¡Victoria Supervisor de Flujo Circular! Has gestionado los punteros P, Q y T perfectamente. ¡La memoria de Tahuantindata está a salvo!", audioExitoTotal);                        
                         StartCoroutine(MostrarResumenFinal());
                     }
                 }

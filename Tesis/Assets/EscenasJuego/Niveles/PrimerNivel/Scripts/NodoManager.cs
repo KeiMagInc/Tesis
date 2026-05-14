@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
 public class NodoManager : MonoBehaviour
 {
     [Header("Conexiones Simples (Niveles 1, 2, 3 y 4)")]
@@ -28,9 +27,9 @@ public class NodoManager : MonoBehaviour
     public Sprite spriteSeco;
     public Sprite spriteVivo;
     private List<SpriteRenderer> renderersSembrios = new List<SpriteRenderer>();
+    private List<Animator> animadoresSembrios = new List<Animator>();
     private bool estaActivado = false;
     private Coroutine rutinaEscala;
-
     void Awake()
     {
         Transform contenedor = transform.Find("Sembrios");
@@ -40,11 +39,16 @@ public class NodoManager : MonoBehaviour
             {
                 SpriteRenderer sr = hijo.GetComponent<SpriteRenderer>();
                 if (sr != null) renderersSembrios.Add(sr);
+                Animator anim = hijo.GetComponent<Animator>();
+                if (anim != null)
+                {
+                    animadoresSembrios.Add(anim);
+                    anim.enabled = false;
+                }
             }
         }
         ResetearNodo();
     }
-
     public void ResetearNodo()
     {
         estaActivado = false;
@@ -58,9 +62,12 @@ public class NodoManager : MonoBehaviour
         {
             if (sr != null) sr.sprite = spriteSeco;
         }
+        foreach (Animator anim in animadoresSembrios)
+        {
+            if (anim != null) anim.enabled = false;
+        }
         transform.localScale = Vector3.one;
     }
-
     public void ActivarHuerto()
     {
         if (!estaActivado)
@@ -75,7 +82,6 @@ public class NodoManager : MonoBehaviour
             StartCoroutine(SecuenciaCrecimiento(true));
         }
     }
-
     public void DrenarAgua()
     {
         if (cuadroAgua != null)
@@ -84,13 +90,11 @@ public class NodoManager : MonoBehaviour
             rutinaEscala = StartCoroutine(AnimarEscalaAgua(escalaNormal));
         }
     }
-
     public void IniciarSecuenciaEliminacion()
     {
         estaActivado = false;
         StartCoroutine(RutinaMuerteNodo());
     }
-
     private IEnumerator RutinaMuerteNodo()
     {
         if (cuadroAgua != null)
@@ -111,7 +115,6 @@ public class NodoManager : MonoBehaviour
         }
         Destroy(gameObject);
     }
-
     IEnumerator AnimarEscalaAgua(Vector3 escalaObjetivo)
     {
         while (Vector3.Distance(cuadroAgua.transform.localScale, escalaObjetivo) > 0.01f)
@@ -121,13 +124,17 @@ public class NodoManager : MonoBehaviour
         }
         cuadroAgua.transform.localScale = escalaObjetivo;
     }
-
     IEnumerator SecuenciaCrecimiento(bool vivir)
     {
         Sprite spriteFinal = vivir ? spriteVivo : spriteSeco;
-        foreach (SpriteRenderer sr in renderersSembrios)
+        for (int i = 0; i < renderersSembrios.Count; i++)
         {
-            if (sr != null) sr.sprite = spriteFinal;
+            if (renderersSembrios[i] != null)
+                renderersSembrios[i].sprite = spriteFinal;
+            if (i < animadoresSembrios.Count && animadoresSembrios[i] != null)
+            {
+                animadoresSembrios[i].enabled = vivir;
+            }
             yield return new WaitForSeconds(retrasoEntreSembrios);
         }
     }

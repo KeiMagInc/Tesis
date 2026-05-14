@@ -98,7 +98,7 @@ public class UIManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(tipo) || tipo.ToLower() != semillaActiva.ToLower())
         {
-            andy.Decir("¡Lupi! Usa la semilla que te indica la mochila.", audioUsaSemillaPrimero);
+            andy.Decir("¡Lupi! Usa el NODO que te indica la mochila.", audioUsaSemillaPrimero);
             return;
         }
         ZonaPlantado[] zonas = Object.FindObjectsByType<ZonaPlantado>(FindObjectsSortMode.None);
@@ -123,7 +123,8 @@ public class UIManager : MonoBehaviour
                 if (logicaActiva != null) logicaActiva.AvanceSiembraExitosa();
             }
         }
-        else andy.Decir("Acércate más a la parcela que corresponde la semilla.", audioAcercateMas);
+        else 
+            andy.Decir("Acércate más a la parcela que corresponde al NODO.", audioAcercateMas);
     }
     public void ConfigurarTextosChecklist(params string[] textos)
     {

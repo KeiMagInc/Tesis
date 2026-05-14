@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2250400793531471313}
   - component: {fileID: 1848415800215981193}
-  - component: {fileID: 2876340519714738447}
+  - component: {fileID: 1863539496162566208}
   m_Layer: 0
   m_Name: PuntoEntrada
   m_TagString: Untagged
@@ -79,7 +79,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.5, y: 1}
   m_EdgeRadius: 0
---- !u!114 &2876340519714738447
+--- !u!114 &1863539496162566208
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -168,7 +168,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: 2382208071769853359, guid: ae3d64d5427b9994eac1b88a8d48604a, type: 3}
+  m_Sprite: {fileID: -2495102797091314606, guid: cf1e1045b035195488e091b74524dabc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -191,7 +191,7 @@ GameObject:
   - component: {fileID: 4233625125665758415}
   - component: {fileID: 9328321732198063}
   m_Layer: 0
-  m_Name: 2HuertoNodoPapa
+  m_Name: 2NodoTrigo
   m_TagString: Planta
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -290,8 +290,8 @@ MonoBehaviour:
   escalaNormal: {x: 3, y: 3, z: 0}
   velocidadEscala: 0.7
   retrasoEntreSembrios: 0.3
-  spriteSeco: {fileID: 2382208071769853359, guid: ae3d64d5427b9994eac1b88a8d48604a, type: 3}
-  spriteVivo: {fileID: -1840190759907527076, guid: 1e7ce091677f6f045bd54fc9cee3c726, type: 3}
+  spriteSeco: {fileID: -2495102797091314606, guid: cf1e1045b035195488e091b74524dabc, type: 3}
+  spriteVivo: {fileID: -999495800006411920, guid: 17442df15eedfd44da2ea89bb4ab7484, type: 3}
 --- !u!1 &1077177690419212729
 GameObject:
   m_ObjectHideFlags: 0
@@ -413,7 +413,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: 2382208071769853359, guid: ae3d64d5427b9994eac1b88a8d48604a, type: 3}
+  m_Sprite: {fileID: -2495102797091314606, guid: cf1e1045b035195488e091b74524dabc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -500,7 +500,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: 2382208071769853359, guid: ae3d64d5427b9994eac1b88a8d48604a, type: 3}
+  m_Sprite: {fileID: -2495102797091314606, guid: cf1e1045b035195488e091b74524dabc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -521,7 +521,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6174649838750680848}
   - component: {fileID: 8922596514882991105}
-  - component: {fileID: 389960300543726721}
+  - component: {fileID: 2172340462071589836}
   m_Layer: 0
   m_Name: PuntoSalida
   m_TagString: Untagged
@@ -590,7 +590,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.5, y: 0.5}
   m_EdgeRadius: 0
---- !u!114 &389960300543726721
+--- !u!114 &2172340462071589836
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -782,7 +782,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: 2382208071769853359, guid: ae3d64d5427b9994eac1b88a8d48604a, type: 3}
+  m_Sprite: {fileID: -2495102797091314606, guid: cf1e1045b035195488e091b74524dabc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -869,7 +869,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: 2382208071769853359, guid: ae3d64d5427b9994eac1b88a8d48604a, type: 3}
+  m_Sprite: {fileID: -2495102797091314606, guid: cf1e1045b035195488e091b74524dabc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1031,7 +1031,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: 2382208071769853359, guid: ae3d64d5427b9994eac1b88a8d48604a, type: 3}
+  m_Sprite: {fileID: -2495102797091314606, guid: cf1e1045b035195488e091b74524dabc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1761,7 +1761,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: 2382208071769853359, guid: ae3d64d5427b9994eac1b88a8d48604a, type: 3}
+  m_Sprite: {fileID: -2495102797091314606, guid: cf1e1045b035195488e091b74524dabc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1784,7 +1784,7 @@ GameObject:
   - component: {fileID: 9085063502163591082}
   - component: {fileID: 811412054768166380}
   - component: {fileID: 2425883285927305870}
-  - component: {fileID: 1262118224328000834}
+  - component: {fileID: 3303951191133502532}
   m_Layer: 5
   m_Name: LetreroInfo
   m_TagString: Untagged
@@ -1867,7 +1867,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velocidad: 5
   amplitud: 0.1
---- !u!61 &1262118224328000834
+--- !u!61 &3303951191133502532
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2203,7 +2203,7 @@ GameObject:
   - component: {fileID: 1968855701838980973}
   - component: {fileID: 5178196964421556645}
   - component: {fileID: 4340155289113492184}
-  - component: {fileID: 7949294829345926}
+  - component: {fileID: 9077144619314442163}
   m_Layer: 5
   m_Name: LetreroLiga
   m_TagString: Untagged
@@ -2286,7 +2286,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velocidad: 5
   amplitud: 0.1
---- !u!61 &7949294829345926
+--- !u!61 &9077144619314442163
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2408,7 +2408,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: 2382208071769853359, guid: ae3d64d5427b9994eac1b88a8d48604a, type: 3}
+  m_Sprite: {fileID: -2495102797091314606, guid: cf1e1045b035195488e091b74524dabc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
