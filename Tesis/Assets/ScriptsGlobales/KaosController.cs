@@ -2,9 +2,14 @@ using Mundo2;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class KaosController : MonoBehaviour
 {
+    [Header("UI de Emotes")]
+    public SpriteRenderer imagenReaccion;
+    public List<Sprite> emotesPositivos;
+    public List<Sprite> emotesNegativos;
+    public float escalaFijaEmote = 15.0f;
     [System.Serializable]
     public class ConfiguracionZona
     {
@@ -13,17 +18,15 @@ public class KaosController : MonoBehaviour
         public Transform puntoA;
         public Transform puntoB;
     }
-    public static KaosController instancia; 
-    public static List<string> nivelesTerminados = new List<string>(); 
+    public static KaosController instancia;
+    public static List<string> nivelesTerminados = new List<string>();
     private bool recibiendoDano = false;
     private Material materialOriginal;
     [Header("Material Silueta")]
     public Material materialSilueta;
     [Header("Efectos Visuales")]
-    public Color colorSiluetaRoja = new Color(0.5f, 0f, 0f, 1f);
     private SpriteRenderer sr;
     private bool estaAnimando = false;
-    private float escalaUltimoFrame; 
     [Header("Configuración de Zonas")]
     public List<ConfiguracionZona> listaZonas;
     [Header("Ajustes de Movimiento")]
@@ -32,7 +35,6 @@ public class KaosController : MonoBehaviour
     [Header("Evolución (Tamaño)")]
     public float escalaInicial = 2.5f;
     public float escalaMinima = 0.3f;
-    [Tooltip("¿A cuántos puntos queremos que haya reducido un 20%?")]
     public int puntosObjetivoPara20Porciento = 300;
     private float reduccionPorPunto;
     private Transform puntoA_Actual;
@@ -49,70 +51,32 @@ public class KaosController : MonoBehaviour
         materialOriginal = sr.material;
         reduccionPorPunto = (escalaInicial * 0.20f) / puntosObjetivoPara20Porciento;
         escalaActualBase = escalaInicial;
-        escalaUltimoFrame = escalaInicial;
+        if (imagenReaccion != null) imagenReaccion.gameObject.SetActive(false);
     }
     void Update()
     {
         ActualizarTamanoBase();
         DetectarZonaPorLista();
-        if (puntoA_Actual != null && puntoB_Actual != null)
+        if (puntoA_Actual != null && puntoB_Actual != null) Patrullar();
+        if (imagenReaccion != null && imagenReaccion.gameObject.activeSelf)
         {
-            Patrullar();
+            float sX = escalaFijaEmote / transform.localScale.x;
+            float sY = escalaFijaEmote / transform.localScale.y;
+            imagenReaccion.transform.localScale = new Vector3(sX, sY, 1);
         }
     }
-    public void ReaccionarAError()
+    private void MostrarEmoteAleatorio(List<Sprite> lista)
     {
-        if (recibiendoDano || estaAnimando || !sr.enabled) return;
-        StartCoroutine(EfectoCastigoVisual());
+        if (imagenReaccion != null && lista.Count > 0)
+        {
+            int indice = Random.Range(0, lista.Count);
+            imagenReaccion.sprite = lista[indice];
+            imagenReaccion.gameObject.SetActive(true);
+        }
     }
-    IEnumerator EfectoCastigoVisual()
+    private void OcultarEmote()
     {
-        estaAnimando = true;
-        if (sr != null && materialSilueta != null)
-        {
-            sr.material = materialSilueta;
-            sr.color = new Color(0f, 0.5f, 1f, 1f); 
-        }
-        float escalaTemporal = escalaActualBase;
-        float tiempoPaso = 0.07f;
-        for (int i = 0; i < 2; i++)
-        {
-            escalaActualBase = escalaTemporal * 1.15f;
-            AplicarEscalaVisual();
-            yield return new WaitForSeconds(tiempoPaso);
-            escalaActualBase = escalaTemporal;
-            AplicarEscalaVisual();
-            yield return new WaitForSeconds(tiempoPaso);
-        }
-        if (sr != null)
-        {
-            sr.material = materialOriginal;
-            sr.color = Color.white;
-        }
-        estaAnimando = false;
-        ActualizarTamanoBase();
-    }
-    void DetectarZonaPorLista()
-    {
-        if (lupi == null || recibiendoDano) return;
-        foreach (var zona in listaZonas)
-        {
-            if (zona.triggerCamara != null && zona.triggerCamara.OverlapPoint(lupi.transform.position))
-            {
-                if (nivelesTerminados.Contains(zona.nombreDeLaZona))
-                {
-                    sr.enabled = false; 
-                    return;
-                }
-                sr.enabled = true; 
-                if (triggerActual != zona.triggerCamara)
-                {
-                    triggerActual = zona.triggerCamara;
-                    AsignarNuevaZona(zona);
-                }
-                return;
-            }
-        }
+        if (imagenReaccion != null) imagenReaccion.gameObject.SetActive(false);
     }
     public void RecibirDanoYDesaparecer(string nombreNivel)
     {
@@ -123,113 +87,127 @@ public class KaosController : MonoBehaviour
             StartCoroutine(AnimacionMuerteKaos());
         }
     }
-    System.Collections.IEnumerator AnimacionMuerteKaos()
+    public void ReaccionarAError()
     {
-        recibiendoDano = true;
+        if (recibiendoDano || estaAnimando || !sr.enabled) return;
+        StartCoroutine(EfectoCastigoVisual());
+    }
+    IEnumerator EfectoCastigoVisual()
+    {
         estaAnimando = true;
-        if (sr != null && materialSilueta != null) sr.material = materialSilueta;
-        float tiempo = 0;
-        while (tiempo < 1.0f) 
+        MostrarEmoteAleatorio(emotesPositivos);
+        if (sr != null && materialSilueta != null)
         {
-            sr.color = (sr.color == Color.red) ? Color.clear : Color.red;
-            yield return new WaitForSeconds(0.1f);
-            tiempo += 0.1f;
+            sr.material = materialSilueta;
+            sr.color = new Color(0f, 0.5f, 1f, 1f);
         }
-        sr.enabled = false; 
-        recibiendoDano = false;
-        estaAnimando = false;
-    }
-    void AsignarNuevaZona(ConfiguracionZona nuevaZona)
-    {
-        puntoA_Actual = nuevaZona.puntoA;
-        puntoB_Actual = nuevaZona.puntoB;
-        destinoActual = puntoA_Actual;
-        if (puntoA_Actual != null)
+        float escalaTemporal = escalaActualBase;
+        for (int i = 0; i < 2; i++)
         {
-            transform.position = puntoA_Actual.position;
-            Debug.Log("<color=cyan>Kaos:</color> Nueva zona: " + nuevaZona.nombreDeLaZona);
-        }
-    }
-    void Patrullar()
-    {
-        Vector2 posActual = transform.position;
-        Vector2 posDestino = destinoActual.position;
-        transform.position = Vector2.MoveTowards(posActual, posDestino, velocidad * Time.deltaTime);
-        if (Vector2.Distance(transform.position, destinoActual.position) < distanciaDeFrenado)
-        {
-            destinoActual = (destinoActual == puntoA_Actual) ? puntoB_Actual : puntoA_Actual;
-        }
-        float diffX = destinoActual.position.x - transform.position.x;
-        if (Mathf.Abs(diffX) > 0.05f)
-        {
-            float mirandoA = diffX > 0 ? escalaActualBase : -escalaActualBase;
-            transform.localScale = new Vector3(mirandoA, escalaActualBase, 1);
-        }
-    }
-    void ActualizarTamanoBase()
-    {
-        if (estaAnimando) return;
-        float reduccionTotal = UIManager.puntosGlobales * reduccionPorPunto;
-        float nuevaEscalaBase = Mathf.Max(escalaMinima, escalaInicial - reduccionTotal);
-        if (nuevaEscalaBase < escalaActualBase)
-        {
-            StartCoroutine(EfectoTransformacionMario(nuevaEscalaBase));
-        }
-        else
-        {
-            escalaActualBase = nuevaEscalaBase;
+            escalaActualBase = escalaTemporal * 1.15f;
             AplicarEscalaVisual();
+            yield return new WaitForSeconds(0.07f);
+            escalaActualBase = escalaTemporal;
+            AplicarEscalaVisual();
+            yield return new WaitForSeconds(0.07f);
         }
-    }
-    void AplicarEscalaVisual()
-    {
-        float signoX = Mathf.Sign(transform.localScale.x);
-        transform.localScale = new Vector3(escalaActualBase * signoX, escalaActualBase, 1);
+        sr.material = materialOriginal;
+        sr.color = Color.white;
+        yield return new WaitForSeconds(0.5f);
+        OcultarEmote();
+        estaAnimando = false;
+        ActualizarTamanoBase();
     }
     System.Collections.IEnumerator EfectoTransformacionMario(float escalaFinal)
     {
         estaAnimando = true;
+        MostrarEmoteAleatorio(emotesNegativos);
         if (sr != null && materialSilueta != null)
         {
             sr.material = materialSilueta;
             sr.color = Color.red;
         }
         float escalaTemporal = escalaActualBase;
-        float tiempoPaso = 0.07f;
         for (int i = 0; i < 3; i++)
         {
             escalaActualBase = escalaTemporal * 1.2f;
             AplicarEscalaVisual();
-            yield return new WaitForSeconds(tiempoPaso);
+            yield return new WaitForSeconds(0.07f);
             escalaActualBase = escalaFinal;
             AplicarEscalaVisual();
-            yield return new WaitForSeconds(tiempoPaso);
+            yield return new WaitForSeconds(0.07f);
         }
         escalaActualBase = escalaFinal;
-        escalaUltimoFrame = escalaFinal;
-        if (sr != null)
-        {
-            sr.material = materialOriginal;
-            sr.color = Color.white;
-        }
+        sr.material = materialOriginal;
+        sr.color = Color.white;
+        yield return new WaitForSeconds(0.5f);
+        OcultarEmote();
         estaAnimando = false;
+    }
+    System.Collections.IEnumerator AnimacionMuerteKaos()
+    {
+        recibiendoDano = true;
+        estaAnimando = true;
+        MostrarEmoteAleatorio(emotesNegativos);
+        if (sr != null && materialSilueta != null) sr.material = materialSilueta;
+        float tiempo = 0;
+        while (tiempo < 1.0f)
+        {
+            sr.color = (sr.color == Color.red) ? Color.clear : Color.red;
+            yield return new WaitForSeconds(0.1f);
+            tiempo += 0.1f;
+        }
+        sr.enabled = false;
+        OcultarEmote();
+        recibiendoDano = false;
+        estaAnimando = false;
+    }
+    void DetectarZonaPorLista()
+    {
+        if (lupi == null || recibiendoDano) return;
+        foreach (var zona in listaZonas)
+        {
+            if (zona.triggerCamara != null && zona.triggerCamara.OverlapPoint(lupi.transform.position))
+            {
+                if (nivelesTerminados.Contains(zona.nombreDeLaZona)) { sr.enabled = false; return; }
+                sr.enabled = true;
+                if (triggerActual != zona.triggerCamara) { triggerActual = zona.triggerCamara; AsignarNuevaZona(zona); }
+                return;
+            }
+        }
+    }
+    void AsignarNuevaZona(ConfiguracionZona nuevaZona)
+    {
+        puntoA_Actual = nuevaZona.puntoA; puntoB_Actual = nuevaZona.puntoB; destinoActual = puntoA_Actual;
+        if (puntoA_Actual != null) transform.position = puntoA_Actual.position;
+    }
+    void Patrullar()
+    {
+        Vector2 posActual = transform.position; Vector2 posDestino = destinoActual.position;
+        transform.position = Vector2.MoveTowards(posActual, posDestino, velocidad * Time.deltaTime);
+        if (Vector2.Distance(transform.position, destinoActual.position) < distanciaDeFrenado)
+            destinoActual = (destinoActual == puntoA_Actual) ? puntoB_Actual : puntoA_Actual;
+        float diffX = destinoActual.position.x - transform.position.x;
+        if (Mathf.Abs(diffX) > 0.05f) AplicarEscalaVisual();
+    }
+    void ActualizarTamanoBase()
+    {
+        if (estaAnimando) return;
+        float reduccionTotal = UIManager.puntosGlobales * reduccionPorPunto;
+        float nuevaEscalaBase = Mathf.Max(escalaMinima, escalaInicial - reduccionTotal);
+        if (nuevaEscalaBase < escalaActualBase) StartCoroutine(EfectoTransformacionMario(nuevaEscalaBase));
+        else { escalaActualBase = nuevaEscalaBase; AplicarEscalaVisual(); }
+    }
+    void AplicarEscalaVisual()
+    {
+        float mirandoA = (destinoActual != null && destinoActual.position.x < transform.position.x) ? -escalaActualBase : escalaActualBase;
+        transform.localScale = new Vector3(mirandoA, escalaActualBase, 1);
     }
     public void ResetearEstadoNivel(string nombreNivel)
     {
-        if (nivelesTerminados.Contains(nombreNivel))
-        {
-            nivelesTerminados.Remove(nombreNivel);
-        }
-        recibiendoDano = false;
-        estaAnimando = false;
-        StopAllCoroutines(); 
-        if (sr != null)
-        {
-            sr.enabled = true; 
-            sr.material = materialOriginal;
-            sr.color = Color.white;
-        }
-        triggerActual = null;
-        Debug.Log("<color=orange>Kaos:</color> Estado reseteado para el nivel " + nombreNivel);
+        if (nivelesTerminados.Contains(nombreNivel)) nivelesTerminados.Remove(nombreNivel);
+        recibiendoDano = false; estaAnimando = false; StopAllCoroutines();
+        if (sr != null) { sr.enabled = true; sr.material = materialOriginal; sr.color = Color.white; }
+        triggerActual = null; OcultarEmote();
     }
 }
