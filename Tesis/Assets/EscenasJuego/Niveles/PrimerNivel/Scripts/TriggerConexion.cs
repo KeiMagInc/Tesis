@@ -13,7 +13,6 @@ public class TriggerConexion : MonoBehaviour
     {
         if (estaCerca && Input.GetKeyDown(KeyCode.E))
         {
-            // ESTA LINEA ES MAGIA: Al darle clic en la consola, resaltará el objeto culpable
             Debug.Log("<color=yellow> Se presionó 'E' en el objeto: [" + gameObject.name + "] con identificador: [" + identificador + "]</color>", gameObject);
 
             if (UIManager.instancia != null && UIManager.instancia.logicaActiva != null)
