@@ -26,6 +26,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Mundo4/Scenes/Nivel_Ordenamiento.unity
     guid: 3fa82a91b849a434196ca06a372a7954
+  - enabled: 1
+    path: Assets/EscenasJuego/Historia/Fin/HistoriaFin.unity
+    guid: 5b0c50c52d916f64992973f60641c7e8
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

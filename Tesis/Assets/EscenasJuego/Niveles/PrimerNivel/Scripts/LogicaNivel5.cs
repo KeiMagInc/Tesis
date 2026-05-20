@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
 {
+    private bool esperandoCierreNivel = false;
     [Header("Información del Nivel UI")]
     public string nombreDelNivel = "Listas Dobles";
     private Color colorOriginalPuntos;
@@ -844,6 +845,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                 checkpointFinal.AparecerYActivar();
                 controladorInsignia.MostrarInsignia(insigniaDeEsteNivel);
                 KaosController.instancia.RecibirDanoYDesaparecer("ListasDobles");
+                esperandoCierreNivel = true;
             }
             CongelarLupi(true);
             ReproducirNivelCompleto();
@@ -929,6 +931,13 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             lineaAgua.SetPosition(1, lupi.position);
         }
         else lineaAgua.positionCount = 0;
+        if (esperandoCierreNivel && checkpointFinal != null && lupi != null)
+        {
+            if (Vector3.Distance(lupi.position, checkpointFinal.transform.position) < 1.5f)
+            {
+                SceneManager.LoadScene("HistoriaFin");
+            }
+        }
     }
     private NodoManager ObtenerNodoReciente()
     {
