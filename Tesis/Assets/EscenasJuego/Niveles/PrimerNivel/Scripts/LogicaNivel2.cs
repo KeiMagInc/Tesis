@@ -83,6 +83,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     void OnEnable()
     {
         if (UIManager.instancia == null) return;
+        UIManager.instancia.DesactivarTodoPostNivel();
         UIManager.instancia.ConfigurarCabeceraNivel(nombreDelNivel, operacionDelNivel);
         puntosAlIniciarNivel = UIManager.puntosGlobales;
         UIManager.instancia.logicaActiva = this;
@@ -91,8 +92,6 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         string[] nombres = { "Trigo", "Calabaza", "Papa" };
         UIManager.instancia.ConfigurarBotonesUI(imagenes, nombres);
         ResetearNivel();
-        UIManager.instancia.MostrarMochilaSolo(false);
-        UIManager.instancia.MostrarChecklistSolo(false);
         UIManager.instancia.ConfigurarTextosChecklist(
             "new Nodo(\"Trigo\");",
             "",
@@ -213,10 +212,10 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     IEnumerator Intro()
     {
         yield return new WaitForSeconds(1f);
-        andy.Decir("¡Lupi! El Kaos ha borrado el rastro de la cosecha. Abre tu mochila y revisa las semillas para restaurar los Nodos de este valle.", audioIntroMochila);
         UIManager.instancia.MostrarMochilaSolo(true);
-        if (audioIntroMochila != null) yield return new WaitForSeconds(audioIntroMochila.length);
+        andy.Decir("¡Lupi! El Kaos ha borrado el rastro de la cosecha. Abre tu mochila y revisa las semillas para restaurar los Nodos de este valle.", audioIntroMochila);
         yield return new WaitUntil(() => UIManager.instancia.panelParcelas.activeSelf);
+        if (audioIntroMochila != null) yield return new WaitForSeconds(audioIntroMochila.length);
         andy.Decir("¡Lupifantástico!. Consulta el pergamino de objetivos. Debemos plantar los huertos en el orden lógico para que la Lista no se pierda en la memoria.", audioIntroChecklist);
         UIManager.instancia.MostrarChecklistSolo(true);
         if (audioIntroChecklist != null)
@@ -317,6 +316,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                     else
                     {
                         SumarPuntos(puntosDinamicos, true);
+                        UIManager.instancia.DesactivarTodoPostNivel();
                         if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null && KaosController.instancia != null)
                         {
                             barreraSiguiente.Abrir();

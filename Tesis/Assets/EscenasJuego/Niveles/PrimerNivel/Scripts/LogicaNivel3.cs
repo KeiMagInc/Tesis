@@ -128,14 +128,13 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     void OnEnable()
     {
         if (UIManager.instancia == null) return;
+        UIManager.instancia.DesactivarTodoPostNivel();
         puntosAlIniciarNivel = UIManager.puntosGlobales;
         UIManager.instancia.logicaActiva = this;
         UIManager.instancia.SetPrefabs(prefabPapaN3, prefabTrigoN3, prefabCalabazaN3);
         Sprite[] imagenes = { spritePapa, spriteTrigo, spriteCalabaza };
         string[] nombres = { "Papa", "Trigo", "Calabaza" };
         UIManager.instancia.ConfigurarBotonesUI(imagenes, nombres);
-        UIManager.instancia.MostrarMochilaSolo(false);
-        UIManager.instancia.MostrarChecklistSolo(false);
         ResetearNivel();
         ActualizarCabeceraSegunModo();
         StartCoroutine(Intro());
@@ -455,6 +454,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         }
         else
         {
+            UIManager.instancia.DesactivarTodoPostNivel();
             if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null && KaosController.instancia != null)
             {
                 barreraSiguiente.Abrir();

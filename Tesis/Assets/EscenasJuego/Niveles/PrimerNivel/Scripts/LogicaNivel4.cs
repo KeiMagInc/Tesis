@@ -103,14 +103,13 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     void OnEnable()
     {
         if (UIManager.instancia == null) return;
+        UIManager.instancia.DesactivarTodoPostNivel();
         puntosAlIniciarNivel = UIManager.puntosGlobales;
         UIManager.instancia.logicaActiva = this;
         UIManager.instancia.SetPrefabs(prefabCodorniz, prefabGallina, prefabCerdo, prefabOveja, prefabVaca);
-        Sprite[] misSprites = { spriteCodorniz, spriteGallina, spriteCerdo, spriteOveja, spriteVaca };
-        string[] misNombres = { "Codorniz", "Gallina", "Cerdo", "Oveja", "Vaca" };
-        UIManager.instancia.ConfigurarBotonesUI(misSprites, misNombres);
-        UIManager.instancia.MostrarMochilaSolo(false);
-        UIManager.instancia.MostrarChecklistSolo(false);
+        Sprite[] imagenes = { spriteCodorniz, spriteGallina, spriteCerdo, spriteOveja, spriteVaca };
+        string[] nombres = { "Codorniz", "Gallina", "Cerdo", "Oveja", "Vaca" };
+        UIManager.instancia.ConfigurarBotonesUI(imagenes, nombres);
         ResetearNivel();
         ActualizarCabeceraNivel4();
         StartCoroutine(SecuenciaIntro());
@@ -261,8 +260,8 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         yield return new WaitForSeconds(0.5f);
         andy.Decir("¡Lupi! Para que el bebedero de Tahuantindata nunca se agote, usaremos Listas Circulares. El agua fluirá entre los animales en un retorno perpetuo.", audioIntroCircular);
         yield return new WaitForSeconds(audioIntroCircular.length + 0.5f);
-        andy.Decir("Abre tu mochila. Cada animal que llegue será un NODO Q dentro de este ciclo de vida.", audioPrepararNodo);
         UIManager.instancia.MostrarMochilaSolo(true);
+        andy.Decir("Abre tu mochila. Cada animal que llegue será un NODO Q dentro de este ciclo de vida.", audioPrepararNodo);
         yield return new WaitUntil(() => UIManager.instancia.panelParcelas.activeSelf);
         UIManager.instancia.MostrarChecklistSolo(true);
         ProximoPasoSiembra();
@@ -504,6 +503,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                     }
                     else
                     {
+                        UIManager.instancia.DesactivarTodoPostNivel();
                         if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null && KaosController.instancia != null)
                         {
                             barreraSiguiente.Abrir();

@@ -7,6 +7,9 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement; 
 public class UIManager : MonoBehaviour
 {
+    [Header("Mochila (Nuevas Referencias)")]
+    public TextMeshProUGUI[] textosNombresSemillas; 
+    public TextMeshProUGUI[] textosNumerosSemillas; 
     [Header("Información del Nivel")] 
     public TextMeshProUGUI textoNombreNivel;
     public TextMeshProUGUI textoNombreOperacion;
@@ -46,16 +49,24 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < botonesSemillas.Length; i++)
         {
             if (botonesSemillas[i] != null)
-                escalasOriginales[i] = botonesSemillas[i].transform.localScale;
+            {
+                Transform tIcono = botonesSemillas[i].transform.Find("Icono");
+                if (tIcono != null)
+                    escalasOriginales[i] = tIcono.localScale;
+                else
+                    escalasOriginales[i] = Vector3.one; 
+            }
         }
+        if (panelParcelas != null) panelParcelas.SetActive(false);
+        MostrarInterfaz(false);
     }
     public void ConfigurarCabeceraNivel(string nombreNivel, string operacion)
     {
         if (textoNombreNivel != null)
-            textoNombreNivel.text = nombreNivel; // Ejemplo: "Nivel 1"
+            textoNombreNivel.text = nombreNivel; 
 
         if (textoNombreOperacion != null)
-            textoNombreOperacion.text = operacion; // Ejemplo: "Identificar partes del nodo"
+            textoNombreOperacion.text = operacion; 
     }
     public void MostrarInterfaz(bool mostrar)
     {
@@ -76,20 +87,28 @@ public class UIManager : MonoBehaviour
     }
     public void ConfigurarMochila(Sprite[] imagenes, string[] nombres, GameObject[] prefabs)
     {
+        if (nombresLogicosActuales == null) nombresLogicosActuales = new string[6];
+        if (prefabsActuales == null) prefabsActuales = new GameObject[6];
         for (int i = 0; i < botonesSemillas.Length; i++)
         {
             if (botonesSemillas[i] == null) continue;
-            if (i < imagenes.Length && i < nombres.Length && i < prefabs.Length)
+            bool slotActivo = i < imagenes.Length && i < nombres.Length && i < prefabs.Length;
+            if (slotActivo && imagenes[i] != null)
             {
-                if (imagenes[i] != null)
+                botonesSemillas[i].gameObject.SetActive(true);
+                Transform tIcono = botonesSemillas[i].transform.Find("Icono");
+                if (tIcono != null && tIcono.TryGetComponent(out Image imgComponent))
                 {
-                    botonesSemillas[i].gameObject.SetActive(true);
-                    botonesSemillas[i].GetComponent<Image>().sprite = imagenes[i];
-                    nombresLogicosActuales[i] = nombres[i];
-                    prefabsActuales[i] = prefabs[i];
-                    botonesSemillas[i].interactable = true;
+                    imgComponent.sprite = imagenes[i];
+                    imgComponent.color = Color.white;
                 }
-                else botonesSemillas[i].gameObject.SetActive(false);
+                nombresLogicosActuales[i] = nombres[i];
+                prefabsActuales[i] = prefabs[i];
+                botonesSemillas[i].interactable = true;
+                if (textosNombresSemillas != null && i < textosNombresSemillas.Length && textosNombresSemillas[i] != null)
+                    textosNombresSemillas[i].text = nombres[i];
+                if (textosNumerosSemillas != null && i < textosNumerosSemillas.Length && textosNumerosSemillas[i] != null)
+                    textosNumerosSemillas[i].text = (i + 1).ToString();
             }
             else
             {
@@ -131,6 +150,11 @@ public class UIManager : MonoBehaviour
                 masCercana.estaOcupada = true;
                 masCercana.DesactivarColision();
                 botonesSemillas[indice].interactable = false;
+                Transform tIcono = botonesSemillas[indice].transform.Find("Icono");
+                if (tIcono != null && tIcono.TryGetComponent(out Image imgIcono))
+                {
+                    imgIcono.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+                }
                 if (logicaActiva != null) logicaActiva.AvanceSiembraExitosa();
             }
         }
@@ -143,7 +167,8 @@ public class UIManager : MonoBehaviour
         {
             if (itemsChecklist[i] != null)
             {
-                itemsChecklist[i].text = ""; 
+                itemsChecklist[i].text = "";
+                itemsChecklist[i].color = Color.black;
                 itemsChecklist[i].gameObject.SetActive(false); 
             }
         }
@@ -153,10 +178,16 @@ public class UIManager : MonoBehaviour
             {
                 itemsChecklist[i].gameObject.SetActive(true);
                 itemsChecklist[i].text = textos[i];
-                itemsChecklist[i].color = Color.black;
+                itemsChecklist[i].text = itemsChecklist[i].text.Replace(" [OK]", "");
                 Debug.Log($"Checklist: Encendiendo Slot {i} con texto: {textos[i]}");
             }
         }
+    }
+    public void DesactivarTodoPostNivel()
+    {
+        MostrarMochilaSolo(false);
+        MostrarChecklistSolo(false);
+        if (panelParcelas != null) panelParcelas.SetActive(false);
     }
     public void MarcarTareaCompletada(int indice)
     {
@@ -192,19 +223,78 @@ public class UIManager : MonoBehaviour
             if (!estaPausado)
                 AbrirCerrarMenuParcelas();
         if (estaPausado) return;
+        if (panelParcelas.activeSelf)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1)) BotonPresionado(0);
+            if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2)) BotonPresionado(1);
+            if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3)) BotonPresionado(2);
+            if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4)) BotonPresionado(3);
+            if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5)) BotonPresionado(4);
+            if (Input.GetKeyDown(KeyCode.Alpha6) || Input.GetKeyDown(KeyCode.Keypad6)) BotonPresionado(5);
+        }
         if (string.IsNullOrEmpty(semillaActiva)) return;
         float pulse = 1f + Mathf.Sin(Time.time * 6f) * 0.12f;
         for (int i = 0; i < botonesSemillas.Length; i++)
         {
-            if (botonesSemillas[i] != null && botonesSemillas[i].gameObject.activeSelf &&
-                nombresLogicosActuales[i] != null && nombresLogicosActuales[i].Equals(semillaActiva, System.StringComparison.OrdinalIgnoreCase))
-                botonesSemillas[i].transform.localScale = escalasOriginales[i] * pulse;
-            else if (botonesSemillas[i] != null)
-                botonesSemillas[i].transform.localScale = escalasOriginales[i];
+            if (botonesSemillas[i] != null)
+            {
+                Transform iconoTransform = botonesSemillas[i].transform.Find("Icono");
+                if (iconoTransform != null)
+                {
+                    if (botonesSemillas[i].gameObject.activeSelf &&
+                        botonesSemillas[i].interactable &&
+                        nombresLogicosActuales[i] != null &&
+                        nombresLogicosActuales[i].Equals(semillaActiva, System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        iconoTransform.localScale = escalasOriginales[i] * pulse;
+                    }
+                    else
+                    {
+                        iconoTransform.localScale = escalasOriginales[i];
+                    }
+                }
+            }
         }
     }
-    public void ResetBotones() { foreach (var b in botonesSemillas) if (b != null) b.interactable = true; if (panelParcelas) panelParcelas.SetActive(false); semillaActiva = ""; }
-    public void MostrarMochilaSolo(bool m) { if (groupIconoMochila) { groupIconoMochila.alpha = m ? 1 : 0; groupIconoMochila.interactable = m; groupIconoMochila.blocksRaycasts = m; } }
-    public void MostrarChecklistSolo(bool m) { if (groupChecklist) { groupChecklist.alpha = m ? 1 : 0; groupChecklist.interactable = m; groupChecklist.blocksRaycasts = m; } }
-    public void AbrirCerrarMenuParcelas() { if (panelParcelas) panelParcelas.SetActive(!panelParcelas.activeSelf); }
+    public void ResetBotones()
+    {
+        for (int i = 0; i < botonesSemillas.Length; i++)
+        {
+            if (botonesSemillas[i] != null)
+            {
+                botonesSemillas[i].interactable = true;
+                Transform tIcono = botonesSemillas[i].transform.Find("Icono");
+                if (tIcono != null && tIcono.TryGetComponent(out Image imgIcono))
+                {
+                    imgIcono.color = Color.white;
+                    tIcono.localScale = escalasOriginales[i];
+                }
+            }
+        }
+        if (panelParcelas) panelParcelas.SetActive(false);
+        semillaActiva = "";
+    }
+    public void MostrarMochilaSolo(bool m)
+    {
+        if (groupIconoMochila)
+        {
+            groupIconoMochila.gameObject.SetActive(m);
+            groupIconoMochila.alpha = m ? 1 : 0;
+        }
+    }
+    public void MostrarChecklistSolo(bool m)
+    {
+        if (groupChecklist != null)
+        {
+            groupChecklist.gameObject.SetActive(m);
+            groupChecklist.alpha = m ? 1 : 0;
+            groupChecklist.interactable = m;
+            groupChecklist.blocksRaycasts = m;
+        }
+    }
+    public void AbrirCerrarMenuParcelas()
+    {
+        if (panelParcelas != null)
+            panelParcelas.SetActive(!panelParcelas.activeSelf);
+    }
 }

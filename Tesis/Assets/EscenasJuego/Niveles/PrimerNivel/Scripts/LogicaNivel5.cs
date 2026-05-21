@@ -130,11 +130,10 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     void OnEnable()
     {
         if (UIManager.instancia == null) return;
+        UIManager.instancia.DesactivarTodoPostNivel();
         puntosAlIniciarNivel = UIManager.puntosGlobales;
         instancia = this;
         UIManager.instancia.logicaActiva = this;
-        UIManager.instancia.MostrarMochilaSolo(false);
-        UIManager.instancia.MostrarChecklistSolo(false);
         ResetearNivel();
         ActualizarCabeceraNivel5();
         StartCoroutine(IntroNivel5());
@@ -283,8 +282,6 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     }
     IEnumerator IntroNivel5()
     {
-        UIManager.instancia.MostrarMochilaSolo(false);
-        UIManager.instancia.MostrarChecklistSolo(false);
         yield return new WaitForSeconds(0.5f);
         AudioClip clipReproducido = null;
         if (modoActual == ModoOperacion.InsertarInicio)
@@ -308,8 +305,8 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             yield return new WaitForSeconds(3.0f);
         if (modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal)
         {
-            andy.Decir("Cada semilla es un NODO con dos enlaces. Abre tu mochila para preparar la siembra.", audioPrepararNodoDoble);
             UIManager.instancia.MostrarMochilaSolo(true);
+            andy.Decir("Cada semilla es un NODO con dos enlaces. Abre tu mochila para preparar la siembra.", audioPrepararNodoDoble);
             yield return new WaitUntil(() => UIManager.instancia.panelParcelas.activeSelf);
         }
         UIManager.instancia.MostrarChecklistSolo(true);
@@ -839,6 +836,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         }
         else
         {
+            UIManager.instancia.DesactivarTodoPostNivel();
             if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null && KaosController.instancia != null)
             {
                 barreraSiguiente.Abrir();
