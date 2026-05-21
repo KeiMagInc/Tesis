@@ -52321,11 +52321,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 24.94
+      value: -17
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 18.31
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -91607,7 +91607,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f699333df550b14080fae2cf37aa516, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tipoDeSemillaPermitida: Remolacha
+  tipoDeSemillaPermitida: Oveja
   estaOcupada: 0
 --- !u!1 &1290207735
 GameObject:
@@ -91798,7 +91798,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f699333df550b14080fae2cf37aa516, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tipoDeSemillaPermitida: Zanahoria
+  tipoDeSemillaPermitida: Cerdo
   estaOcupada: 0
 --- !u!4 &1312583796 stripped
 Transform:
@@ -96914,7 +96914,7 @@ MonoBehaviour:
   puntosMaximos: 10
   puntosMinimos: 1
   tiempoLimite: 60
-  audioConectarSalidaAnterior: {fileID: 8300000, guid: 1db0d5614fa63244c834de72a573afeb, type: 3}
+  audioConectarSalidaAnterior: {fileID: 8300000, guid: 28c679363700c284babb89bf4f8e08cb, type: 3}
   audioErrorEliminacionInicio: {fileID: 8300000, guid: fa776cf67eb8fd342893d57b6a4a03f2, type: 3}
   audioErrorEliminacion: {fileID: 8300000, guid: 6ec0a1880ab12c449a03e73ce0c6f8bf, type: 3}
   audioErrorEliminacionFinalNull: {fileID: 8300000, guid: 8a7169b193444ed409250b15ac09a623, type: 3}
@@ -96925,41 +96925,41 @@ MonoBehaviour:
   audioErrorNoInfoNueva: {fileID: 8300000, guid: 51185ec500514f143bd7cecdb3f89901, type: 3}
   audioFelicidadesInsertarInicio: {fileID: 8300000, guid: 7e2c3920a3e11244a8a53fa08acb6415, type: 3}
   audioFelicidadesInsertarFinal: {fileID: 8300000, guid: e160b08d601e91145a08c7d87d77b5c8, type: 3}
-  audioFelicidadesEliminarInicio: {fileID: 8300000, guid: e2cb4ec35a858904eaeca4ab68cb0ef7, type: 3}
+  audioFelicidadesEliminarInicio: {fileID: 8300000, guid: ceb3d9b7dcf87294fae4b797c01fbcb5, type: 3}
   audioFelicidadesFinalNivel: {fileID: 8300000, guid: 9575bcca1bd2aa64ab269b1e1d8cce1f, type: 3}
-  audioRecogerHeadEliminar: {fileID: 8300000, guid: 95822779d69155b44ba8bc8b2411edd3, type: 3}
-  audioConectarZanahoriaDesdeHead: {fileID: 8300000, guid: 533916afd35f58f47bb149a34b499696, type: 3}
-  audioRecogerNullEliminar: {fileID: 8300000, guid: 1a438c1227e49f742aedf93f56e6b46a, type: 3}
-  audioConectarZanahoriaDesdeNull: {fileID: 8300000, guid: aa5a878c547793d49a00542000ce8112, type: 3}
-  audioPrimerNodoDobleInsertarFinal: {fileID: 8300000, guid: 5869c4f0761a5ef459d5c8b3b033ce4b, type: 3}
-  audioVinculoRetroceso: {fileID: 8300000, guid: a68e022ddbaf91643a0344c9874b0c24, type: 3}
-  audioCerrarSiguienteANull: {fileID: 8300000, guid: e5dbe0f28a5f5a34ca478e8e890974ce, type: 3}
-  audioDeNullANodo: {fileID: 8300000, guid: 82a25e4e7f03b374283176be8d6f3b06, type: 3}
-  audioSiguienteANull: {fileID: 8300000, guid: dad3189f23d9ba0439eb13793d9a09df, type: 3}
-  audioConectarASiguiente: {fileID: 8300000, guid: ed5547d49b232c941ad598c88225e0b2, type: 3}
-  audioActualizarNull: {fileID: 8300000, guid: b143f92f9f7fd5a498fb3c9c89c2b56a, type: 3}
-  audioExitoInsercionFinal: {fileID: 8300000, guid: a6e086124eed45746997ddac18af766a, type: 3}
-  audioConectarSiguienteAlNuevo: {fileID: 8300000, guid: d0b0b71e552b6bd49b5d823086d4315e, type: 3}
-  audioMoverInicioACabecera: {fileID: 8300000, guid: b6d7f710ba38dad42b52a7d370ddf476, type: 3}
+  audioRecogerHeadEliminar: {fileID: 8300000, guid: 3b4a0c0bf5e80904688bf8aaa6d5c168, type: 3}
+  audioConectarCerdoDesdeHead: {fileID: 8300000, guid: fd70be9b7d55e0d48923a3c92d49d971, type: 3}
+  audioRecogerNullEliminar: {fileID: 8300000, guid: 4a5224699df6531468fc36441972d048, type: 3}
+  audioConectarCerdoDesdeNull: {fileID: 8300000, guid: 5d46dc17f3db79b429789f4c1f972f8b, type: 3}
+  audioPrimerNodoDobleInsertarFinal: {fileID: 8300000, guid: 64c220515a657c54595d0254302a27ee, type: 3}
+  audioVinculoRetroceso: {fileID: 8300000, guid: 9031506e613a1024390322188d4aca01, type: 3}
+  audioCerrarSiguienteANull: {fileID: 8300000, guid: 02df161cdacf060439e7a288d10157fe, type: 3}
+  audioDeNullANodo: {fileID: 8300000, guid: 1c9ef217032448e4182c7d2dc38f3d99, type: 3}
+  audioSiguienteANull: {fileID: 8300000, guid: 906289be24154ff4893ef9aa2b39ef8f, type: 3}
+  audioConectarASiguiente: {fileID: 8300000, guid: 46b9357290725dc41b35c5950354ed6f, type: 3}
+  audioActualizarNull: {fileID: 8300000, guid: f0349043b0c7dc24aa7df94da8d3d480, type: 3}
+  audioExitoInsercionFinal: {fileID: 8300000, guid: 0e01a86238a640e42936996e518e3819, type: 3}
+  audioConectarSiguienteAlNuevo: {fileID: 8300000, guid: f4c95032728bd7140bec165c50ab01c3, type: 3}
+  audioMoverInicioACabecera: {fileID: 8300000, guid: a93c4f9d165b0934bb16d2efbfac83c2, type: 3}
   audioCerrarSiguienteConNull: {fileID: 8300000, guid: f0a20dca0becb2241881244b9b0552f8, type: 3}
   audioConectarSiguienteAlNodo: {fileID: 8300000, guid: f7272456f585349429d7af8bdc2179d9, type: 3}
-  audioExitoTotalInicio: {fileID: 8300000, guid: 7e084a59d3091e34199f4dd4e3f24128, type: 3}
-  audioEliminarInicio: {fileID: 8300000, guid: 6036c3a76ac7db840b53d63b48c0da92, type: 3}
-  audioEliminarFinal: {fileID: 8300000, guid: 77bce1c1f4ecfbd458448e61de7201e6, type: 3}
-  audioPrimerNodoDobleInicio: {fileID: 8300000, guid: 52fb91f976df2ae4aa09a6c692e36be0, type: 3}
-  audioConectarAnteriorSalida: {fileID: 8300000, guid: f5d8cb1cf24f95b48b17313da74d0556, type: 3}
-  audioInsertarInicio: {fileID: 8300000, guid: bd93b6e51cd82434b9107c0e1496b86d, type: 3}
-  audioInsertarFinal: {fileID: 8300000, guid: 2d60b65e406a06a42bbb4ea4478351b5, type: 3}
-  audioPrepararNodoDoble: {fileID: 8300000, guid: ee7944bede4b71243bca559a61c391a4, type: 3}
-  audioSiembraInstruccion: {fileID: 8300000, guid: 61932c74aad8d0647a230b2a3fe4ed4a, type: 3}
-  audioPrimerNodoDoble: {fileID: 8300000, guid: 56b3cc27714b2ca4faa1576eb1f063e9, type: 3}
-  audioConectarAnterior: {fileID: 8300000, guid: 1d3bce60b687f4649b2af8b1f31d24e1, type: 3}
-  audioConectarSiguiente: {fileID: 8300000, guid: ba964368b67a32a409b8ed196af1c96a, type: 3}
-  audioMoverInicio: {fileID: 8300000, guid: a9d979452addc7d4baee8ff84cfc2674, type: 3}
-  audioCerrarConNull: {fileID: 8300000, guid: 80edfa38e4b82db4097e359a8994ccc3, type: 3}
-  audioExitoInicio: {fileID: 8300000, guid: 83f22e8e4c2d7e24d99cc1a0887bd62f, type: 3}
-  audioExitoFinal: {fileID: 8300000, guid: 30974918115f5f644be3f2de5197275a, type: 3}
-  audioIntroEliminarDoble: {fileID: 8300000, guid: 633ca3313d43f6b4a8372cabedce3041, type: 3}
+  audioExitoTotalInicio: {fileID: 8300000, guid: 3855d5528c7211f43a80eb7a441555ad, type: 3}
+  audioEliminarInicio: {fileID: 8300000, guid: d3e7e8b40b65a2d41ac87dfcb1e4def7, type: 3}
+  audioEliminarFinal: {fileID: 8300000, guid: 9628f566fd6f73d46b573034d730cfc4, type: 3}
+  audioPrimerNodoDobleInicio: {fileID: 8300000, guid: a6ccd70dc330a4a49bfd860d9cd6c134, type: 3}
+  audioConectarAnteriorSalida: {fileID: 8300000, guid: 8af63df1f6f647b4d9d1cff4a0090d96, type: 3}
+  audioInsertarInicio: {fileID: 8300000, guid: 713c75863a804074bbae304f86ec527f, type: 3}
+  audioInsertarFinal: {fileID: 8300000, guid: 9271d4553d6052e40949b0c30c326c57, type: 3}
+  audioPrepararNodoDoble: {fileID: 8300000, guid: 4165318e2a50af347aef5e6847b54a0f, type: 3}
+  audioSiembraInstruccion: {fileID: 8300000, guid: 7cc2989d8b0089744bdfcd9b738dd8a4, type: 3}
+  audioPrimerNodoDoble: {fileID: 8300000, guid: a14fe8589306e654b8d93bf5e5e988cc, type: 3}
+  audioConectarAnterior: {fileID: 8300000, guid: 45fae95cf0f95ca4bb4299903a0e7a7b, type: 3}
+  audioConectarSiguiente: {fileID: 8300000, guid: 57a1e1a9e4d328b46805060c0c394744, type: 3}
+  audioMoverInicio: {fileID: 8300000, guid: d4b176d6cfd025e4b9cf10f4e81e2e3b, type: 3}
+  audioCerrarConNull: {fileID: 8300000, guid: 051b51d445ef37c43aa9600029d4d8ca, type: 3}
+  audioExitoInicio: {fileID: 8300000, guid: 9d4173fa988148b49807ec85925f167e, type: 3}
+  audioExitoFinal: {fileID: 8300000, guid: 1d7dd62705341664c9825055a615b418, type: 3}
+  audioIntroEliminarDoble: {fileID: 8300000, guid: 85c37194d634c114fae70859b2c6afa2, type: 3}
   controladorInsignia: {fileID: 216550761}
   insigniaDeEsteNivel: {fileID: -5931077577829324559, guid: 0f28a8c58a1ee8b4fadc6e22b6c6d976, type: 3}
   checkpointFinal: {fileID: 1594470652}
@@ -96974,12 +96974,12 @@ MonoBehaviour:
   lineaFija: {fileID: 903374926}
   lupi: {fileID: 191083641}
   lineaFijaPrev: {fileID: 540727244}
-  prefabRabano: {fileID: 839396964857267429, guid: f6ddd5f03af1a41419635b3a07c63b53, type: 3}
-  prefabZanahoria: {fileID: 839396964857267429, guid: 8260760e5fced9f4c90a4064489fe448, type: 3}
-  prefabRemolacha: {fileID: 839396964857267429, guid: 29f87ed2cdfe5e848979bb0ab48da8e7, type: 3}
-  spriteRabano: {fileID: 5721182865851055489, guid: 10772d9933d3d9049903185ee294bed4, type: 3}
-  spriteZanahoria: {fileID: -3829704256182829468, guid: 69655a6125fe7414ab6ac77f106357c5, type: 3}
-  spriteRemolacha: {fileID: 980901043704405067, guid: 7183fdf36fa816349b9d8cad0ea90708, type: 3}
+  prefabVaca: {fileID: 839396964857267429, guid: f6ddd5f03af1a41419635b3a07c63b53, type: 3}
+  prefabCerdo: {fileID: 839396964857267429, guid: 8260760e5fced9f4c90a4064489fe448, type: 3}
+  prefabOveja: {fileID: 839396964857267429, guid: 29f87ed2cdfe5e848979bb0ab48da8e7, type: 3}
+  spriteVaca: {fileID: 1019254656465003142, guid: b2ee1023951a90a4b856f9705b894c44, type: 3}
+  spriteCerdo: {fileID: 1995238211026135775, guid: fc36a00a50267c647a0861bb89456b83, type: 3}
+  spriteOveja: {fileID: 6792788541964517201, guid: 376ac2832fc9c05428caf8f767a362f5, type: 3}
   puntoSalidaHead: {fileID: 501578209}
   puntoEntradaNull: {fileID: 1528405447}
   brilloHead: {fileID: 501578208}
@@ -98592,7 +98592,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f699333df550b14080fae2cf37aa516, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tipoDeSemillaPermitida: Rabano
+  tipoDeSemillaPermitida: Vaca
   estaOcupada: 0
 --- !u!1 &2014488506
 GameObject:

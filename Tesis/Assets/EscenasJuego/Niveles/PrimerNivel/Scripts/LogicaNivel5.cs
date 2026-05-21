@@ -44,9 +44,9 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     public AudioClip audioFelicidadesEliminarInicio;
     public AudioClip audioFelicidadesFinalNivel;
     public AudioClip audioRecogerHeadEliminar;
-    public AudioClip audioConectarZanahoriaDesdeHead;
+    public AudioClip audioConectarCerdoDesdeHead;
     public AudioClip audioRecogerNullEliminar;
-    public AudioClip audioConectarZanahoriaDesdeNull;
+    public AudioClip audioConectarCerdoDesdeNull;
     public AudioClip audioPrimerNodoDobleInsertarFinal;
     public AudioClip audioVinculoRetroceso;
     public AudioClip audioCerrarSiguienteANull;
@@ -97,12 +97,12 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     private enum ModoOperacion { InsertarInicio, InsertarFinal, EliminarInicio, EliminarFinal }
     private ModoOperacion modoActual = ModoOperacion.InsertarInicio;
     [Header("Prefabs y Sprites")]
-    public GameObject prefabRabano;
-    public GameObject prefabZanahoria;
-    public GameObject prefabRemolacha;
-    public Sprite spriteRabano;
-    public Sprite spriteZanahoria;
-    public Sprite spriteRemolacha;
+    public GameObject prefabVaca;
+    public GameObject prefabCerdo;
+    public GameObject prefabOveja;
+    public Sprite spriteVaca;
+    public Sprite spriteCerdo;
+    public Sprite spriteOveja;
     [Header("Referencias de Escena")]
     public Transform puntoSalidaHead;
     public Transform puntoEntradaNull;
@@ -113,8 +113,8 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     private bool cargandoAgua = false;
     private NodoManager managerActual;
     private List<NodoManager> listaNodos = new List<NodoManager>();
-    private string[] nombresNodosInicio = { "Remolacha", "Zanahoria", "Rabano" };
-    private string[] nombresNodosFinal = { "Rabano", "Zanahoria", "Remolacha" };
+    private string[] nombresNodosInicio = { "Oveja", "Cerdo", "Vaca" };
+    private string[] nombresNodosFinal = { "Vaca", "Cerdo", "Oveja" };
     private Transform puntoOrigenActual;
     private List<LineRenderer> lineasFijasActivas = new List<LineRenderer>();
     private LineRenderer enlaceActualAlNull;
@@ -264,20 +264,20 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     {
         if (modoActual == ModoOperacion.InsertarInicio)
         {
-            UIManager.instancia.SetPrefabs(prefabRemolacha, prefabZanahoria, prefabRabano);
-            UIManager.instancia.ConfigurarBotonesUI(new Sprite[] { spriteRemolacha, spriteZanahoria, spriteRabano }, nombresNodosInicio);
-            UIManager.instancia.ConfigurarTextosChecklist("new Nodo(\"Remolacha\");", "", "new Nodo(\"Zanahoria\");", "", "new Nodo(\"Rábano\");");
+            UIManager.instancia.SetPrefabs(prefabOveja, prefabCerdo, prefabVaca);
+            UIManager.instancia.ConfigurarBotonesUI(new Sprite[] { spriteOveja, spriteCerdo, spriteVaca }, nombresNodosInicio);
+            UIManager.instancia.ConfigurarTextosChecklist("new Nodo(\"Oveja\");", "", "new Nodo(\"Cerdo\");", "", "new Nodo(\"Vaca\");");
         }
         else if (modoActual == ModoOperacion.InsertarFinal)
         {
-            UIManager.instancia.SetPrefabs(prefabRabano, prefabZanahoria, prefabRemolacha);
-            UIManager.instancia.ConfigurarBotonesUI(new Sprite[] { spriteRabano, spriteZanahoria, spriteRemolacha }, nombresNodosFinal);
-            UIManager.instancia.ConfigurarTextosChecklist("new Nodo(\"Rábano\");", "", "new Nodo(\"Zanahoria\");", "", "new Nodo(\"Remolacha\");");
+            UIManager.instancia.SetPrefabs(prefabVaca, prefabCerdo, prefabOveja);
+            UIManager.instancia.ConfigurarBotonesUI(new Sprite[] { spriteVaca, spriteCerdo, spriteOveja }, nombresNodosFinal);
+            UIManager.instancia.ConfigurarTextosChecklist("new Nodo(\"Vaca\");", "", "new Nodo(\"Cerdo\");", "", "new Nodo(\"Oveja\");");
         }
         else if (modoActual == ModoOperacion.EliminarInicio)
         {
             UIManager.instancia.ResetBotones();
-            UIManager.instancia.ConfigurarTextosChecklist("", "delete(Rábano)", "", "delete(Remolacha)", "");
+            UIManager.instancia.ConfigurarTextosChecklist("", "delete(Vaca)", "", "delete(Oveja)", "");
         }
     }
     IEnumerator IntroNivel5()
@@ -287,17 +287,17 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         if (modoActual == ModoOperacion.InsertarInicio)
         {
             clipReproducido = audioInsertarInicio;
-            andy.Decir("¡Lupi! Las Listas Dobles permiten que el agua fluya hacia adelante y hacia atrás. ¡Insertemos al INICIO!", clipReproducido);
+            andy.Decir("¡Lupi! Las Listas Doblemente Ligadas utilizan punteros LIGADER y LIGAIZQ. Empezamos con la Inserción al Inicio para actualizar el puntero de acceso P.", clipReproducido);
         }
         else if (modoActual == ModoOperacion.InsertarFinal)
         {
             clipReproducido = audioInsertarFinal;
-            andy.Decir("¡Excelente! Ahora extenderemos el canal hacia el horizonte. Aplicaremos la Inserción al FINAL de la estructura.", clipReproducido);
+            andy.Decir("¡Excelente! Aplicaremos el algoritmo de Inserción al Final para actualizar el puntero F.", clipReproducido);
         }
         else if (modoActual == ModoOperacion.EliminarInicio)
         {
             clipReproducido = audioIntroEliminarDoble;
-            andy.Decir("¡Alerta Lupi! El Kaos ha infectado la cabecera. Debemos eliminar el primer NODO para sanar el flujo bidireccional.", clipReproducido);
+            andy.Decir("¡Alerta Lupi! El Kaos ha infectado el campo INFO de la cabecera. Eliminaremos el NODO en P reasignando las ligas bidireccionales.", clipReproducido);
         }
         if (clipReproducido != null)
             yield return new WaitForSeconds(clipReproducido.length + 0.5f);
@@ -306,7 +306,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         if (modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal)
         {
             UIManager.instancia.MostrarMochilaSolo(true);
-            andy.Decir("Cada semilla es un NODO con dos enlaces. Abre tu mochila para preparar la siembra.", audioPrepararNodoDoble);
+            andy.Decir("Cada animal es un NODO Q con dos campos de LIGA. Abre tu mochila para preparar la asignación de memoria.", audioPrepararNodoDoble);
             yield return new WaitUntil(() => UIManager.instancia.panelParcelas.activeSelf);
         }
         UIManager.instancia.MostrarChecklistSolo(true);
@@ -320,19 +320,19 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             string[] nombres = (modoActual == ModoOperacion.InsertarInicio) ? nombresNodosInicio : nombresNodosFinal;
             if (fase < nombres.Length)
             {
-                andy.Decir("¡Lupi! prepara la tierra y siembra la semilla indicada.", audioSiembraInstruccion);
+                andy.Decir("¡Lupi! Crea el NODO Q y define su campo INFO con el animal indicado.", audioSiembraInstruccion);
                 UIManager.instancia.SetSemillaPalpitar(nombres[fase]);
                 pasoConexion = 0;
             }
         }
         else if (modoActual == ModoOperacion.EliminarInicio)
         {
-            andy.Decir("¡El primer nodo está infectado! Recoge la dirección del INICIO; debemos reasignar la cabecera directamente a la Zanahoria para saltar el Rábano corrupto.", audioEliminarInicio);
+            andy.Decir("¡La Vaca en P está infectada! Recoge la dirección de P; debemos reasignar la cabecera al Cerdo para aislar el NODO corrupto.", audioEliminarInicio);
             if (brilloHead) brilloHead.SetEncendido(true);
         }
         else if (modoActual == ModoOperacion.EliminarFinal)
         {
-            andy.Decir("Sanaremos el final de la estructura. Activa la SALIDA SIGUIENTE de la Zanahoria para redirigir su flujo hacia NULL y desvincular la Remolacha.", audioEliminarFinal);
+            andy.Decir("Sanaremos el final. El campo LIGADER de la Oveja debe apuntar a NULL para desvincular al Cerdo infectado en F.", audioEliminarFinal);
             EncenderBrilloEnNodo(puntoEntradaNull.parent.gameObject, "Null", true);
             SetPalpitarVisual(puntoEntradaNull.parent.gameObject, "LetreroNull", true);
         }
@@ -346,12 +346,12 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         {
             if (fase == 0)
             {
-                andy.Decir("Al ser el primer NODO, su campo ANTERIOR debe apuntar a la dirección de memoria de INICIO.", audioPrimerNodoDoble);
+                andy.Decir("Al ser el primer NODO de la lista, el puntero P debe apuntar a Q, y su campo LIGAIZQ debe inicializarse en NULL.", audioPrimerNodoDoble);
                 if (brilloHead) brilloHead.SetEncendido(true);
             }
             else
             {
-                andy.Decir("¡Muy bien Lupi! El antiguo primer NODO ahora tiene un nuevo predecesor. Conecta su SALIDA ANTERIOR a la ENTRADA del nuevo cultivo.", audioConectarAnterior);
+                andy.Decir("¡Muy bien Lupi! El antiguo NODO en P tiene un nuevo predecesor. Conecta su LIGAIZQ a la dirección de memoria del nuevo NODO Q.", audioConectarAnterior);
                 EncenderBrilloEnNodo(listaNodos[0].gameObject, "SalidaAnterior", true);
                 SetPalpitarVisual(listaNodos[0].gameObject, "LetreroLigaIzq", true);
             }
@@ -360,12 +360,12 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         {
             if (fase == 0)
             {
-                andy.Decir("¡Primer NODO del canal! Recoge el flujo del INICIO para establecer el punto de partida de nuestra lista doble.", audioPrimerNodoDobleInicio);
+                andy.Decir("Iniciemos la lista doble. El puntero P y el puntero F deben apuntar a este primer NODO Q.", audioPrimerNodoDobleInicio);
                 if (brilloHead) brilloHead.SetEncendido(true);
             }
             else
             {
-                andy.Decir("Cada nuevo integrante debe conocer sus raíces. Activa la SALIDA ANTERIOR de este para enlazarlo con su predecesor.", audioConectarAnteriorSalida);
+                andy.Decir("El nuevo NODO Q debe conocer a su predecesor. Conecta su LIGAIZQ a la dirección del NODO que apunta F.", audioConectarAnteriorSalida);
                 EncenderBrilloEnNodo(managerActual.gameObject, "SalidaAnterior", true);
                 SetPalpitarVisual(managerActual.gameObject, "LetreroLigaIzq", true);
             }
@@ -390,7 +390,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                 ultimoTiempoClic = Time.time;
                 IniciarCarga(nodoViejoPrimero.puntoSalidaAnterior, "EntradaSiguiente", managerActual.gameObject);
                 SetPalpitarVisual(nodoViejoPrimero.gameObject, "LetreroLigaIzq", false);
-                andy.Decir("Recogiste el enlace de retroceso. Llévalo a la ENTRADA SIGUIENTE de la nueva parcela.", audioConectarASiguiente);
+                andy.Decir("Recogiste la liga de retroceso. Llévala al campo LIGADER del nuevo NODO Q para mantener la continuidad.", audioConectarASiguiente);
                 return;
             }
             else if (fase > 0 && pasoConexion == 1 && tipo == "SalidaSiguiente" && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
@@ -398,7 +398,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                 ultimoTiempoClic = Time.time;
                 IniciarCarga(managerActual.puntoSalidaSiguiente, "EntradaAnterior", nodoViejoPrimero.gameObject);
                 SetPalpitarVisual(managerActual.gameObject, "LetreroLigaDer", false);
-                andy.Decir("Ahora establezcamos el camino de ida. Lleva la SALIDA SIGUIENTE al campo ANTERIOR que te indica.", audioConectarSiguiente);
+                andy.Decir("Establezcamos el camino de ida. El campo LIGADER del nuevo NODO Q debe apuntar a la dirección que antes tenía P.", audioConectarSiguiente);
                 return;
             }
             else if (((fase == 0 && pasoConexion == 0) || (fase > 0 && pasoConexion == 2)) && tipo == "Head")
@@ -406,7 +406,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                 ultimoTiempoClic = Time.time;
                 IniciarCarga(puntoSalidaHead, "EntradaAnterior", managerActual.gameObject);
                 if (brilloHead) brilloHead.SetEncendido(false);
-                andy.Decir("Recogiste la dirección de la cabecera. Llévala al campo ANTERIOR del nuevo NODO.", audioMoverInicio);
+                andy.Decir("Dirección de memoria recogida. Actualiza el puntero P para que apunte al nuevo NODO Q, convirtiéndolo en la nueva cabecera.", audioMoverInicio);
                 return;
             }
             else if (fase == 0 && pasoConexion == 1 && tipo == "SalidaSiguiente" && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
@@ -416,7 +416,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                 cargandoAgua = true;
                 puntoOrigenActual = managerActual.puntoSalidaSiguiente;
                 if (brilloNull) brilloNull.SetEncendido(true);
-                andy.Decir("Como solo hay un NODO, su flujo de salida debe descansar en NULL para cerrar la estructura.", audioCerrarConNull);
+                andy.Decir("Como solo existe el NODO Q en la lista, su campo LIGADER debe apuntar a NULL para indicar el fin de la estructura.", audioCerrarConNull);
                 return;
             }
         }
@@ -437,7 +437,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                 LimpiarSegmentoEspecifico(puntoSalidaHead.position, nodoViejoPrimero.puntoEntradaAnterior.position);
                 FinalizarPasoLigero(puntoOrigenActual.position, nodoViejoPrimero.puntoEntradaAnterior.position, "EntradaAnterior", nodoViejoPrimero.gameObject, "LetreroLigaIzq");
                 pasoConexion = 2;
-                andy.Decir("¡Excelente equilibrio Lupi! Los NODOS están unidos en ambos sentidos. Por último, mueve el puntero de INICIO a nuestra nueva cabecera.", audioMoverInicioACabecera);
+                andy.Decir("¡Excelente equilibrio Lupi! Los NODOS están vinculados por LIGADER y LIGAIZQ. Finalmente, mueve el puntero P a nuestra nueva cabecera.", audioMoverInicioACabecera);
                 if (brilloHead) brilloHead.SetEncendido(true);
                 return;
             }
@@ -456,7 +456,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                     }
                     else
                     {
-                        andy.Decir("¡Inserción completa Lupi! El nuevo NODO es ahora la cabecera de nuestra Lista Doble.", audioExitoInicio);
+                        andy.Decir("¡Inserción completa Lupi! El NODO Q es ahora el primer elemento (P) de nuestra Lista Doblemente Ligada.", audioExitoInicio);
                         StartCoroutine(EsperarYFinalizar(true, audioExitoInicio.length));
                     }
                     return;
@@ -466,7 +466,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             {
                 ultimoTiempoClic = Time.time;
                 FinalizarPasoLigero(puntoOrigenActual.position, puntoEntradaNull.position, "", null, "");
-                andy.Decir("¡Lista Doble creada! El flujo ahora puede ir y venir en armonía.", audioExitoTotalInicio);
+                andy.Decir("¡Lista Doble creada!  El flujo bidireccional entre P y NULL está en perfecta armonía técnica.", audioExitoTotalInicio);
                 StartCoroutine(EsperarYFinalizar(true, audioExitoTotalInicio.length));
                 return;
             }
@@ -504,7 +504,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                 {
                     ultimoTiempoClic = Time.time;
                     IniciarCarga(puntoSalidaHead, "EntradaAnterior", managerActual.gameObject);
-                    andy.Decir("Iniciemos el canal recogiendo la dirección desde INICIO.", audioPrimerNodoDobleInsertarFinal);
+                    andy.Decir("El puntero P debe reconocer a este primer NODO como el origen.", audioPrimerNodoDobleInsertarFinal);
                     return;
                 }
                 else if (pasoConexion == 1 && tipo == "SalidaSiguiente" && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
@@ -514,7 +514,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                     puntoOrigenActual = managerActual.puntoSalidaSiguiente;
                     SetPalpitarVisual(managerActual.gameObject, "LetreroLigaDer", false);
                     if (brilloNull) brilloNull.SetEncendido(true);
-                    andy.Decir("Establece el final del flujo llevando la SALIDA SIGUIENTE al cartel de NULL.", audioCerrarSiguienteANull);
+                    andy.Decir("Establece el final de la lista. El campo LIGADER del último NODO debe apuntar siempre al valor NULL.", audioCerrarSiguienteANull);
                     return;
                 }
             }
@@ -524,14 +524,14 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                 {
                     ultimoTiempoClic = Time.time;
                     IniciarCarga(managerActual.puntoSalidaAnterior, "EntradaSiguiente", nodoViejoUltimo.gameObject);
-                    andy.Decir("Para que el nuevo nodo reconozca a su antecesor, recoge su SALIDA ANTERIOR.", audioConectarSalidaAnterior);
+                    andy.Decir("Para que el NODO Q reconozca al NODO anterior en la secuencia, recoge la dirección desde su campo LIGAIZQ.", audioConectarSalidaAnterior);
                     return;
                 }
                 else if (pasoConexion == 1 && tipo == "SalidaSiguiente" && objetoTocado.GetComponentInParent<NodoManager>() == nodoViejoUltimo)
                 {
                     ultimoTiempoClic = Time.time;
                     IniciarCarga(nodoViejoUltimo.puntoSalidaSiguiente, "EntradaAnterior", managerActual.gameObject);
-                    andy.Decir("Ahora completa la dualidad lleva la SALIDA SIGUIENTE del antiguo nodo hacia el nuevo integrante.", audioConectarSiguienteAlNuevo);
+                    andy.Decir("Completa la dualidad: el campo LIGADER del antiguo NODO F debe apuntar ahora hacia el nuevo NODO Q.", audioConectarSiguienteAlNuevo);
                     return;
                 }
                 else if (pasoConexion == 2 && tipo == "Head")
@@ -548,7 +548,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                     if (brilloNull) brilloNull.SetEncendido(false);
                     EncenderBrilloEnNodo(managerActual.gameObject, "EntradaSiguiente", true);
                     SetPalpitarVisual(managerActual.gameObject, "LetreroLigaDer", true);
-                    andy.Decir("Finalmente, recoge la dirección de NULL y llévala al nuevo NODO.", audioDeNullANodo);
+                    andy.Decir("Recoge la dirección NULL y asígnala al LIGADER del NODO Q para terminar con la inserción al final.", audioDeNullANodo);
                     return;
                 }
             }
@@ -563,7 +563,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                     FinalizarPasoLigero(puntoOrigenActual.position, managerActual.puntoEntradaAnterior.position, "EntradaAnterior", managerActual.gameObject, "LetreroLigaIzq");
                     managerActual.ActivarHuerto();
                     pasoConexion = 1;
-                    andy.Decir("¡Primer NODO vinculado! Ahora, definamos el fin del camino conectando la SALIDA SIGUIENTE a NULL.", audioSiguienteANull);
+                    andy.Decir("¡Primer NODO vinculado! Definamos el límite de la lista conectando el campo LIGADER hacia NULL.", audioSiguienteANull);
                     SetPalpitarVisual(managerActual.gameObject, "LetreroLigaDer", true);
                     return;
                 }
@@ -572,7 +572,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                     ultimoTiempoClic = Time.time;
                     if (brilloNull) brilloNull.SetEncendido(false);
                     FinalizarPasoLigero(puntoOrigenActual.position, puntoEntradaNull.position, "", null, "");
-                    andy.Decir("¡LupiFantástico! La lista doble ha comenzado en el valle.", audioExitoFinal);
+                    andy.Decir("¡LupiFantástico! La lista doble ha sido inicializada con P y F apuntando al mismo NODO.", audioExitoFinal);
                     StartCoroutine(EsperarYFinalizar(false, audioExitoFinal.length));
                     return;
                 }
@@ -585,7 +585,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                     if (enlaceActualAlNull != null) Destroy(enlaceActualAlNull.gameObject);
                     FinalizarPasoLigero(puntoOrigenActual.position, nodoViejoUltimo.puntoEntradaSiguiente.position, "EntradaSiguiente", nodoViejoUltimo.gameObject, "LetreroLigaDer");
                     pasoConexion = 1;
-                    andy.Decir("¡Vínculo de retroceso creado! Ahora establece el flujo de avance hacia la nueva parcela.", audioVinculoRetroceso);
+                    andy.Decir("¡Vínculo LIGAIZQ creado! Establece el flujo de avance actualizando el campo LIGADER del NODO previo.", audioVinculoRetroceso);
                     SetPalpitarVisual(nodoViejoUltimo.gameObject, "LetreroLigaDer", true);
                     return;
                 }
@@ -595,7 +595,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                     FinalizarPasoLigero(puntoOrigenActual.position, managerActual.puntoEntradaAnterior.position, "EntradaAnterior", managerActual.gameObject, "LetreroLigaIzq");
                     managerActual.ActivarHuerto();
                     pasoConexion = 2;
-                    andy.Decir("Por último, actualiza la referencia de NULL hacia este nuevo final.", audioActualizarNull);
+                    andy.Decir("Finalmente, el campo LIGADER del nuevo NODO Q debe apuntar a NULL, y actualizaremos F hacia este nuevo final.", audioActualizarNull);
                     if (brilloNull) brilloNull.SetEncendido(true);
                     return;
                 }
@@ -603,7 +603,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                 {
                     ultimoTiempoClic = Time.time;
                     FinalizarPasoLigero(puntoOrigenActual.position, managerActual.puntoEntradaSiguiente.position, "EntradaSiguiente", managerActual.gameObject, "LetreroLigaDer");
-                    andy.Decir("¡Inserción al final completada! El canal se ha extendido en perfecta armonía Bidireccional.", audioExitoInsercionFinal);
+                    andy.Decir("¡Inserción al final completada! El puntero F se ha desplazado y el campo LIGADER del predecesor ha sido actualizado.", audioExitoInsercionFinal);
                     StartCoroutine(EsperarYFinalizar(false, audioExitoInsercionFinal.length));
                     return;
                 }
@@ -630,30 +630,30 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         if (Time.time - ultimoTiempoClic < 0.5f) return;
         NodoManager nodoTocado = objetoTocado != null ? objetoTocado.GetComponentInParent<NodoManager>() : null;
         if (listaNodos.Count < 2) return; 
-        NodoManager nodoZanahoria = listaNodos[1];
-        NodoManager nodoRabano = listaNodos[0];
+        NodoManager nodoCerdo = listaNodos[1];
+        NodoManager nodoVaca = listaNodos[0];
         if (!cargandoAgua)
         {
             if (tipo == "Head" && pasoConexion == 0)
             {
                 ultimoTiempoClic = Time.time;
                 brilloHead.SetEncendido(false);
-                IniciarCarga(puntoSalidaHead, "EntradaAnterior", nodoZanahoria.gameObject);
-                andy.Decir("¡Alerta Lupi! Recoge la esencia del INICIO. Debemos reasignar el puntero para que salte al Rábano marchito y busque una nueva cabecera.", audioRecogerHeadEliminar);
+                IniciarCarga(puntoSalidaHead, "EntradaAnterior", nodoCerdo.gameObject);
+                andy.Decir("Recogiste el puntero P. Reasígnalo al sucesor de la Vaca para que la lista comience en el Cerdo.", audioRecogerHeadEliminar);
                 return;
             }
         }
         else
         {
-            if (tipo == "EntradaAnterior" && nodoTocado == nodoZanahoria)
+            if (tipo == "EntradaAnterior" && nodoTocado == nodoCerdo)
             {
                 ultimoTiempoClic = Time.time; 
                 cargandoAgua = false;
-                LimpiarSegmentosDeNodo(nodoRabano);
-                CrearSegmentoFijo(puntoSalidaHead.position, nodoZanahoria.puntoEntradaAnterior.position);
-                andy.Decir("¡Perfecto! El flujo ahora reconoce a la Zanahoria como su nuevo origen. El NODO infectado ha sido aislado.", audioConectarZanahoriaDesdeHead);
-                StartCoroutine(EsperarYFinalizar(false, audioConectarZanahoriaDesdeHead.length));
-                StartCoroutine(SecuenciaEliminacionExito(nodoRabano, 1));
+                LimpiarSegmentosDeNodo(nodoVaca);
+                CrearSegmentoFijo(puntoSalidaHead.position, nodoCerdo.puntoEntradaAnterior.position);
+                andy.Decir("¡Perfecto! P ahora apunta al Cerdo. El campo LIGAIZQ del nuevo P debe ser NULL para liberar la memoria de la Vaca.", audioConectarCerdoDesdeHead);
+                StartCoroutine(EsperarYFinalizar(false, audioConectarCerdoDesdeHead.length));
+                StartCoroutine(SecuenciaEliminacionExito(nodoVaca, 1));
                 return;
             }
             if (objetoTocado != null && objetoTocado.transform == puntoOrigenActual) return;
@@ -679,8 +679,8 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         if (Time.time - ultimoTiempoClic < 0.5f) return;
         NodoManager nodoTocado = objetoTocado != null ? objetoTocado.GetComponentInParent<NodoManager>() : null;
         if (listaNodos.Count < 3) return; 
-        NodoManager nodoZanahoria = listaNodos[1];
-        NodoManager nodoRemolacha = listaNodos[2];
+        NodoManager nodoCerdo = listaNodos[1];
+        NodoManager nodoOveja = listaNodos[2];
         if (!cargandoAgua)
         {
             if (tipo == "Null" && pasoConexion == 0)
@@ -690,28 +690,28 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                 puntoOrigenActual = puntoEntradaNull;
                 if (brilloNull) brilloNull.SetEncendido(false);
                 SetPalpitarVisual(puntoEntradaNull.parent.gameObject, "LetreroNull", false);
-                SetPalpitarVisual(nodoZanahoria.gameObject, "LetreroLigaDer", true);
-                andy.Decir("Recoge la dirección de NULL para cerrar el canal antes de que llegue a la Remolacha.", audioRecogerNullEliminar);
+                SetPalpitarVisual(nodoCerdo.gameObject, "LetreroLigaDer", true);
+                andy.Decir("Recoge el valor NULL para cerrar el flujo antes de que el puntero F alcance a la Oveja infectada.", audioRecogerNullEliminar);
                 return;
             }
         }
         else
         {
-            if (tipo == "EntradaSiguiente" && nodoTocado == nodoZanahoria)
+            if (tipo == "EntradaSiguiente" && nodoTocado == nodoCerdo)
             {
                 ultimoTiempoClic = Time.time;
                 cargandoAgua = false;
-                SetPalpitarVisual(nodoZanahoria.gameObject, "LetreroLigaDer", false);
+                SetPalpitarVisual(nodoCerdo.gameObject, "LetreroLigaDer", false);
                 if (enlaceActualAlNull != null) Destroy(enlaceActualAlNull.gameObject);
-                LimpiarSegmentosDeNodo(nodoRemolacha);
+                LimpiarSegmentosDeNodo(nodoOveja);
                 LineRenderer lineaNull = Instantiate(lineaFija, transform);
                 lineaNull.positionCount = 2;
                 lineaNull.SetPosition(0, puntoEntradaNull.position);
-                lineaNull.SetPosition(1, nodoZanahoria.puntoSalidaSiguiente.position);
+                lineaNull.SetPosition(1, nodoCerdo.puntoSalidaSiguiente.position);
                 enlaceActualAlNull = lineaNull;
-                andy.Decir("¡Perfecto Lupi! La Zanahoria ahora apunta directamente al vacío de NULL, liberando la memoria de la parcela infectada.", audioConectarZanahoriaDesdeNull);
-                StartCoroutine(EsperarYFinalizar(false, audioConectarZanahoriaDesdeNull.length));
-                StartCoroutine(SecuenciaEliminacionExito(nodoRemolacha, 2));
+                andy.Decir("¡Perfecto Lupi! El Cerdo ahora apunta a NULL. El campo LIGADER de la Oveja ha sido anulado y el NODO infectado está fuera de la memoria.", audioConectarCerdoDesdeNull);
+                StartCoroutine(EsperarYFinalizar(false, audioConectarCerdoDesdeNull.length));
+                StartCoroutine(SecuenciaEliminacionExito(nodoOveja, 2));
                 return;
             }
             if (objetoTocado != null && objetoTocado.transform == puntoOrigenActual) return;
@@ -802,7 +802,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         else if (modoActual == ModoOperacion.InsertarFinal)
         {
             ReproducirNivelCompleto();
-            andy.Decir("¡Asombroso Lupi! Ahora el canal es fuerte hasta su último nodo. Has completado con éxito la Inserción al Final de la estructura.", audioFelicidadesInsertarFinal);
+            andy.Decir("¡Asombroso Lupi! Ahora el canal es fuerte hasta su último NODO. Has completado con éxito la Inserción al Final de la estructura.", audioFelicidadesInsertarFinal);
             if (audioFelicidadesInsertarFinal != null)
                 yield return new WaitForSeconds(audioFelicidadesInsertarFinal.length + 0.5f);
             else
@@ -825,7 +825,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         yield return new WaitForSeconds(2f);
         UIManager.instancia.MarcarTareaCompletada(numeroTareaUI);
         if (modoActual == ModoOperacion.EliminarInicio)        {
-            andy.Decir("¡El Rábano ha sido purificado! Ahora desvincularemos el último NODO infectado para sanar el valle.", audioFelicidadesEliminarInicio);
+            andy.Decir("¡La Vaca ha sido purificada y su memoria liberada! Ahora eliminaremos el NODO en F para sanar el final de la lista.", audioFelicidadesEliminarInicio);
             if (audioFelicidadesEliminarInicio != null) yield return new WaitForSeconds(audioFelicidadesEliminarInicio.length + 0.5f);
             else yield return new WaitForSeconds(4f);
             modoActual = ModoOperacion.EliminarFinal;

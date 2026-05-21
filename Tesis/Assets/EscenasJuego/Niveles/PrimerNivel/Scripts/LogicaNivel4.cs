@@ -452,7 +452,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         tiempoInicioEstado = Time.time;
         if (indiceAEliminar == 4)
         {
-            andy.Decir("La vaca se ha retirado. Usa el puntero auxiliar T para que la LIGA de la oveja apunte de regreso a las cordornices (P)", audioEliminarFinal);
+            andy.Decir("La vaca se ha retirado. Usa el puntero auxiliar T para que la LIGA de la oveja apunte de regreso a las codornices (P)", audioEliminarFinal);
             EncenderBrilloHijo(listaNodos[3].gameObject, "Liga", true);
         }
         else

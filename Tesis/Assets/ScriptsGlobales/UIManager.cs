@@ -149,17 +149,19 @@ public class UIManager : MonoBehaviour
                 Instantiate(prefabsActuales[indice], masCercana.transform.position, Quaternion.identity);
                 masCercana.estaOcupada = true;
                 masCercana.DesactivarColision();
+                if (panelParcelas != null)
+                    panelParcelas.SetActive(false);
                 botonesSemillas[indice].interactable = false;
                 Transform tIcono = botonesSemillas[indice].transform.Find("Icono");
                 if (tIcono != null && tIcono.TryGetComponent(out Image imgIcono))
-                {
                     imgIcono.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
-                }
                 if (logicaActiva != null) logicaActiva.AvanceSiembraExitosa();
             }
         }
-        else 
+        else
+        {
             andy.Decir("Acércate más a la parcela que corresponde al NODO.", audioAcercateMas);
+        }
     }
     public void ConfigurarTextosChecklist(params string[] textos)
     {
