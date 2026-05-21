@@ -283,15 +283,18 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     }
     void ReproducirNivelCompleto()
     {
-        if (fuenteAudio && sonidoCompletado)
-            for (int i = 0; i < 2; i++) fuenteAudio.PlayOneShot(sonidoCompletado);
+        AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
+        if (masterSFX && sonidoCompletado)
+            masterSFX.PlayOneShot(sonidoCompletado);
     }
 
     void ReproducirError(string mensajePista, AudioClip audioExplicacion)
     {
         fallosContador++;
-        if (fuenteAudio && sonidoError) fuenteAudio.PlayOneShot(sonidoError);
         if (andy != null) andy.Decir(mensajePista, audioExplicacion);
+        AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
+        if (masterSFX && sonidoError)
+            masterSFX.PlayOneShot(sonidoError);
         if (!KaosController.nivelesTerminados.Contains("AnatomiaComponentes"))
         {
             UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
@@ -311,7 +314,8 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         ActualizarPuntos();
         if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
         rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(true));
-        if (!silencioso && fuenteAudio && sonidoAcierto) fuenteAudio.PlayOneShot(sonidoAcierto);
+        if (!silencioso && UIManager.instancia.fuenteVozAndy && sonidoAcierto)
+            UIManager.instancia.fuenteVozAndy.PlayOneShot(sonidoAcierto);
     }
 
     void ActualizarPuntos() { if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString(); }

@@ -7,6 +7,12 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement; 
 public class UIManager : MonoBehaviour
 {
+    [Header("Gestión de Sonido y Audio")]
+    public AudioSource fuenteMusicaFondo;
+    public AudioSource fuenteVozAndy;
+    public Image iconoMusica;
+    public Image iconoAudio;    
+    public Sprite spriteSonidoOn, spriteSonidoOff;
     [Header("Tutorial de Controles")]
     public GameObject panelControles;
     private bool controlesYaOcultos = false;
@@ -62,6 +68,30 @@ public class UIManager : MonoBehaviour
         }
         if (panelParcelas != null) panelParcelas.SetActive(false);
         MostrarInterfaz(false);
+    }
+    void Start()
+    {
+        fuenteMusicaFondo.mute = PlayerPrefs.GetInt("MusicaMute", 0) == 1;
+        fuenteVozAndy.mute = PlayerPrefs.GetInt("AndyMute", 0) == 1;
+        ActualizarIconos();
+    }
+    public void AlternarMusica()
+    {
+        fuenteMusicaFondo.mute = !fuenteMusicaFondo.mute;
+        PlayerPrefs.SetInt("MusicaMute", fuenteMusicaFondo.mute ? 1 : 0);
+        ActualizarIconos();
+    }
+
+    public void AlternarAudioAndy()
+    {
+        fuenteVozAndy.mute = !fuenteVozAndy.mute;
+        PlayerPrefs.SetInt("AndyMute", fuenteVozAndy.mute ? 1 : 0);
+        ActualizarIconos();
+    }
+    private void ActualizarIconos()
+    {
+        if (iconoMusica) iconoMusica.sprite = fuenteMusicaFondo.mute ? spriteSonidoOff : spriteSonidoOn;
+        if (iconoAudio) iconoAudio.sprite = fuenteVozAndy.mute ? spriteSonidoOff : spriteSonidoOn;
     }
     public void ConfigurarCabeceraNivel(string nombreNivel, string operacion)
     {

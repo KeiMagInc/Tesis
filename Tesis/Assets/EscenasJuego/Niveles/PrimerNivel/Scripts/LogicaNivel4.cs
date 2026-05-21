@@ -527,8 +527,9 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     }
     void ReproducirNivelCompleto()
     {
-        if (fuenteAudio && sonidoCompletado)
-            for (int i = 0; i < 2; i++) fuenteAudio.PlayOneShot(sonidoCompletado);
+        AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
+        if (masterSFX && sonidoCompletado)
+            masterSFX.PlayOneShot(sonidoCompletado);
     }
     void ActualizarLineaFijaPostEliminacion()
     {
@@ -591,7 +592,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         if (brilloRio) brilloRio.SetEncendido(false);
         foreach (var b in Object.FindObjectsByType<EfectoLetrero>(FindObjectsSortMode.None)) b.SetEncendido(false);
     }
-    void SumarPuntos(int cant)
+    void SumarPuntos(int cant, bool silencioso = false)
     {
         if (KaosController.nivelesTerminados.Contains("ListasCirculares")) return;
         aciertosContador++;
@@ -599,12 +600,17 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();
         if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
         rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(true));
-        if (fuenteAudio && sonidoAcierto) fuenteAudio.PlayOneShot(sonidoAcierto);
+        if (!silencioso && UIManager.instancia.fuenteVozAndy && sonidoAcierto)
+        {
+            UIManager.instancia.fuenteVozAndy.PlayOneShot(sonidoAcierto);
+        }
     }
     void ReproducirError()
     {
         fallosContador++;
-        if (fuenteAudio && sonidoError) fuenteAudio.PlayOneShot(sonidoError);
+        AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
+        if (masterSFX && sonidoError)
+            masterSFX.PlayOneShot(sonidoError);
         if (!KaosController.nivelesTerminados.Contains("ListasCirculares"))
         {
             UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);

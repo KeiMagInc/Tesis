@@ -16,13 +16,17 @@ public class RoomCam : MonoBehaviour
         {
             virtualCamera.Priority = 10;
             if (objetoLogica != null) objetoLogica.SetActive(true);
-            GestorInterfazNivel gestor = Object.FindFirstObjectByType<GestorInterfazNivel>();
-            if (gestor != null) gestor.MostrarNombre(textoDeNivel);
-            if (miAudioSource != null && sonidoAmbienteZona != null)
+            if (UIManager.instancia != null && sonidoAmbienteZona != null)
             {
-                miAudioSource.clip = sonidoAmbienteZona;
-                miAudioSource.loop = true;
-                miAudioSource.Play();
+                if (UIManager.instancia.fuenteMusicaFondo.clip != sonidoAmbienteZona)
+                {
+                    UIManager.instancia.fuenteMusicaFondo.clip = sonidoAmbienteZona;
+                    UIManager.instancia.fuenteMusicaFondo.Play();
+                }
+                else if (!UIManager.instancia.fuenteMusicaFondo.isPlaying)
+                {
+                    UIManager.instancia.fuenteMusicaFondo.Play();
+                }
             }
         }
     }
@@ -32,7 +36,6 @@ public class RoomCam : MonoBehaviour
         {
             virtualCamera.Priority = 0;
             if (objetoLogica != null) objetoLogica.SetActive(false);
-            if (miAudioSource != null) miAudioSource.Stop();
         }
     }
 }

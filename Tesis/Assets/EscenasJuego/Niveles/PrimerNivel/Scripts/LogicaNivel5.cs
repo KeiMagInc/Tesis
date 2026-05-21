@@ -853,12 +853,16 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     }
     void ReproducirAcierto()
     {
-        if (fuenteAudio && sonidoAcierto) fuenteAudio.PlayOneShot(sonidoAcierto);
+        AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
+        if (masterSFX && sonidoAcierto)
+            masterSFX.PlayOneShot(sonidoAcierto);
     }
     void ReproducirError()
     {
         fallosContador++;
-        if (fuenteAudio && sonidoError) fuenteAudio.PlayOneShot(sonidoError);
+        AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
+        if (masterSFX && sonidoError)
+            masterSFX.PlayOneShot(sonidoError);
         if (!KaosController.nivelesTerminados.Contains("ListasDobles"))
         {
             UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
@@ -871,8 +875,9 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     }
     void ReproducirNivelCompleto()
     {
-        if (fuenteAudio && sonidoCompletado)
-            for (int i = 0; i < 2; i++) fuenteAudio.PlayOneShot(sonidoCompletado);
+        AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
+        if (masterSFX && sonidoCompletado)
+            masterSFX.PlayOneShot(sonidoCompletado);
     }
     void CrearSegmentoFijo(Vector3 inicio, Vector3 fin)
     {
