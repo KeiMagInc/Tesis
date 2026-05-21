@@ -26,6 +26,11 @@ public class MenuManager : MonoBehaviour
     {
         AplicarEfectoPalpito();
     }
+    public void SalirDelJuego()
+    {
+        Debug.Log("Saliendo del juego...");
+        Application.Quit();
+    }
     private void AplicarEfectoPalpito()
     {
         float calculoEscala = 1f + Mathf.Sin(Time.time * velocidadPalpito) * intensidadPalpito;
