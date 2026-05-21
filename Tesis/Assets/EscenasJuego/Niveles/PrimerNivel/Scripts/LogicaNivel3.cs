@@ -310,10 +310,13 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             UIManager.instancia.MostrarMochilaSolo(true);
             yield return new WaitForSeconds(0.5f);
             andy.Decir("Primero, prepara el nuevo NODO. Abre la mochila y elije una semilla para asignar un valor al campo P.INFO de esta parcela.", audioPrepararNodo);
+            yield return new WaitUntil(() => UIManager.instancia.panelParcelas.activeSelf);
+            UIManager.instancia.MostrarChecklistSolo(true);
             if (audioPrepararNodo != null)
                 yield return new WaitForSeconds(audioPrepararNodo.length + 0.2f);
             else
-                yield return new WaitForSeconds(3.5f);
+                UIManager.instancia.MostrarChecklistSolo(true);
+            yield return new WaitForSeconds(3.5f);
             yield return new WaitUntil(() => UIManager.instancia.panelParcelas.activeSelf);
         }
         UIManager.instancia.MostrarChecklistSolo(true);

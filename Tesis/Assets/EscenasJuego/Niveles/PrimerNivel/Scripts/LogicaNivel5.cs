@@ -136,7 +136,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         UIManager.instancia.logicaActiva = this;
         ResetearNivel();
         ActualizarCabeceraNivel5();
-        StartCoroutine(IntroNivel5());
+        StartCoroutine(Intro());
     }
     void ActualizarCabeceraNivel5()
     {
@@ -214,7 +214,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         ActualizarCabeceraNivel5();
         if (lupi != null && puntoInicioNivel != null)
             lupi.position = puntoInicioNivel.position;
-        StartCoroutine(IntroNivel5());
+        StartCoroutine(Intro());
     }
     public void BotonSiguiente()
     {
@@ -280,7 +280,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             UIManager.instancia.ConfigurarTextosChecklist("", "delete(Vaca)", "", "delete(Oveja)", "");
         }
     }
-    IEnumerator IntroNivel5()
+    IEnumerator Intro()
     {
         yield return new WaitForSeconds(0.5f);
         AudioClip clipReproducido = null;
@@ -308,8 +308,12 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             UIManager.instancia.MostrarMochilaSolo(true);
             andy.Decir("Cada animal es un NODO Q con dos campos de LIGA. Abre tu mochila para preparar la asignación de memoria.", audioPrepararNodoDoble);
             yield return new WaitUntil(() => UIManager.instancia.panelParcelas.activeSelf);
+            UIManager.instancia.MostrarChecklistSolo(true);
         }
-        UIManager.instancia.MostrarChecklistSolo(true);
+        else
+        {
+            UIManager.instancia.MostrarChecklistSolo(true);
+        }
         ProximoPaso();
     }
     void ProximoPaso()
@@ -797,7 +801,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             modoActual = ModoOperacion.InsertarFinal;
             ActualizarCabeceraNivel5();
             ConfigurarUIParaModoActual();
-            StartCoroutine(IntroNivel5());
+            StartCoroutine(Intro());
         }
         else if (modoActual == ModoOperacion.InsertarFinal)
         {
@@ -813,7 +817,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             pasoConexion = 0;
             cargandoAgua = false;
             ConfigurarUIParaModoActual();
-            StartCoroutine(IntroNivel5());
+            StartCoroutine(Intro());
         }
     }
     IEnumerator SecuenciaEliminacionExito(NodoManager nodo, int numeroTareaUI)

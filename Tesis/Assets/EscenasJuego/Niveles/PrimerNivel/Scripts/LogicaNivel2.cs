@@ -211,13 +211,14 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     }
     IEnumerator Intro()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         UIManager.instancia.MostrarMochilaSolo(true);
         andy.Decir("¡Lupi! El Kaos ha borrado el rastro de la cosecha. Abre tu mochila y revisa las semillas para restaurar los Nodos de este valle.", audioIntroMochila);
+        yield return new WaitForSeconds(audioIntroMochila.length + 0.5f);
+        UIManager.instancia.MostrarMochilaSolo(true);
         yield return new WaitUntil(() => UIManager.instancia.panelParcelas.activeSelf);
-        if (audioIntroMochila != null) yield return new WaitForSeconds(audioIntroMochila.length);
-        andy.Decir("¡Lupifantástico!. Consulta el pergamino de objetivos. Debemos plantar los huertos en el orden lógico para que la Lista no se pierda en la memoria.", audioIntroChecklist);
         UIManager.instancia.MostrarChecklistSolo(true);
+        andy.Decir("¡Lupifantástico!. Consulta el pergamino de objetivos. Debemos plantar los huertos en el orden lógico para que la Lista no se pierda en la memoria.", audioIntroChecklist);
         if (audioIntroChecklist != null)
             yield return new WaitForSeconds(audioIntroChecklist.length + 0.5f);
         else
