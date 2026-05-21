@@ -1991,7 +1991,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'SIGUIENTE
+  m_text: 'LIGADER
 
 
 '
@@ -2151,7 +2151,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'ANTERIOR
+  m_text: 'LIGAIZQ
 
 
 '

@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement; 
 public class UIManager : MonoBehaviour
 {
+    public CanvasGroup groupNombreNivel;
     private PlayerController lupiController;
     [Header("Gestión de Sonido y Audio")]
     public AudioSource fuenteMusicaFondo;
@@ -102,6 +103,11 @@ public class UIManager : MonoBehaviour
 
         if (textoNombreOperacion != null)
             textoNombreOperacion.text = operacion;
+        if (groupNombreNivel != null)
+        {
+            groupNombreNivel.alpha = 1;
+            groupNombreNivel.gameObject.SetActive(true);
+        }
         if (panelControles != null)
         {
             bool esNivelAnatomia = nombreNivel.Contains("Anatomía y Componentes");

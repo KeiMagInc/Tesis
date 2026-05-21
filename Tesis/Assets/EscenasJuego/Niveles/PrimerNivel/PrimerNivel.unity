@@ -69216,6 +69216,11 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 100, y: 100}
   m_EdgeRadius: 0
+--- !u!225 &790488636 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 7216496725390429729, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+  m_PrefabInstance: {fileID: 1395060073}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &794504635
 GameObject:
   m_ObjectHideFlags: 0
@@ -93426,6 +93431,10 @@ PrefabInstance:
       propertyPath: spriteSonidoOff
       value: 
       objectReference: {fileID: -1616128084, guid: a37e8466236089c45b610370218b5353, type: 3}
+    - target: {fileID: 3906074956565988614, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: groupNombreNivel
+      value: 
+      objectReference: {fileID: 790488636}
     - target: {fileID: 3906074956565988614, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: fuenteMusicaFondo
       value: 
