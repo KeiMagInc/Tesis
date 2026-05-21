@@ -7,6 +7,9 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement; 
 public class UIManager : MonoBehaviour
 {
+    [Header("Tutorial de Controles")]
+    public GameObject panelControles;
+    private bool controlesYaOcultos = false;
     [Header("Mochila (Nuevas Referencias)")]
     public TextMeshProUGUI[] textosNombresSemillas; 
     public TextMeshProUGUI[] textosNumerosSemillas; 
@@ -66,7 +69,14 @@ public class UIManager : MonoBehaviour
             textoNombreNivel.text = nombreNivel; 
 
         if (textoNombreOperacion != null)
-            textoNombreOperacion.text = operacion; 
+            textoNombreOperacion.text = operacion;
+        if (panelControles != null)
+        {
+            bool esNivelAnatomia = nombreNivel.Contains("Anatomía y Componentes");
+            panelControles.SetActive(esNivelAnatomia);
+            controlesYaOcultos = !esNivelAnatomia;
+            Debug.Log("El nivel actual es: " + nombreNivel);
+        }
     }
     public void MostrarInterfaz(bool mostrar)
     {
@@ -190,6 +200,11 @@ public class UIManager : MonoBehaviour
         MostrarMochilaSolo(false);
         MostrarChecklistSolo(false);
         if (panelParcelas != null) panelParcelas.SetActive(false);
+        if (panelControles != null)
+        {
+            panelControles.SetActive(false);
+            controlesYaOcultos = true;
+        }
     }
     public void MarcarTareaCompletada(int indice)
     {
