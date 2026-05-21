@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement; 
 public class UIManager : MonoBehaviour
 {
+    private PlayerController lupiController;
     [Header("Gestión de Sonido y Audio")]
     public AudioSource fuenteMusicaFondo;
     public AudioSource fuenteVozAndy;
@@ -68,6 +69,7 @@ public class UIManager : MonoBehaviour
         }
         if (panelParcelas != null) panelParcelas.SetActive(false);
         MostrarInterfaz(false);
+        lupiController = playerLupi.GetComponent<PlayerController>();
     }
     void Start()
     {
@@ -190,7 +192,10 @@ public class UIManager : MonoBehaviour
                 masCercana.estaOcupada = true;
                 masCercana.DesactivarColision();
                 if (panelParcelas != null)
+                {
                     panelParcelas.SetActive(false);
+                    if (lupiController != null) lupiController.controlesBloqueados = false; 
+                }
                 botonesSemillas[indice].interactable = false;
                 Transform tIcono = botonesSemillas[indice].transform.Find("Icono");
                 if (tIcono != null && tIcono.TryGetComponent(out Image imgIcono))
@@ -318,7 +323,11 @@ public class UIManager : MonoBehaviour
                 }
             }
         }
-        if (panelParcelas) panelParcelas.SetActive(false);
+        if (panelParcelas)
+        {
+            panelParcelas.SetActive(false);
+            if (lupiController != null) lupiController.controlesBloqueados = false;
+        }
         semillaActiva = "";
     }
     public void MostrarMochilaSolo(bool m)
@@ -343,5 +352,6 @@ public class UIManager : MonoBehaviour
     {
         if (panelParcelas != null)
             panelParcelas.SetActive(!panelParcelas.activeSelf);
+        if (lupiController != null) lupiController.controlesBloqueados = panelParcelas.activeSelf;
     }
 }

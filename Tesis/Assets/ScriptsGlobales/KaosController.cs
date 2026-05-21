@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class KaosController : MonoBehaviour
 {
+    public float distanciaMinimaAlJugador = 5.0f; 
     [Header("UI de Emotes")]
     public SpriteRenderer imagenReaccion;
     public List<Sprite> emotesPositivos;
@@ -57,7 +58,7 @@ public class KaosController : MonoBehaviour
     {
         ActualizarTamanoBase();
         DetectarZonaPorLista();
-        if (puntoA_Actual != null && puntoB_Actual != null) Patrullar();
+        if (triggerActual != null) SeguirJugador();
         if (imagenReaccion != null && imagenReaccion.gameObject.activeSelf)
         {
             float sX = escalaFijaEmote / transform.localScale.x;
@@ -181,7 +182,7 @@ public class KaosController : MonoBehaviour
         puntoA_Actual = nuevaZona.puntoA; puntoB_Actual = nuevaZona.puntoB; destinoActual = puntoA_Actual;
         if (puntoA_Actual != null) transform.position = puntoA_Actual.position;
     }
-    void Patrullar()
+    /*void Patrullar()
     {
         Vector2 posActual = transform.position; Vector2 posDestino = destinoActual.position;
         transform.position = Vector2.MoveTowards(posActual, posDestino, velocidad * Time.deltaTime);
@@ -189,6 +190,27 @@ public class KaosController : MonoBehaviour
             destinoActual = (destinoActual == puntoA_Actual) ? puntoB_Actual : puntoA_Actual;
         float diffX = destinoActual.position.x - transform.position.x;
         if (Mathf.Abs(diffX) > 0.05f) AplicarEscalaVisual();
+    }*/
+    void SeguirJugador()
+    {
+        if (lupi == null || recibiendoDano) return;
+
+        // Calculamos la distancia actual
+        float distanciaActual = Vector2.Distance(transform.position, lupi.transform.position);
+
+        // LÓGICA PAC-MAN:
+        // Si el jugador se aleja más de la cuenta, Kaos avanza para alcanzarlo.
+        // Si el jugador está dentro del rango de "distanciaMinima", Kaos se detiene.
+        if (distanciaActual > distanciaMinimaAlJugador)
+        {
+            // Kaos avanza hacia la posición del jugador
+            transform.position = Vector2.MoveTowards(transform.position, lupi.transform.position, velocidad * Time.deltaTime);
+        }
+
+        // IMPORTANTE: No hay "else" de retroceder. 
+        // Si te acercas a él, se queda quieto y lo tocarás (recibiendo daño).
+
+        AplicarEscalaVisual();
     }
     void ActualizarTamanoBase()
     {
@@ -198,9 +220,15 @@ public class KaosController : MonoBehaviour
         if (nuevaEscalaBase < escalaActualBase) StartCoroutine(EfectoTransformacionMario(nuevaEscalaBase));
         else { escalaActualBase = nuevaEscalaBase; AplicarEscalaVisual(); }
     }
-    void AplicarEscalaVisual()
+    /*void AplicarEscalaVisual()
     {
         float mirandoA = (destinoActual != null && destinoActual.position.x < transform.position.x) ? -escalaActualBase : escalaActualBase;
+        transform.localScale = new Vector3(mirandoA, escalaActualBase, 1);
+    }*/
+    void AplicarEscalaVisual()
+    {
+        if (lupi == null) return;
+        float mirandoA = (lupi.transform.position.x < transform.position.x) ? -escalaActualBase : escalaActualBase;
         transform.localScale = new Vector3(mirandoA, escalaActualBase, 1);
     }
     public void ResetearEstadoNivel(string nombreNivel)
