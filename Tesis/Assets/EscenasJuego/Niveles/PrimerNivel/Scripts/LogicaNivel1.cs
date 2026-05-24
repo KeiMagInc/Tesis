@@ -5,6 +5,9 @@ using TMPro;
 using UnityEngine.SceneManagement;
 public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Efectos Burbuja")]
+    public GameObject prefabBurbuja;
+    public Transform puntoCentroHuerto;
     [Header("Información del Nivel UI")]
     public string nombreDelNivel = "Anatomía y Componentes";
     public string operacionDelNivel = "Identificar las partes del nodo";
@@ -306,19 +309,34 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
                 KaosController.instancia.ReaccionarAError();
         }
     }
-
     void SumarPuntos(int cant, bool silencioso = false)
     {
         if (KaosController.nivelesTerminados.Contains("AnatomiaComponentes")) return;
-        aciertosContador++;
+        if (prefabBurbuja != null)
+        {
+            Vector3 spawnPos;
+            if (puntoCentroHuerto != null)
+            {
+                spawnPos = puntoCentroHuerto.position;
+            }
+            else
+            {
+                spawnPos = huertoScript.transform.position;
+            }
+            spawnPos.z = -1f;
+            GameObject nuevaBurbuja = Instantiate(prefabBurbuja, spawnPos, Quaternion.identity);
+            EfectoBurbuja scriptBurbuja = nuevaBurbuja.GetComponent<EfectoBurbuja>();
+            if (scriptBurbuja != null)
+                scriptBurbuja.Configurar(cant);
+        }
         UIManager.puntosGlobales += cant;
         ActualizarPuntos();
         if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
         rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(true));
         if (!silencioso && UIManager.instancia.fuenteVozAndy && sonidoAcierto)
         {
-            if (sonidoAcierto) UIManager.instancia.fuenteVozAndy.PlayOneShot(sonidoAcierto);
-            if (sonidoCuy) UIManager.instancia.fuenteVozAndy.PlayOneShot(sonidoCuy); 
+            UIManager.instancia.fuenteVozAndy.PlayOneShot(sonidoAcierto);
+            if (sonidoCuy) UIManager.instancia.fuenteVozAndy.PlayOneShot(sonidoCuy);
         }
     }
 

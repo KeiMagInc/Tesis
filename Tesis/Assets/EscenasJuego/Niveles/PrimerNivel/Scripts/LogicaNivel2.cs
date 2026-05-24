@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Efectos Burbuja")]
+    public GameObject prefabBurbuja;
     [Header("Información del Nivel UI")]
     public string nombreDelNivel = "Creación y Referencia";
     public string operacionDelNivel = "Identificar la dirección física y lógica";
@@ -356,6 +358,17 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     void SumarPuntos(int cant, bool silencioso = false)
     {
         if (KaosController.nivelesTerminados.Contains("CreacionReferencias")) return;
+        if (prefabBurbuja != null && managerActual != null)
+        {
+            Vector3 spawnPos = managerActual.transform.position;
+            spawnPos.z = -1f;
+            GameObject nuevaBurbuja = Instantiate(prefabBurbuja, spawnPos, Quaternion.identity);
+            if (nuevaBurbuja.TryGetComponent<EfectoBurbuja>(out var efecto))
+            {
+                efecto.Configurar(cant);
+                Debug.Log($"[Nivel 2] Burbuja creada sobre {managerActual.name} con +{cant} puntos.");
+            }
+        }
         aciertosContador++;
         UIManager.puntosGlobales += cant;
         ActualizarPuntos();

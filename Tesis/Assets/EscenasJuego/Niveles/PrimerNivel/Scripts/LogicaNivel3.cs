@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Efectos Burbuja")]
+    public GameObject prefabBurbuja;
     [Header("Información del Nivel UI")]
     public string nombreDelNivel = "Listas Simples";
     private Color colorOriginalPuntos;
@@ -874,6 +876,38 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     void SumarPuntos(int cant, bool silencioso = false)
     {
         if (KaosController.nivelesTerminados.Contains("ListasSimples")) return;
+
+        if (prefabBurbuja != null)
+        {
+            Vector3 posicionAparicion = Vector3.zero;
+            bool hayObjetivo = false;
+            if (managerActual != null)
+            {
+                posicionAparicion = managerActual.transform.position;
+                hayObjetivo = true;
+            }
+            else if (modoActual == ModoOperacion.EliminarInicio && listaNodos.Count > 0 && listaNodos[0] != null)
+            {
+                posicionAparicion = listaNodos[0].transform.position;
+                hayObjetivo = true;
+            }
+            else if (modoActual == ModoOperacion.EliminarFinal && listaNodos.Count > 0)
+            {
+                posicionAparicion = listaNodos[listaNodos.Count - 1].transform.position;
+                hayObjetivo = true;
+            }
+
+            if (hayObjetivo)
+            {
+                posicionAparicion.z = -1f;
+                GameObject nuevaBurbuja = Instantiate(prefabBurbuja, posicionAparicion, Quaternion.identity);
+                if (nuevaBurbuja.TryGetComponent<EfectoBurbuja>(out var efecto))
+                {
+                    efecto.Configurar(cant);
+                    Debug.Log($"[Nivel 3] Burbuja +{cant} en modo {modoActual}");
+                }
+            }
+        }
         aciertosContador++;
         UIManager.puntosGlobales += cant;
         if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();

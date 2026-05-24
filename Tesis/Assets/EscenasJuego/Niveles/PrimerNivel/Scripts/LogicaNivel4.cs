@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 
 public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Efectos Burbuja")]
+    public GameObject prefabBurbuja;
     [Header("Información del Nivel UI")]
     public string nombreDelNivel = "Listas Ciculares";
     private Color colorOriginalPuntos;
@@ -596,6 +598,35 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     void SumarPuntos(int cant, bool silencioso = false)
     {
         if (KaosController.nivelesTerminados.Contains("ListasCirculares")) return;
+        if (prefabBurbuja != null)
+        {
+            Vector3 posAparicion = Vector3.zero;
+            bool objetivoEncontrado = false;
+            if (nodoActual != null)
+            {
+                posAparicion = nodoActual.transform.position;
+                objetivoEncontrado = true;
+            }
+            else if (modoActual == ModoOperacion.Eliminar && listaNodos.Count > 0)
+            {
+                int index = (indiceAEliminar == 4) ? 4 : 0;
+                if (index < listaNodos.Count && listaNodos[index] != null)
+                {
+                    posAparicion = listaNodos[index].transform.position;
+                    objetivoEncontrado = true;
+                }
+            }
+            if (objetivoEncontrado)
+            {
+                posAparicion.z = -1f;
+                GameObject nuevaBurbuja = Instantiate(prefabBurbuja, posAparicion, Quaternion.identity);
+                if (nuevaBurbuja.TryGetComponent<EfectoBurbuja>(out var efecto))
+                {
+                    efecto.Configurar(cant);
+                    Debug.Log($"[Nivel 4] Burbuja +{cant} creada en {posAparicion}");
+                }
+            }
+        }
         aciertosContador++;
         UIManager.puntosGlobales += cant; 
         if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();

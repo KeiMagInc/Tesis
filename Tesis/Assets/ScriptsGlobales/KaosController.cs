@@ -35,8 +35,8 @@ public class KaosController : MonoBehaviour
     public float distanciaDeFrenado = 0.2f;
     [Header("Evolución (Tamaño)")]
     public float escalaInicial = 2.5f;
-    public float escalaMinima = 0.3f;
-    public int puntosObjetivoPara20Porciento = 300;
+    public float escalaMinima = 0.2f;
+    public int puntosObjetivoPara20Porciento = 500;
     private float reduccionPorPunto;
     private Transform puntoA_Actual;
     private Transform puntoB_Actual;

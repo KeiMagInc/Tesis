@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 
 public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Efectos Burbuja")]
+    public GameObject prefabBurbuja;
     private bool esperandoCierreNivel = false;
     [Header("Información del Nivel UI")]
     public string nombreDelNivel = "Listas Dobles";
@@ -986,10 +988,47 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             }
         }
     }
-    void SumarPuntos(int c) {
+    void SumarPuntos(int cant, bool silencioso = false)
+    {
         if (KaosController.nivelesTerminados.Contains("ListasDobles")) return;
+        if (prefabBurbuja != null)
+        {
+            Vector3 posicionAparicion = Vector3.zero;
+            bool hayObjetivo = false;
+            if (managerActual != null)
+            {
+                posicionAparicion = managerActual.transform.position;
+                hayObjetivo = true;
+            }
+            else if (modoActual == ModoOperacion.EliminarInicio && listaNodos.Count > 0)
+            {
+                if (listaNodos[0] != null)
+                {
+                    posicionAparicion = listaNodos[0].transform.position;
+                    hayObjetivo = true;
+                }
+            }
+            else if (modoActual == ModoOperacion.EliminarFinal && listaNodos.Count > 2)
+            {
+                if (listaNodos[2] != null)
+                {
+                    posicionAparicion = listaNodos[2].transform.position;
+                    hayObjetivo = true;
+                }
+            }
+            if (hayObjetivo)
+            {
+                posicionAparicion.z = -1f;
+                GameObject nuevaBurbuja = Instantiate(prefabBurbuja, posicionAparicion, Quaternion.identity);
+                if (nuevaBurbuja.TryGetComponent<EfectoBurbuja>(out var efecto))
+                {
+                    efecto.Configurar(cant);
+                    Debug.Log($"[Nivel 5] Burbuja +{cant} en {modoActual}");
+                }
+            }
+        }
         aciertosContador++;
-        UIManager.puntosGlobales += c;
+        UIManager.puntosGlobales += cant;
         if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
         rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(true));
         if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();
