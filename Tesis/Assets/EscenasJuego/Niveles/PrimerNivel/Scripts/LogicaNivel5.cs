@@ -85,6 +85,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     public AudioClip sonidoAcierto;
     public AudioClip sonidoError;
     public AudioClip sonidoCompletado;
+    public AudioClip sonidoCuy;
     [Header("Progreso")]
     public BarreraProgreso barreraSiguiente;
     public static LogicaNivel5 instancia;
@@ -858,8 +859,11 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     void ReproducirAcierto()
     {
         AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
-        if (masterSFX && sonidoAcierto)
-            masterSFX.PlayOneShot(sonidoAcierto);
+        if (masterSFX != null)
+        {
+            if (sonidoAcierto != null) masterSFX.PlayOneShot(sonidoAcierto);
+            if (sonidoCuy != null) masterSFX.PlayOneShot(sonidoCuy);
+        }
     }
     void ReproducirError()
     {

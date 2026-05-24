@@ -57,6 +57,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     public AudioClip sonidoAcierto;
     public AudioClip sonidoError;
     public AudioClip sonidoCompletado;
+    public AudioClip sonidoCuy;
     [Header("Progreso")]
     public BarreraProgreso barreraSiguiente;
     public static LogicaNivel4 instancia;
@@ -602,7 +603,8 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(true));
         if (!silencioso && UIManager.instancia.fuenteVozAndy && sonidoAcierto)
         {
-            UIManager.instancia.fuenteVozAndy.PlayOneShot(sonidoAcierto);
+            if (sonidoAcierto) UIManager.instancia.fuenteVozAndy.PlayOneShot(sonidoAcierto);
+            if (sonidoCuy) UIManager.instancia.fuenteVozAndy.PlayOneShot(sonidoCuy);
         }
     }
     void ReproducirError()

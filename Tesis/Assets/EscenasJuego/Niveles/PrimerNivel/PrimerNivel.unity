@@ -52684,11 +52684,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.5
+      value: -4.39
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.5
+      value: -2.84
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -68410,6 +68410,7 @@ MonoBehaviour:
   sonidoAcierto: {fileID: 8300000, guid: 98863497d94d52b40b3ab0e2db327e07, type: 3}
   sonidoError: {fileID: 8300000, guid: 824e3d297c0e52540852102b31c7850c, type: 3}
   sonidoCompletado: {fileID: 8300000, guid: 9585c13f96cfa464f88be829fc20bdb3, type: 3}
+  sonidoCuy: {fileID: 8300000, guid: daf16bf3fa4531d42b7892d5903a1066, type: 3}
   spriteTrigo: {fileID: -666870068449178133, guid: 4e52881ec9a7d9c439711e8b3dbf54a9, type: 3}
   spritePapa: {fileID: -8837905132163604103, guid: 07f59a9d6656a4540876194e2b9269b1, type: 3}
   spriteCalabaza: {fileID: 3530326326342318695, guid: 7c83225fb307b3f4183195fc6ac9a273, type: 3}
@@ -91513,6 +91514,7 @@ MonoBehaviour:
   sonidoAcierto: {fileID: 8300000, guid: 98863497d94d52b40b3ab0e2db327e07, type: 3}
   sonidoError: {fileID: 8300000, guid: 824e3d297c0e52540852102b31c7850c, type: 3}
   sonidoCompletado: {fileID: 8300000, guid: 9585c13f96cfa464f88be829fc20bdb3, type: 3}
+  sonidoCuy: {fileID: 8300000, guid: daf16bf3fa4531d42b7892d5903a1066, type: 3}
   spriteTrigo: {fileID: -666870068449178133, guid: 4e52881ec9a7d9c439711e8b3dbf54a9, type: 3}
   spritePapa: {fileID: -8837905132163604103, guid: 07f59a9d6656a4540876194e2b9269b1, type: 3}
   spriteCalabaza: {fileID: 3530326326342318695, guid: 7c83225fb307b3f4183195fc6ac9a273, type: 3}
@@ -93205,6 +93207,7 @@ MonoBehaviour:
   sonidoAcierto: {fileID: 8300000, guid: 98863497d94d52b40b3ab0e2db327e07, type: 3}
   sonidoError: {fileID: 8300000, guid: 824e3d297c0e52540852102b31c7850c, type: 3}
   sonidoCompletado: {fileID: 8300000, guid: 9585c13f96cfa464f88be829fc20bdb3, type: 3}
+  sonidoCuy: {fileID: 8300000, guid: daf16bf3fa4531d42b7892d5903a1066, type: 3}
   spriteTrigo: {fileID: -666870068449178133, guid: 4e52881ec9a7d9c439711e8b3dbf54a9, type: 3}
   spritePapa: {fileID: -8837905132163604103, guid: 07f59a9d6656a4540876194e2b9269b1, type: 3}
   spriteCalabaza: {fileID: 3530326326342318695, guid: 7c83225fb307b3f4183195fc6ac9a273, type: 3}
@@ -97924,6 +97927,7 @@ MonoBehaviour:
   sonidoAcierto: {fileID: 8300000, guid: 98863497d94d52b40b3ab0e2db327e07, type: 3}
   sonidoError: {fileID: 8300000, guid: 824e3d297c0e52540852102b31c7850c, type: 3}
   sonidoCompletado: {fileID: 8300000, guid: 9585c13f96cfa464f88be829fc20bdb3, type: 3}
+  sonidoCuy: {fileID: 8300000, guid: daf16bf3fa4531d42b7892d5903a1066, type: 3}
   barreraSiguiente: {fileID: 184262754}
   andy: {fileID: 1873500765}
   textoPuntos: {fileID: 203448345}
@@ -98680,6 +98684,7 @@ MonoBehaviour:
   sonidoAcierto: {fileID: 8300000, guid: 98863497d94d52b40b3ab0e2db327e07, type: 3}
   sonidoError: {fileID: 8300000, guid: 824e3d297c0e52540852102b31c7850c, type: 3}
   sonidoCompletado: {fileID: 8300000, guid: 9585c13f96cfa464f88be829fc20bdb3, type: 3}
+  sonidoCuy: {fileID: 8300000, guid: daf16bf3fa4531d42b7892d5903a1066, type: 3}
   barreraSiguiente: {fileID: 269502052}
   spriteCodorniz: {fileID: 2553609784176096277, guid: 4983e7d74b1c24540b7a9f64a6c705bc, type: 3}
   spriteGallina: {fileID: -7949451116081983662, guid: 06dbe221a4ffea340a584858f60632c6, type: 3}

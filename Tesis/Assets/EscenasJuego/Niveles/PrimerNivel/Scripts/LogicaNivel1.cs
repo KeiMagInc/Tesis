@@ -46,6 +46,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     public AudioClip sonidoAcierto;
     public AudioClip sonidoError;
     public AudioClip sonidoCompletado;
+    public AudioClip sonidoCuy;
     [Header("Sprites UI Originales")]
     public Sprite spriteTrigo;
     public Sprite spritePapa;
@@ -315,7 +316,10 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
         rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(true));
         if (!silencioso && UIManager.instancia.fuenteVozAndy && sonidoAcierto)
-            UIManager.instancia.fuenteVozAndy.PlayOneShot(sonidoAcierto);
+        {
+            if (sonidoAcierto) UIManager.instancia.fuenteVozAndy.PlayOneShot(sonidoAcierto);
+            if (sonidoCuy) UIManager.instancia.fuenteVozAndy.PlayOneShot(sonidoCuy); 
+        }
     }
 
     void ActualizarPuntos() { if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString(); }
