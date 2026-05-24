@@ -937,6 +937,11 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     }
     void Update()
     {
+        if (panelFinal != null && panelFinal.activeSelf)
+        {
+            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+                BotonSiguiente();
+        }
         if (cargandoAgua && puntoOrigenActual != null)
         {
             lineaAgua.positionCount = 2;

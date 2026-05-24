@@ -536,6 +536,11 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     }
     void Update()
     {
+        if (panelFinal != null && panelFinal.activeSelf)
+        {
+            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+                BotonSiguiente();
+        }
         if (puntoSalidaHead == null || lupi == null || puntoEntradaNull == null) return;
         ActualizarVisualManguera();
     }

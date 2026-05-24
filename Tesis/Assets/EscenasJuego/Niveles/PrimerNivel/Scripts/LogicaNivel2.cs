@@ -354,7 +354,14 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                 KaosController.instancia.ReaccionarAError();
         }
     }
-    void Update() { if (cargandoAgua) lineaAgua.SetPosition(lineaAgua.positionCount - 1, lupi.position); }
+    void Update() {
+        if (panelFinal != null && panelFinal.activeSelf)
+        {
+            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+                BotonSiguiente();
+        }
+        if (cargandoAgua) lineaAgua.SetPosition(lineaAgua.positionCount - 1, lupi.position); 
+    }
     void SumarPuntos(int cant, bool silencioso = false)
     {
         if (KaosController.nivelesTerminados.Contains("CreacionReferencias")) return;
