@@ -91,6 +91,8 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         UIManager.instancia.MostrarMochilaSolo(false);
         UIManager.instancia.MostrarChecklistSolo(false);
         UIManager.instancia.panelParcelas.SetActive(false);
+        var control = lupi.GetComponent<PlayerController>();
+        if (control != null) control.controlesBloqueados = false;
         ResetearNivel();
     }
     void OnDisable()

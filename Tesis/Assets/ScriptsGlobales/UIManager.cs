@@ -84,7 +84,6 @@ public class UIManager : MonoBehaviour
         PlayerPrefs.SetInt("MusicaMute", fuenteMusicaFondo.mute ? 1 : 0);
         ActualizarIconos();
     }
-
     public void AlternarAudioAndy()
     {
         fuenteVozAndy.mute = !fuenteVozAndy.mute;
@@ -356,8 +355,10 @@ public class UIManager : MonoBehaviour
     }
     public void AbrirCerrarMenuParcelas()
     {
+        if (groupIconoMochila == null || groupIconoMochila.alpha == 0) return;
         if (panelParcelas != null)
             panelParcelas.SetActive(!panelParcelas.activeSelf);
-        if (lupiController != null) lupiController.controlesBloqueados = panelParcelas.activeSelf;
+        if (lupiController != null)
+            lupiController.controlesBloqueados = panelParcelas.activeSelf;
     }
 }
