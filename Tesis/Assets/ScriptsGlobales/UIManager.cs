@@ -74,8 +74,10 @@ public class UIManager : MonoBehaviour
     }
     void Start()
     {
-        fuenteMusicaFondo.mute = PlayerPrefs.GetInt("MusicaMute", 0) == 1;
-        fuenteVozAndy.mute = PlayerPrefs.GetInt("AndyMute", 0) == 1;
+        PlayerPrefs.SetInt("MusicaMute", 0);
+        PlayerPrefs.SetInt("AndyMute", 0);
+        fuenteMusicaFondo.mute = false;
+        fuenteVozAndy.mute = false;
         ActualizarIconos();
     }
     public void AlternarMusica()
@@ -267,9 +269,12 @@ public class UIManager : MonoBehaviour
     }
     public void SalirDelJuego()
     {
+        PlayerPrefs.SetInt("MusicaMute", 0);
+        PlayerPrefs.SetInt("AndyMute", 0);
+        PlayerPrefs.Save();
         Time.timeScale = 1f;
         AudioListener.pause = false;
-        Debug.Log("Regresando al menú de inicio...");
+        Debug.Log("Regresando al menú de inicio y reseteando audio por defecto...");
         SceneManager.LoadScene("MenuInicio");
     }
     void Update()
