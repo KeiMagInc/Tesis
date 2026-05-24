@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
 public class HistorietaManager : MonoBehaviour
 {
     [Header("Referencias a Botones")]
     public Button buttonSaltar;
     public Button buttonRegresar;
+    public Button buttonSalir;
     [Header("Configuración de Escenas")]
     public string escenaSiguiente = "PrimerNivel";
     public string escenaAnterior = "MenuInicio";
@@ -15,7 +15,6 @@ public class HistorietaManager : MonoBehaviour
     public float intensidadPalpito = 0.05f;
     public float velocidadPalpito = 5f;
     private Vector3[] escalasBase;
-
     void Start()
     {
         if (botonesParaAnimar != null)
@@ -54,5 +53,13 @@ public class HistorietaManager : MonoBehaviour
     public void CargarEscenaAnterior()
     {
         if (!string.IsNullOrEmpty(escenaAnterior)) SceneManager.LoadScene(escenaAnterior);
+    }
+    public void SalirDelJuego()
+    {
+        Application.Quit();
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+        Debug.Log("Saliendo del juego...");
     }
 }
