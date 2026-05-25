@@ -7,6 +7,13 @@ using UnityEngine.SceneManagement;
 
 public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Audios Animales")]
+    public AudioClip sonidoCodorniz;
+    public AudioClip sonidoGallina;
+    public AudioClip sonidoCerdo;
+    public AudioClip sonidoOveja;
+    public AudioClip sonidoVaca;
+    private float tiempoUltimaAccion = 0f;
     [Header("Efectos Burbuja")]
     public GameObject prefabBurbuja;
     [Header("Información del Nivel UI")]
@@ -56,6 +63,8 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     public Checkpoint checkpointFinal;
     [Header("Sonidos")]
     public AudioSource fuenteAudio;
+    public AudioClip sonidoSeleccionar;
+    public AudioClip sonidoAlerta;
     public AudioClip sonidoAcierto;
     public AudioClip sonidoError;
     public AudioClip sonidoCompletado;
@@ -110,6 +119,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         puntosAlIniciarNivel = UIManager.puntosGlobales;
         UIManager.instancia.logicaActiva = this;
         UIManager.instancia.SetPrefabs(prefabCodorniz, prefabGallina, prefabCerdo, prefabOveja, prefabVaca);
+        UIManager.instancia.SetSounds(sonidoCodorniz, sonidoGallina, sonidoCerdo, sonidoOveja, sonidoVaca);
         Sprite[] imagenes = { spriteCodorniz, spriteGallina, spriteCerdo, spriteOveja, spriteVaca };
         string[] nombres = { "Codorniz", "Gallina", "Cerdo", "Oveja", "Vaca" };
         UIManager.instancia.ConfigurarBotonesUI(imagenes, nombres);
@@ -282,11 +292,38 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     public void AvanceSiembraExitosa()
     {
         UIManager.instancia.SetSemillaPalpitar("");
-        StartCoroutine(EsperarYAsignarNodo());
+        AsignarNodoInmediato();
+    }
+    void AsignarNodoInmediato()
+    {
+        // Buscamos el nodo recién clonado
+        foreach (var nm in Object.FindObjectsByType<NodoManager>(FindObjectsSortMode.None))
+        {
+            if (nm.name.Contains("(Clone)") && !listaNodos.Contains(nm))
+            {
+                nodoActual = nm;
+                break;
+            }
+        }
+
+        if (nodoActual != null)
+        {
+            subPaso = 1;
+            if (fase == 0)
+            {
+                brilloRio.SetEncendido(true);
+                andy.Decir("Al ser el primer animal, el puntero de acceso P debe inicializarse apuntando a sí mismo: P^.LIGA = P", audioPrimerNodoCircular);
+            }
+            else
+            {
+                EncenderBrilloHijo(listaNodos[fase - 1].gameObject, "Liga", true);
+                andy.Decir("Para insertar a Q, actualizaremos la LIGA del animal anterior para que apunte a la dirección de memoria de este nuevo integrante.", audioInsertarIntermedio);
+            }
+        }
     }
     IEnumerator EsperarYAsignarNodo()
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.1f);
         foreach (var nm in Object.FindObjectsByType<NodoManager>(FindObjectsSortMode.None))
         {
             if (nm.name.Contains("(Clone)") && !listaNodos.Contains(nm))
@@ -312,11 +349,16 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     }
     public void AccionEnLetrero(string tipo, GameObject objetoTocado)
     {
+        if (Time.time - tiempoUltimaAccion < 0.05f) return;
+        tiempoUltimaAccion = Time.time;
+        if (fuenteAudio != null && sonidoSeleccionar != null)
+            fuenteAudio.PlayOneShot(sonidoSeleccionar);
         if (modoActual == ModoOperacion.Insertar)
         {
+            if (nodoActual == null) AsignarNodoInmediato();
             if (nodoActual == null) return;
             NodoManager managerTocado = objetoTocado.GetComponentInParent<NodoManager>();
-            if (!cargandoAgua) 
+            if (!cargandoAgua)
             {
                 if (fase == 0 && (tipo == "LC" || tipo == "Head"))
                 {
@@ -351,9 +393,9 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                     else andy.Decir("¡No pierdas el ciclo! Para cerrar la estructura circular, activa la LIGA del último animal para que retorne al inicio donde está P.", audioErrorNoLigaAnteriorCerrar);
                 }
             }
-            else 
+            else
             {
-                if (tipo == "EntradaHuerto")
+                if (tipo == "EntradaHuerto" || tipo == "Info")
                 {
                     if (subPaso == 1 && managerTocado == nodoActual)
                     {
@@ -361,7 +403,6 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                         cargandoAgua = false;
                         nodoActual.ActivarHuerto();
                         SumarPuntos(puntos);
-                        tiempoInicioEstado = Time.time;
                         puntosConfirmados.Add(nodoActual.puntoEntrada.position);
                         DibujarLineaFija();
                         EncenderBrilloHijo(nodoActual.gameObject, "Info", false);
@@ -431,7 +472,9 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         if (audioExitoCiclo != null)
             yield return new WaitForSeconds(audioExitoCiclo.length + 0.5f);
         else
-            yield return new WaitForSeconds(3f); 
+            yield return new WaitForSeconds(3f);
+        if (fuenteAudio != null && sonidoAlerta != null)
+            fuenteAudio.PlayOneShot(sonidoAlerta);
         andy.Decir("¡Impresionante! El Kaos ha infectado a los animales. Debemos realizar una ELIMINACIÓN, liberando la memoria del nodo sin romper el flujo.", audioIntroEliminar);
         if (audioIntroEliminar != null)
             yield return new WaitForSeconds(audioIntroEliminar.length + 0.5f);
@@ -453,6 +496,8 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     void ProximoPasoEliminar()
     {
         tiempoInicioEstado = Time.time;
+        if (fuenteAudio != null && sonidoAlerta != null)
+            fuenteAudio.PlayOneShot(sonidoAlerta);
         if (indiceAEliminar == 4)
         {
             andy.Decir("La vaca se ha retirado. Usa el puntero auxiliar T para que la LIGA de la oveja apunte de regreso a las codornices (P)", audioEliminarFinal);
@@ -659,5 +704,8 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                 KaosController.instancia.ReaccionarAError();
         }
     }
-    IEnumerator EsperarSiguiente() { yield return new WaitForSeconds(2f); ProximoPasoSiembra(); }
+    IEnumerator EsperarSiguiente() { 
+        yield return new WaitForSeconds(0.3f); 
+        ProximoPasoSiembra(); 
+    }
 }

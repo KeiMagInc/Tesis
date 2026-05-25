@@ -84,6 +84,8 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     public Checkpoint checkpointFinal;
     [Header("Sonidos")]
     public AudioSource fuenteAudio;
+    public AudioClip sonidoSeleccionar;
+    public AudioClip sonidoAlerta;
     public AudioClip sonidoAcierto;
     public AudioClip sonidoError;
     public AudioClip sonidoCompletado;
@@ -106,6 +108,9 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     public Sprite spriteVaca;
     public Sprite spriteCerdo;
     public Sprite spriteOveja;
+    public AudioClip sonidoVaca;
+    public AudioClip sonidoCerdo;
+    public AudioClip sonidoOveja;
     [Header("Referencias de Escena")]
     public Transform puntoSalidaHead;
     public Transform puntoEntradaNull;
@@ -268,12 +273,14 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         if (modoActual == ModoOperacion.InsertarInicio)
         {
             UIManager.instancia.SetPrefabs(prefabOveja, prefabCerdo, prefabVaca);
+            UIManager.instancia.SetSounds(sonidoOveja, sonidoCerdo, sonidoVaca);
             UIManager.instancia.ConfigurarBotonesUI(new Sprite[] { spriteOveja, spriteCerdo, spriteVaca }, nombresNodosInicio);
             UIManager.instancia.ConfigurarTextosChecklist("new Nodo(\"Oveja\");", "", "new Nodo(\"Cerdo\");", "", "new Nodo(\"Vaca\");");
         }
         else if (modoActual == ModoOperacion.InsertarFinal)
         {
             UIManager.instancia.SetPrefabs(prefabVaca, prefabCerdo, prefabOveja);
+            UIManager.instancia.SetSounds(sonidoVaca, sonidoCerdo, sonidoOveja);
             UIManager.instancia.ConfigurarBotonesUI(new Sprite[] { spriteVaca, spriteCerdo, spriteOveja }, nombresNodosFinal);
             UIManager.instancia.ConfigurarTextosChecklist("new Nodo(\"Vaca\");", "", "new Nodo(\"Cerdo\");", "", "new Nodo(\"Oveja\");");
         }
@@ -299,6 +306,8 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         }
         else if (modoActual == ModoOperacion.EliminarInicio)
         {
+            if (fuenteAudio != null && sonidoAlerta != null)
+                fuenteAudio.PlayOneShot(sonidoAlerta);
             clipReproducido = audioIntroEliminarDoble;
             andy.Decir("¡Alerta Lupi! El Kaos ha infectado el campo INFO de la cabecera. Eliminaremos el NODO en P reasignando las ligas bidireccionales.", clipReproducido);
         }
@@ -334,6 +343,8 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         }
         else if (modoActual == ModoOperacion.EliminarInicio)
         {
+            if (fuenteAudio != null && sonidoAlerta != null)
+                fuenteAudio.PlayOneShot(sonidoAlerta);
             andy.Decir("¡La Vaca en P está infectada! Recoge la dirección de P; debemos reasignar la cabecera al Cerdo para aislar el NODO corrupto.", audioEliminarInicio);
             if (brilloHead) brilloHead.SetEncendido(true);
         }
@@ -346,8 +357,13 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     }
     public void AvanceSiembraExitosa()
     {
-        tiempoInicioEstado = Time.time;
         UIManager.instancia.SetSemillaPalpitar("");
+        StartCoroutine(EsperarParaAsignarNodoDoble());        
+    }
+
+    IEnumerator EsperarParaAsignarNodoDoble()
+    {
+        yield return new WaitForSeconds(0.5f);
         managerActual = ObtenerNodoReciente();
         if (modoActual == ModoOperacion.InsertarInicio)
         {
@@ -378,8 +394,12 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             }
         }
     }
+
     public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
     {
+        if (Time.time - ultimoTiempoClic < 0.1f) return; 
+        if (fuenteAudio != null && sonidoSeleccionar != null)
+            fuenteAudio.PlayOneShot(sonidoSeleccionar);
         if (modoActual == ModoOperacion.InsertarInicio) LogicaInsertarInicio(tipo, objetoTocado);
         else if (modoActual == ModoOperacion.InsertarFinal) LogicaInsertarFinal(tipo, objetoTocado);
         else if (modoActual == ModoOperacion.EliminarInicio) LogicaEliminarInicio(tipo, objetoTocado);
@@ -482,20 +502,25 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         if (objetoTocado != null && objetoTocado.transform == puntoOrigenActual) return;
         if (!cargandoAgua && (tipo.Contains("Entrada") || tipo == "Null")) return;
         if (cargandoAgua && (tipo.Contains("Salida") || tipo == "Head")) return;
-        if (!andy.fuenteVoz.isPlaying)
-        {
-            ReproducirError();
-            if (fase == 0 && pasoConexion == 0)
-                andy.Decir("¡Cuidado Lupi! Para iniciar la Lista Doble, debemos recoger el flujo directamente del INICIO.", audioErrorNoRio);
+        ReproducirError();
+        if (fase == 0 && pasoConexion == 0)
+            andy.Decir("¡Cuidado Lupi! Para iniciar la Lista Doble, debemos recoger el flujo directamente del INICIO.", audioErrorNoRio);
             else if (pasoConexion == 0 || pasoConexion == 1)
-                andy.Decir("El algoritmo indica que debemos activar los enlaces bidireccionales del NODO.", audioErrorNoLigaAnterior);
+            andy.Decir("El algoritmo indica que debemos activar los enlaces bidireccionales del NODO.", audioErrorNoLigaAnterior);
             else
-                andy.Decir("Para completar la inserción, activa el poste de INICIO.", audioMoverInicioError);
-        }
+            andy.Decir("Para completar la inserción, activa el poste de INICIO.", audioMoverInicioError);
     }
     IEnumerator EsperarYFinalizar(bool exito, float tiempo)
     {
         yield return new WaitForSeconds(tiempo);
+        if (andy != null && andy.fuenteVoz != null)
+        {
+            while (andy.fuenteVoz.isPlaying)
+            {
+                yield return null;
+            }
+        }
+        yield return new WaitForSeconds(0.5f);
         FinalizarNodoCompleto(exito);
     }
     void LogicaInsertarFinal(string tipo, GameObject objetoTocado)
@@ -791,7 +816,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     }
     IEnumerator CambiarDeFaseAlgoritmo()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.3f);
         if (modoActual == ModoOperacion.InsertarInicio)
         {
             ReproducirNivelCompleto();
@@ -831,11 +856,16 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         nodo.IniciarSecuenciaEliminacion();
         yield return new WaitForSeconds(2f);
         UIManager.instancia.MarcarTareaCompletada(numeroTareaUI);
-        if (modoActual == ModoOperacion.EliminarInicio)        {
+        if (modoActual == ModoOperacion.EliminarInicio)
+        {
             andy.Decir("¡La Vaca ha sido purificada y su memoria liberada! Ahora eliminaremos el NODO en F para sanar el final de la lista.", audioFelicidadesEliminarInicio);
-            if (audioFelicidadesEliminarInicio != null) yield return new WaitForSeconds(audioFelicidadesEliminarInicio.length + 0.5f);
-            else yield return new WaitForSeconds(4f);
+            if (audioFelicidadesEliminarInicio != null) 
+                yield return new WaitForSeconds(audioFelicidadesEliminarInicio.length + 0.8f);
+            else 
+                yield return new WaitForSeconds(4f);
             modoActual = ModoOperacion.EliminarFinal;
+            if (fuenteAudio != null && sonidoAlerta != null)
+                fuenteAudio.PlayOneShot(sonidoAlerta);
             ActualizarCabeceraNivel5();
             pasoConexion = 0;
             ConfigurarUIParaModoActual();
@@ -952,9 +982,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         if (esperandoCierreNivel && checkpointFinal != null && lupi != null)
         {
             if (Vector3.Distance(lupi.position, checkpointFinal.transform.position) < 1.5f)
-            {
                 SceneManager.LoadScene("HistoriaFin");
-            }
         }
     }
     private NodoManager ObtenerNodoReciente()
@@ -1051,9 +1079,10 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             z.ResetearZona(); 
         }
         if (LogicaNivel1.instancia != null)
-        {
             LogicaNivel1.instancia.ResetearNivelSilencioso();
-        }
     }
-    IEnumerator EsperarSiguiente() { yield return new WaitForSeconds(2f); ProximoPaso(); }
+    IEnumerator EsperarSiguiente() { 
+        yield return new WaitForSeconds(1.0f); 
+        ProximoPaso(); 
+    }
 }

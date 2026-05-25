@@ -12,6 +12,8 @@ public class UIManager : MonoBehaviour
     [Header("Gestión de Sonido y Audio")]
     public AudioSource fuenteMusicaFondo;
     public AudioSource fuenteVozAndy;
+    public AudioClip sonidoPausa;
+    public AudioClip sonidoMochila;
     public Image iconoMusica;
     public Image iconoAudio;    
     public Sprite spriteSonidoOn, spriteSonidoOff;
@@ -19,8 +21,8 @@ public class UIManager : MonoBehaviour
     public GameObject panelControles;
     private bool controlesYaOcultos = false;
     [Header("Mochila (Nuevas Referencias)")]
-    public TextMeshProUGUI[] textosNombresSemillas; 
-    public TextMeshProUGUI[] textosNumerosSemillas; 
+    public TextMeshProUGUI[] textosNombresSemillas;
+    public Image[] imagenesNumerosSemillas;
     [Header("Información del Nivel")] 
     public TextMeshProUGUI textoNombreNivel;
     public TextMeshProUGUI textoNombreOperacion;
@@ -47,6 +49,7 @@ public class UIManager : MonoBehaviour
     public float distanciaParaEncajar = 5.0f;
     private string[] nombresLogicosActuales = new string[6];
     private GameObject[] prefabsActuales = new GameObject[6];
+    private AudioClip[] sonidosActuales = new AudioClip[6];
     private Vector3[] escalasOriginales;
     private string semillaActiva = "";
     private Color colorVerdeMilitar;
@@ -76,9 +79,24 @@ public class UIManager : MonoBehaviour
     {
         PlayerPrefs.SetInt("MusicaMute", 0);
         PlayerPrefs.SetInt("AndyMute", 0);
+        if (fuenteMusicaFondo != null)
+        {
+            fuenteMusicaFondo.loop = true;
+            if (!fuenteMusicaFondo.isPlaying)
+                fuenteMusicaFondo.Play();
+        }
         fuenteMusicaFondo.mute = false;
         fuenteVozAndy.mute = false;
+        fuenteVozAndy.ignoreListenerPause = true;
         ActualizarIconos();
+    }
+    public void SetSounds(params AudioClip[] sonidos)
+    {
+        System.Array.Clear(sonidosActuales, 0, sonidosActuales.Length);
+        for (int i = 0; i < sonidos.Length && i < sonidosActuales.Length; i++)
+        {
+            sonidosActuales[i] = sonidos[i];
+        }
     }
     public void AlternarMusica()
     {
@@ -156,12 +174,14 @@ public class UIManager : MonoBehaviour
                 botonesSemillas[i].interactable = true;
                 if (textosNombresSemillas != null && i < textosNombresSemillas.Length && textosNombresSemillas[i] != null)
                     textosNombresSemillas[i].text = nombres[i];
-                if (textosNumerosSemillas != null && i < textosNumerosSemillas.Length && textosNumerosSemillas[i] != null)
-                    textosNumerosSemillas[i].text = (i + 1).ToString();
+                if (imagenesNumerosSemillas != null && i < imagenesNumerosSemillas.Length && imagenesNumerosSemillas[i] != null)
+                    imagenesNumerosSemillas[i].gameObject.SetActive(true);
             }
             else
             {
                 botonesSemillas[i].gameObject.SetActive(false);
+                if (imagenesNumerosSemillas != null && i < imagenesNumerosSemillas.Length && imagenesNumerosSemillas[i] != null)
+                    imagenesNumerosSemillas[i].gameObject.SetActive(false);
             }
         }
     }
@@ -196,6 +216,8 @@ public class UIManager : MonoBehaviour
             if (prefabsActuales[indice] != null)
             {
                 Instantiate(prefabsActuales[indice], masCercana.transform.position, Quaternion.identity);
+                if (indice < sonidosActuales.Length && sonidosActuales[indice] != null)
+                    fuenteVozAndy.PlayOneShot(sonidosActuales[indice]);
                 masCercana.estaOcupada = true;
                 masCercana.DesactivarColision();
                 if (panelParcelas != null)
@@ -263,6 +285,8 @@ public class UIManager : MonoBehaviour
     public void AlternarPausa()
     {
         estaPausado = !estaPausado;
+        if (fuenteVozAndy != null && sonidoPausa != null)
+            fuenteVozAndy.PlayOneShot(sonidoPausa);
         if (panelPausa) panelPausa.SetActive(estaPausado);
         Time.timeScale = estaPausado ? 0f : 1f;
         AudioListener.pause = estaPausado;
@@ -361,6 +385,8 @@ public class UIManager : MonoBehaviour
     public void AbrirCerrarMenuParcelas()
     {
         if (groupIconoMochila == null || groupIconoMochila.alpha == 0) return;
+        if (fuenteVozAndy != null && sonidoMochila != null)
+            fuenteVozAndy.PlayOneShot(sonidoMochila);
         if (panelParcelas != null)
             panelParcelas.SetActive(!panelParcelas.activeSelf);
         if (lupiController != null)

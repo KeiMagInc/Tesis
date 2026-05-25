@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
 {
+    private float tiempoUltimaAccion = 0f;
     [Header("Efectos Burbuja")]
     public GameObject prefabBurbuja;
     [Header("Información del Nivel UI")]
@@ -85,6 +86,9 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     public BarreraProgreso barreraSiguiente;
     [Header("Sonidos")]
     public AudioSource fuenteAudio;
+    public AudioClip sonidoSeleccionar;
+    public AudioClip sonidoSembrar;
+    public AudioClip sonidoAlerta;
     public AudioClip sonidoAcierto;
     public AudioClip sonidoError;
     public AudioClip sonidoCompletado;
@@ -135,6 +139,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         puntosAlIniciarNivel = UIManager.puntosGlobales;
         UIManager.instancia.logicaActiva = this;
         UIManager.instancia.SetPrefabs(prefabPapaN3, prefabTrigoN3, prefabCalabazaN3);
+        UIManager.instancia.SetSounds(sonidoSembrar, sonidoSembrar, sonidoSembrar);
         Sprite[] imagenes = { spritePapa, spriteTrigo, spriteCalabaza };
         string[] nombres = { "Papa", "Trigo", "Calabaza" };
         UIManager.instancia.ConfigurarBotonesUI(imagenes, nombres);
@@ -301,6 +306,8 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         }
         else if (modoActual == ModoOperacion.EliminarInicio)
         {
+            if (fuenteAudio != null && sonidoAlerta != null)
+                fuenteAudio.PlayOneShot(sonidoAlerta);
             clipReproducido = audioIntroEliminarInicio;
             andy.Decir("¡Alerta! El Kaos ha infectado el primer NODO. Debemos realizar una ELIMINACIÓN para proteger el resto de la estructura.", clipReproducido);
         }
@@ -352,6 +359,8 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         }
         else if (modoActual == ModoOperacion.EliminarFinal)
         {
+            if (fuenteAudio != null && sonidoAlerta != null)
+                fuenteAudio.PlayOneShot(sonidoAlerta);
             andy.Decir("El último NODO está perdido. Debemos modificar el campo LIGA del penúltimo NODO para que apunte a NULL.", audioEliminarFinalLiga);
             EncenderBrilloEnNodo(listaNodos[1].gameObject, "Liga", true);
         }
@@ -635,6 +644,10 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     }
     public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
     {
+        if (Time.time - tiempoUltimaAccion < 0.1f) return;
+        tiempoUltimaAccion = Time.time;
+        if (fuenteAudio != null && sonidoSeleccionar != null)
+            fuenteAudio.PlayOneShot(sonidoSeleccionar);
         switch (modoActual)
         {
             case ModoOperacion.InsertarInicio: LogicaInsertarInicio(tipo, objetoTocado); break;

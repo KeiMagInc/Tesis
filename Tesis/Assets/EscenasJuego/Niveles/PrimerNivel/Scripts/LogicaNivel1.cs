@@ -46,6 +46,8 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     public AudioClip audioErrorNull;
     [Header("Sonidos")]
     public AudioSource fuenteAudio;
+    public AudioClip sonidoSeleccionar;
+    public AudioClip sonidoSembrar; 
     public AudioClip sonidoAcierto;
     public AudioClip sonidoError;
     public AudioClip sonidoCompletado;
@@ -88,6 +90,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         if (UIManager.instancia == null) return;
         puntosAlIniciarNivel = UIManager.puntosGlobales;
         UIManager.instancia.logicaActiva = this;
+        UIManager.instancia.SetSounds(sonidoSembrar, sonidoSembrar, sonidoSembrar);
         UIManager.instancia.MostrarMochilaSolo(false);
         UIManager.instancia.MostrarChecklistSolo(false);
         UIManager.instancia.panelParcelas.SetActive(false);
@@ -205,7 +208,9 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     public void AvanceSiembraExitosa() { }
     public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
     {
-        if (Time.time - tiempoUltimaAccion < 1.5f) return;
+        if (Time.time - tiempoUltimaAccion < 0.1f) return;
+        if (fuenteAudio != null && sonidoSeleccionar != null)
+            fuenteAudio.PlayOneShot(sonidoSeleccionar);
         tiempoUltimaAccion = Time.time;
 
         switch (tipo)

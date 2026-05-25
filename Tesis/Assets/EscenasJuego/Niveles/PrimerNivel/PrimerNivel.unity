@@ -52723,7 +52723,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.7
+      value: 3.5
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -68488,6 +68488,8 @@ MonoBehaviour:
   audioErrorLiga: {fileID: 8300000, guid: 0198eb9d4f6112c48a9c45c6327d332d, type: 3}
   audioErrorNull: {fileID: 8300000, guid: 82ce1c42dd8b3684d87c0ddf87cd1076, type: 3}
   fuenteAudio: {fileID: 1873500767}
+  sonidoSeleccionar: {fileID: 8300000, guid: 122342ede45c3b246a29c8127b91527c, type: 3}
+  sonidoSembrar: {fileID: 8300000, guid: dafca0e1d1d65b24995af4562e248413, type: 3}
   sonidoAcierto: {fileID: 8300000, guid: 98863497d94d52b40b3ab0e2db327e07, type: 3}
   sonidoError: {fileID: 8300000, guid: 824e3d297c0e52540852102b31c7850c, type: 3}
   sonidoCompletado: {fileID: 8300000, guid: 9585c13f96cfa464f88be829fc20bdb3, type: 3}
@@ -91698,6 +91700,8 @@ MonoBehaviour:
   audioLigaAbierta: {fileID: 8300000, guid: 2448cf1550950c648b8b3b8480f3050a, type: 3}
   audioFinalNivel: {fileID: 8300000, guid: 494cf6a68a2f3c94db046e8f2d77498c, type: 3}
   fuenteAudio: {fileID: 1873500767}
+  sonidoSeleccionar: {fileID: 8300000, guid: 122342ede45c3b246a29c8127b91527c, type: 3}
+  sonidoSembrar: {fileID: 8300000, guid: dafca0e1d1d65b24995af4562e248413, type: 3}
   sonidoAcierto: {fileID: 8300000, guid: 98863497d94d52b40b3ab0e2db327e07, type: 3}
   sonidoError: {fileID: 8300000, guid: 824e3d297c0e52540852102b31c7850c, type: 3}
   sonidoCompletado: {fileID: 8300000, guid: 9585c13f96cfa464f88be829fc20bdb3, type: 3}
@@ -93427,6 +93431,9 @@ MonoBehaviour:
   checkpointFinal: {fileID: 493115344}
   barreraSiguiente: {fileID: 1576343243}
   fuenteAudio: {fileID: 1873500767}
+  sonidoSeleccionar: {fileID: 8300000, guid: 122342ede45c3b246a29c8127b91527c, type: 3}
+  sonidoSembrar: {fileID: 8300000, guid: dafca0e1d1d65b24995af4562e248413, type: 3}
+  sonidoAlerta: {fileID: 8300000, guid: 8388e5ece4871fd49aaf6febe9925841, type: 3}
   sonidoAcierto: {fileID: 8300000, guid: 98863497d94d52b40b3ab0e2db327e07, type: 3}
   sonidoError: {fileID: 8300000, guid: 824e3d297c0e52540852102b31c7850c, type: 3}
   sonidoCompletado: {fileID: 8300000, guid: 9585c13f96cfa464f88be829fc20bdb3, type: 3}
@@ -93666,9 +93673,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1788621128}
     - target: {fileID: 3906074956565988614, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: sonidoPausa
+      value: 
+      objectReference: {fileID: 8300000, guid: c6c1850c3a0ce6a4fa741c4f46815c78, type: 3}
+    - target: {fileID: 3906074956565988614, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: fuenteVozAndy
       value: 
       objectReference: {fileID: 1873500767}
+    - target: {fileID: 3906074956565988614, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: sonidoMochila
+      value: 
+      objectReference: {fileID: 8300000, guid: a70ff43c9ccbdce45ab5e7386dfc5fc8, type: 3}
     - target: {fileID: 3906074956565988614, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: panelControles
       value: 
@@ -93689,6 +93704,34 @@ PrefabInstance:
       propertyPath: fuenteMusicaFondo
       value: 
       objectReference: {fileID: 379046422}
+    - target: {fileID: 3906074956565988614, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: imagenesNumerosSemillas.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3906074956565988614, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: 'imagenesNumerosSemillas.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1250188595}
+    - target: {fileID: 3906074956565988614, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: 'imagenesNumerosSemillas.Array.data[1]'
+      value: 
+      objectReference: {fileID: 289220105}
+    - target: {fileID: 3906074956565988614, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: 'imagenesNumerosSemillas.Array.data[2]'
+      value: 
+      objectReference: {fileID: 30078234}
+    - target: {fileID: 3906074956565988614, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: 'imagenesNumerosSemillas.Array.data[3]'
+      value: 
+      objectReference: {fileID: 1229178081}
+    - target: {fileID: 3906074956565988614, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: 'imagenesNumerosSemillas.Array.data[4]'
+      value: 
+      objectReference: {fileID: 1206888634}
+    - target: {fileID: 3906074956565988614, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: 'imagenesNumerosSemillas.Array.data[5]'
+      value: 
+      objectReference: {fileID: 755203159}
     - target: {fileID: 4321314355883206078, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -98286,6 +98329,8 @@ MonoBehaviour:
   insigniaDeEsteNivel: {fileID: -5931077577829324559, guid: 0f28a8c58a1ee8b4fadc6e22b6c6d976, type: 3}
   checkpointFinal: {fileID: 1594470652}
   fuenteAudio: {fileID: 1873500767}
+  sonidoSeleccionar: {fileID: 8300000, guid: 122342ede45c3b246a29c8127b91527c, type: 3}
+  sonidoAlerta: {fileID: 8300000, guid: 8388e5ece4871fd49aaf6febe9925841, type: 3}
   sonidoAcierto: {fileID: 8300000, guid: 98863497d94d52b40b3ab0e2db327e07, type: 3}
   sonidoError: {fileID: 8300000, guid: 824e3d297c0e52540852102b31c7850c, type: 3}
   sonidoCompletado: {fileID: 8300000, guid: 9585c13f96cfa464f88be829fc20bdb3, type: 3}
@@ -98303,6 +98348,9 @@ MonoBehaviour:
   spriteVaca: {fileID: 1019254656465003142, guid: b2ee1023951a90a4b856f9705b894c44, type: 3}
   spriteCerdo: {fileID: 1995238211026135775, guid: fc36a00a50267c647a0861bb89456b83, type: 3}
   spriteOveja: {fileID: 6792788541964517201, guid: 376ac2832fc9c05428caf8f767a362f5, type: 3}
+  sonidoVaca: {fileID: 8300000, guid: 3031c165539b409409f57b042c6f3a18, type: 3}
+  sonidoCerdo: {fileID: 8300000, guid: 97b745fc39e483342afa2a84f738dfe4, type: 3}
+  sonidoOveja: {fileID: 8300000, guid: 858187ccfb6cb47468c6c406fa80f81b, type: 3}
   puntoSalidaHead: {fileID: 501578209}
   puntoEntradaNull: {fileID: 1528405447}
   brilloHead: {fileID: 501578208}
@@ -99011,6 +99059,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0976d74c87dbcc8488da2c02840c663d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sonidoCodorniz: {fileID: 8300000, guid: a8769f8b2957de740a0de0eaf0ef2da2, type: 3}
+  sonidoGallina: {fileID: 8300000, guid: 275619b82d2fcf74ab23e6b03b46f12f, type: 3}
+  sonidoCerdo: {fileID: 8300000, guid: 97b745fc39e483342afa2a84f738dfe4, type: 3}
+  sonidoOveja: {fileID: 8300000, guid: 858187ccfb6cb47468c6c406fa80f81b, type: 3}
+  sonidoVaca: {fileID: 8300000, guid: 3031c165539b409409f57b042c6f3a18, type: 3}
   prefabBurbuja: {fileID: 10061019977776553, guid: 90e09882a54cf3545a1bb7cd4b178ac8, type: 3}
   nombreDelNivel: Listas Ciculares
   puntoInicioNivel: {fileID: 1112845466}
@@ -99044,6 +99097,8 @@ MonoBehaviour:
   insigniaDeEsteNivel: {fileID: -8556057885812432577, guid: 5005f64025f263447acc7317898b0b42, type: 3}
   checkpointFinal: {fileID: 1803596388538438346}
   fuenteAudio: {fileID: 1873500767}
+  sonidoSeleccionar: {fileID: 8300000, guid: 122342ede45c3b246a29c8127b91527c, type: 3}
+  sonidoAlerta: {fileID: 8300000, guid: 8388e5ece4871fd49aaf6febe9925841, type: 3}
   sonidoAcierto: {fileID: 8300000, guid: 98863497d94d52b40b3ab0e2db327e07, type: 3}
   sonidoError: {fileID: 8300000, guid: 824e3d297c0e52540852102b31c7850c, type: 3}
   sonidoCompletado: {fileID: 8300000, guid: 9585c13f96cfa464f88be829fc20bdb3, type: 3}

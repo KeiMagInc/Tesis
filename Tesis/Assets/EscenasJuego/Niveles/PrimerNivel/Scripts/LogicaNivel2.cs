@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
 {
+    private float tiempoUltimaAccion = 0f;
     [Header("Efectos Burbuja")]
     public GameObject prefabBurbuja;
     [Header("Información del Nivel UI")]
@@ -46,6 +47,8 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     public AudioClip audioFinalNivel;
     [Header("Sonidos")]
     public AudioSource fuenteAudio;
+    public AudioClip sonidoSeleccionar;
+    public AudioClip sonidoSembrar;
     public AudioClip sonidoAcierto;
     public AudioClip sonidoError;
     public AudioClip sonidoCompletado;
@@ -91,6 +94,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         puntosAlIniciarNivel = UIManager.puntosGlobales;
         UIManager.instancia.logicaActiva = this;
         UIManager.instancia.SetPrefabs(prefabTrigoN2, prefabCalabazaN2, prefabPapaN2);
+        UIManager.instancia.SetSounds(sonidoSembrar, sonidoSembrar, sonidoSembrar);
         Sprite[] imagenes = { spriteTrigo, spriteCalabaza, spritePapa };
         string[] nombres = { "Trigo", "Calabaza", "Papa" };
         UIManager.instancia.ConfigurarBotonesUI(imagenes, nombres);
@@ -247,6 +251,10 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     }
     public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
     {
+        if (Time.time - tiempoUltimaAccion < 0.1f) return;
+        tiempoUltimaAccion = Time.time;
+        if (fuenteAudio != null && sonidoSeleccionar != null)
+            fuenteAudio.PlayOneShot(sonidoSeleccionar);
         switch (tipo)
         {
             case "Head":
