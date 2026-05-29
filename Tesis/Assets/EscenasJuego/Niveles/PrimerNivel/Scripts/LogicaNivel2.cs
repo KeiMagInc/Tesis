@@ -99,6 +99,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         string[] nombres = { "Trigo", "Calabaza", "Papa" };
         UIManager.instancia.ConfigurarBotonesUI(imagenes, nombres);
         ResetearNivel();
+        UIManager.instancia.SetMochilaHabilitada(true);
         UIManager.instancia.ConfigurarTextosChecklist(
             "new Nodo(\"Trigo\");",
             "",
@@ -169,6 +170,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         if (panelFinal != null) panelFinal.SetActive(false);
         CongelarLupi(false);
         ResetearNivel();
+        UIManager.instancia.SetMochilaHabilitada(true);
         if (lupi != null && puntoInicioNivel != null)
             lupi.position = puntoInicioNivel.position;
         StartCoroutine(Intro());

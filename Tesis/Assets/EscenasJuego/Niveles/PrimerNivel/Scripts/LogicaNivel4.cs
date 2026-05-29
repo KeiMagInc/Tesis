@@ -125,6 +125,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         UIManager.instancia.ConfigurarBotonesUI(imagenes, nombres);
         ResetearNivel();
         ActualizarCabeceraNivel4();
+        UIManager.instancia.SetMochilaHabilitada(true);
         StartCoroutine(SecuenciaIntro());
     }
     void OnDisable()
@@ -213,6 +214,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         CongelarLupi(false);
         ResetearNivel();
         ActualizarCabeceraNivel4();
+        UIManager.instancia.SetMochilaHabilitada(true);
         if (lupi != null && puntoInicioNivel != null)
             lupi.position = puntoInicioNivel.position;
         StartCoroutine(SecuenciaIntro());
@@ -491,6 +493,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                 "delete(Codorniz)",
                 ""
             );
+        UIManager.instancia.SetMochilaHabilitada(false);
         ProximoPasoEliminar();
     }
     void ProximoPasoEliminar()

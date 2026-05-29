@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement; 
 public class UIManager : MonoBehaviour
 {
+    private bool mochilaHabilitada = true;
     public CanvasGroup groupNombreNivel;
     private PlayerController lupiController;
     [Header("Gestión de Sonido y Audio")]
@@ -89,6 +90,16 @@ public class UIManager : MonoBehaviour
         fuenteVozAndy.mute = false;
         fuenteVozAndy.ignoreListenerPause = true;
         ActualizarIconos();
+    }
+    public void SetMochilaHabilitada(bool habilitada)
+    {
+        mochilaHabilitada = habilitada;
+        MostrarMochilaSolo(habilitada);
+        if (!habilitada && panelParcelas != null && panelParcelas.activeSelf)
+        {
+            panelParcelas.SetActive(false);
+            if (lupiController != null) lupiController.controlesBloqueados = false;
+        }
     }
     public void SetSounds(params AudioClip[] sonidos)
     {
@@ -306,8 +317,10 @@ public class UIManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
             AlternarPausa();
         if (Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.M))
-            if (!estaPausado)
+        {
+            if (!estaPausado && mochilaHabilitada)
                 AbrirCerrarMenuParcelas();
+        }
         if (estaPausado) return;
         if (panelParcelas.activeSelf)
         {
@@ -368,8 +381,9 @@ public class UIManager : MonoBehaviour
     {
         if (groupIconoMochila)
         {
-            groupIconoMochila.gameObject.SetActive(m);
-            groupIconoMochila.alpha = m ? 1 : 0;
+            bool activar = m && mochilaHabilitada;
+            groupIconoMochila.gameObject.SetActive(activar);
+            groupIconoMochila.alpha = activar ? 1 : 0;
         }
     }
     public void MostrarChecklistSolo(bool m)
@@ -384,7 +398,7 @@ public class UIManager : MonoBehaviour
     }
     public void AbrirCerrarMenuParcelas()
     {
-        if (groupIconoMochila == null || groupIconoMochila.alpha == 0) return;
+        if (groupIconoMochila == null || groupIconoMochila.alpha == 0 || !mochilaHabilitada) return;
         if (fuenteVozAndy != null && sonidoMochila != null)
             fuenteVozAndy.PlayOneShot(sonidoMochila);
         if (panelParcelas != null)

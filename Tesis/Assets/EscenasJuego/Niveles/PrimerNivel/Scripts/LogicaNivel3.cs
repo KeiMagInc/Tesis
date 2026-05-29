@@ -145,6 +145,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         UIManager.instancia.ConfigurarBotonesUI(imagenes, nombres);
         ResetearNivel();
         ActualizarCabeceraSegunModo();
+        UIManager.instancia.SetMochilaHabilitada(true);
         StartCoroutine(Intro());
     }
     void ActualizarCabeceraSegunModo()
@@ -221,6 +222,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         CongelarLupi(false);
         ResetearNivel();
         ActualizarCabeceraSegunModo();
+        UIManager.instancia.SetMochilaHabilitada(true);
         if (lupi != null && puntoInicioNivel != null)
             lupi.position = puntoInicioNivel.position;
         StartCoroutine(Intro());
@@ -298,11 +300,13 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         {
             clipReproducido = audioIntroInsertarInicio;
             andy.Decir("¡Atención Lupi! Kaos ha borrado todas las parcelas. Debemos aplicar una INSERCIÓN AL INICIO para expandir la lista desde su cabecera.", clipReproducido);
+            UIManager.instancia.SetMochilaHabilitada(true);
         }
         else if (modoActual == ModoOperacion.InsertarFinal)
         {
             clipReproducido = audioIntroInsertarFinal;
             andy.Decir("¡Lupifantástico! Ahora aprenderemos la INSERCIÓN AL FINAL. Debemos extender el rastro de la cosecha hasta el último rincón del valle.", clipReproducido);
+            UIManager.instancia.SetMochilaHabilitada(true);
         }
         else if (modoActual == ModoOperacion.EliminarInicio)
         {
@@ -310,6 +314,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 fuenteAudio.PlayOneShot(sonidoAlerta);
             clipReproducido = audioIntroEliminarInicio;
             andy.Decir("¡Alerta! El Kaos ha infectado el primer NODO. Debemos realizar una ELIMINACIÓN para proteger el resto de la estructura.", clipReproducido);
+            UIManager.instancia.SetMochilaHabilitada(false);
         }
         if (clipReproducido != null)
             yield return new WaitForSeconds(clipReproducido.length + 0.5f);
@@ -380,6 +385,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             ActualizarCabeceraSegunModo();
             LimpiarEscenaParaSiguienteAlgoritmo();
             ActualizarTextosChecklistSegunAlgoritmo();
+            UIManager.instancia.SetMochilaHabilitada(true);
             StartCoroutine(Intro());
         }
         else if (modoActual == ModoOperacion.InsertarFinal)
@@ -395,6 +401,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             fase = 0;
             UIManager.instancia.ResetBotones();
             UIManager.instancia.ConfigurarTextosChecklist("", "delete(Calabaza);", "", "delete(Papa);", "");
+            UIManager.instancia.SetMochilaHabilitada(false);
             StartCoroutine(Intro());
         }
     }
@@ -465,6 +472,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 yield return new WaitForSeconds(3.5f);
             modoActual = ModoOperacion.EliminarFinal;
             ActualizarCabeceraSegunModo();
+            UIManager.instancia.SetMochilaHabilitada(false);
             ProximoPaso(); 
         }
         else

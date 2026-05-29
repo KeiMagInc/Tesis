@@ -144,6 +144,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         UIManager.instancia.logicaActiva = this;
         ResetearNivel();
         ActualizarCabeceraNivel5();
+        UIManager.instancia.SetMochilaHabilitada(true);
         StartCoroutine(Intro());
     }
     void ActualizarCabeceraNivel5()
@@ -198,7 +199,6 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         {
             var controlMovimiento = lupi.GetComponent<PlayerController>();
             if (controlMovimiento != null) controlMovimiento.enabled = !congelar;
-
             Rigidbody2D rb = lupi.GetComponent<Rigidbody2D>();
             if (rb != null) rb.linearVelocity = Vector2.zero;
         }
@@ -220,6 +220,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         CongelarLupi(false);
         ResetearNivel();
         ActualizarCabeceraNivel5();
+        UIManager.instancia.SetMochilaHabilitada(true);
         if (lupi != null && puntoInicioNivel != null)
             lupi.position = puntoInicioNivel.position;
         StartCoroutine(Intro());
@@ -298,11 +299,13 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         {
             clipReproducido = audioInsertarInicio;
             andy.Decir("¡Lupi! Las Listas Doblemente Ligadas utilizan punteros LIGADER y LIGAIZQ. Empezamos con la Inserción al Inicio para actualizar el puntero de acceso P.", clipReproducido);
+            UIManager.instancia.SetMochilaHabilitada(true);
         }
         else if (modoActual == ModoOperacion.InsertarFinal)
         {
             clipReproducido = audioInsertarFinal;
             andy.Decir("¡Excelente! Aplicaremos el algoritmo de Inserción al Final para actualizar el puntero F.", clipReproducido);
+            UIManager.instancia.SetMochilaHabilitada(true);
         }
         else if (modoActual == ModoOperacion.EliminarInicio)
         {
@@ -310,6 +313,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                 fuenteAudio.PlayOneShot(sonidoAlerta);
             clipReproducido = audioIntroEliminarDoble;
             andy.Decir("¡Alerta Lupi! El Kaos ha infectado el campo INFO de la cabecera. Eliminaremos el NODO en P reasignando las ligas bidireccionales.", clipReproducido);
+            UIManager.instancia.SetMochilaHabilitada(false);
         }
         if (clipReproducido != null)
             yield return new WaitForSeconds(clipReproducido.length + 0.5f);
@@ -829,6 +833,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             modoActual = ModoOperacion.InsertarFinal;
             ActualizarCabeceraNivel5();
             ConfigurarUIParaModoActual();
+            UIManager.instancia.SetMochilaHabilitada(true); 
             StartCoroutine(Intro());
         }
         else if (modoActual == ModoOperacion.InsertarFinal)
@@ -845,6 +850,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             pasoConexion = 0;
             cargandoAgua = false;
             ConfigurarUIParaModoActual();
+            UIManager.instancia.SetMochilaHabilitada(false); 
             StartCoroutine(Intro());
         }
     }
@@ -869,6 +875,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             ActualizarCabeceraNivel5();
             pasoConexion = 0;
             ConfigurarUIParaModoActual();
+            UIManager.instancia.SetMochilaHabilitada(false);
             ProximoPaso();
         }
         else
