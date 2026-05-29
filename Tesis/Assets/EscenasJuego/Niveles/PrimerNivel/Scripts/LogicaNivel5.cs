@@ -78,6 +78,9 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     public AudioClip audioExitoInicio;
     public AudioClip audioExitoFinal;
     public AudioClip audioIntroEliminarDoble;
+    public AudioClip audioErrorKaos1;
+    public AudioClip audioErrorKaos2;
+    public AudioClip audioErrorKaos3;
     [Header("Insignias")]
     public ControladorInsignia controladorInsignia;
     public Sprite insigniaDeEsteNivel;
@@ -146,6 +149,63 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         ActualizarCabeceraNivel5();
         UIManager.instancia.SetMochilaHabilitada(true);
         StartCoroutine(Intro());
+    }
+    public void DesconectarEnlacePorKaos()
+    {
+        if (fase >= 3 || (!cargandoAgua && pasoConexion == 0 && modoActual != ModoOperacion.EliminarInicio && modoActual != ModoOperacion.EliminarFinal)) return;
+        fallosContador++;
+        UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
+        ActualizarPuntos();
+        if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
+        rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(false));
+        AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
+        if (masterSFX && sonidoError) masterSFX.PlayOneShot(sonidoError);
+        if (modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal)
+        {
+            if (cargandoAgua)
+            {
+                cargandoAgua = false;
+                lineaAgua.positionCount = 0;
+                if (puntoOrigenActual == puntoSalidaHead)
+                {
+                    if (brilloHead) brilloHead.SetEncendido(true);
+                }
+                else if (puntoOrigenActual == puntoEntradaNull)
+                {
+                    if (brilloNull) brilloNull.SetEncendido(true);
+                    SetPalpitarVisual(puntoEntradaNull.parent.gameObject, "LetreroNull", true);
+                }
+                else if (managerActual != null)
+                {
+                    if (puntoOrigenActual == managerActual.puntoSalidaAnterior)
+                        SetPalpitarVisual(managerActual.gameObject, "LetreroLigaIzq", true);
+                    else if (puntoOrigenActual == managerActual.puntoSalidaSiguiente)
+                        SetPalpitarVisual(managerActual.gameObject, "LetreroLigaDer", true);
+                }
+                if (andy != null) andy.Decir("¡Puntero desconectado! Kaos saboteó el enlace bidireccional.", audioErrorKaos1);
+            }
+            else if (pasoConexion > 0)
+            {
+                pasoConexion--;
+                if (lineasFijasActivas.Count > 0)
+                {
+                    LineRenderer ultima = lineasFijasActivas[lineasFijasActivas.Count - 1];
+                    lineasFijasActivas.RemoveAt(lineasFijasActivas.Count - 1);
+                    Destroy(ultima.gameObject);
+                }
+                if (andy != null) andy.Decir("¡Cuidado! El golpe de Kaos rompió la secuencia. Debes rehacer el último paso.", audioErrorKaos2);
+            }
+        }
+        else
+        {
+            if (cargandoAgua)
+            {
+                cargandoAgua = false;
+                ApagarBrillosGlobales();
+                ProximoPaso();
+                if (andy != null) andy.Decir("¡Kaos interrumpió la purificación! Intenta reasignar los enlaces de nuevo.", audioErrorKaos3);
+            }
+        }
     }
     void ActualizarCabeceraNivel5()
     {

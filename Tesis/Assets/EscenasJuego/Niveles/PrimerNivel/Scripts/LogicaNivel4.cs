@@ -57,6 +57,9 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     public AudioClip audioSembrar;
     public AudioClip audioExitoCiclo;
     public AudioClip audioExitoTotal;
+    public AudioClip audioErrorKaos1;
+    public AudioClip audioErrorKaos2;
+    public AudioClip audioErrorKaos3;
     [Header("Insignias")]
     public ControladorInsignia controladorInsignia;
     public Sprite insigniaDeEsteNivel;
@@ -135,6 +138,46 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
             UIManager.instancia.logicaActiva = null;
         }
         ResetearNivel();
+    }
+    public void DesconectarEnlacePorKaos()
+    {
+        if (fase >= nombresNodos.Length && modoActual == ModoOperacion.Insertar) return;
+        if (!cargandoAgua && subPaso == 0) return;
+        fallosContador++;
+        UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
+        ActualizarPuntos();
+        if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
+        rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(false));
+        AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
+        if (masterSFX && sonidoError) masterSFX.PlayOneShot(sonidoError);
+        if (modoActual == ModoOperacion.Insertar)
+        {
+            if (subPaso == 1 && cargandoAgua)
+            {
+                cargandoAgua = false;
+                ApagarBrillos();
+                if (fase == 0) brilloRio.SetEncendido(true);
+                else EncenderBrilloHijo(listaNodos[fase - 1].gameObject, "Liga", true);
+                if (andy != null) andy.Decir("¡Oh no! Kaos ha interrumpido la conexión del bebedero. Vuelve al origen.", audioErrorKaos1);
+            }
+            else if (subPaso == 2 && cargandoAgua)
+            {
+                cargandoAgua = false;
+                ApagarBrillos();
+                if (nodoActual != null) EncenderBrilloHijo(nodoActual.gameObject, "Liga", true);
+                if (andy != null) andy.Decir("¡Cuidado Lupi! Kaos soltó el retorno circular. Activa la válvula P.LIGA de nuevo.", audioErrorKaos2);
+            }
+        }
+        else if (modoActual == ModoOperacion.Eliminar)
+        {
+            if (cargandoAgua)
+            {
+                cargandoAgua = false;
+                ApagarBrillos();
+                ProximoPasoEliminar();
+                if (andy != null) andy.Decir("¡Emergencia! Kaos saboteó la eliminación. Intenta reasignar el ciclo otra vez.", audioErrorKaos3);
+            }
+        }
     }
     void ActualizarCabeceraNivel4()
     {

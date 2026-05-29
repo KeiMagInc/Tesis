@@ -44,6 +44,9 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     public AudioClip audioErrorInfo;
     public AudioClip audioErrorLiga;
     public AudioClip audioErrorNull;
+    public AudioClip audioErrorKaos1;
+    public AudioClip audioErrorKaos2;
+    public AudioClip audioErrorKaos3;
     [Header("Sonidos")]
     public AudioSource fuenteAudio;
     public AudioClip sonidoSeleccionar;
@@ -101,6 +104,40 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     void OnDisable()
     {
         ResetearNivelSilencioso();
+    }
+    public void DesconectarEnlacePorKaos()
+    {
+        if (estado >= 4 || estado == 0) return;
+        fallosContador++;
+        UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
+        ActualizarPuntos();
+        if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
+        rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(false));
+        AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
+        if (masterSFX && sonidoError)
+            masterSFX.PlayOneShot(sonidoError);
+        if (estado == 1)
+        {
+            estado = 0;
+            ActualizarBrillos(true, false, false, false);
+            if (andy != null)
+                andy.Decir("¡Oh no! Kaos te ha tocado y ha desconectado la manguera del INICIO.", audioErrorKaos1); 
+        }
+        else if (estado == 2)
+        {
+            estado = 0;
+            if (huertoScript != null) huertoScript.ResetearNodo();
+            ActualizarBrillos(true, false, false, false);
+            if (andy != null)
+                andy.Decir("¡Cuidado Lupi! Kaos desconectó tu manguera. Reconecta desde el INICIO.", audioErrorKaos2);
+        }
+        else if (estado == 3)
+        {
+            estado = 2;
+            ActualizarBrillos(false, false, true, false);
+            if (andy != null)
+                andy.Decir("¡Kaos soltó la manguera de salida! Vuelve a conectarla desde P.LIGA.", audioErrorKaos3);
+        }
     }
     IEnumerator AnimacionPuntos(bool esAumento)
     {
@@ -298,7 +335,6 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         if (masterSFX && sonidoCompletado)
             masterSFX.PlayOneShot(sonidoCompletado);
     }
-
     void ReproducirError(string mensajePista, AudioClip audioExplicacion)
     {
         fallosContador++;
@@ -346,9 +382,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
             if (sonidoCuy) UIManager.instancia.fuenteVozAndy.PlayOneShot(sonidoCuy);
         }
     }
-
     void ActualizarPuntos() { if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString(); }
-
     void ActualizarBrillos(bool ini, bool dat, bool pun, bool nul)
     {
         if (brilloInicio) brilloInicio.SetEncendido(ini);

@@ -78,6 +78,10 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     public AudioClip audioCerradoListaEliminar;
     public AudioClip audioAdiosNodo;
     public AudioClip audioExitoTotalNivel;
+    public AudioClip audioErrorKaos1;
+    public AudioClip audioErrorKaos2;
+    public AudioClip audioErrorKaos3;
+    public AudioClip audioErrorKaos4;
     [Header("Insignias")]
     public ControladorInsignia controladorInsignia;
     public Sprite insigniaDeEsteNivel;
@@ -147,6 +151,54 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         ActualizarCabeceraSegunModo();
         UIManager.instancia.SetMochilaHabilitada(true);
         StartCoroutine(Intro());
+    }
+    public void DesconectarEnlacePorKaos()
+    {
+        if (fase >= 3 || (!cargandoAgua && pasoConexion == 0 && modoActual != ModoOperacion.EliminarInicio && modoActual != ModoOperacion.EliminarFinal)) return;
+        fallosContador++;
+        UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
+        ActualizarPuntos();
+        if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
+        rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(false));
+        AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
+        if (masterSFX && sonidoError) masterSFX.PlayOneShot(sonidoError);
+        if (modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal)
+        {
+            if (pasoConexion == 0 && cargandoAgua)
+            {
+                cargandoAgua = false;
+                if (fase == 0) brilloHead.SetEncendido(true);
+                else if (modoActual == ModoOperacion.InsertarFinal) EncenderBrilloEnNodo(managerAnterior.gameObject, "Liga", true);
+                if (andy != null) andy.Decir("¡Oh no! Kaos te ha tocado y ha desconectado la manguera.", audioErrorKaos1);
+            }
+            else if (pasoConexion == 1)
+            {
+                pasoConexion = 0;
+                cargandoAgua = false;
+                if (managerActual != null) managerActual.ResetearNodo();
+                ApagarBrillosGlobales();
+                if (fase == 0) brilloHead.SetEncendido(true);
+                if (andy != null) andy.Decir("¡Cuidado Lupi! Kaos desconectó tu manguera. Reconecta desde el origen.", audioErrorKaos2);
+            }
+            else if (pasoConexion == 2 && cargandoAgua)
+            {
+                pasoConexion = 1;
+                cargandoAgua = false;
+                if (managerActual != null) EncenderBrilloEnNodo(managerActual.gameObject, "Liga", true);
+                brilloNull.SetEncendido(false);
+                if (andy != null) andy.Decir("¡Kaos soltó la manguera de salida! Vuelve a conectarla.", audioErrorKaos3);
+            }
+        }
+        else if (modoActual == ModoOperacion.EliminarInicio || modoActual == ModoOperacion.EliminarFinal)
+        {
+            if (cargandoAgua)
+            {
+                cargandoAgua = false;
+                ApagarBrillosGlobales();
+                ProximoPaso();
+                if (andy != null) andy.Decir("¡Cuidado! Kaos interrumpió la eliminación. Inténtalo de nuevo.", audioErrorKaos4);
+            }
+        }
     }
     void ActualizarCabeceraSegunModo()
     {

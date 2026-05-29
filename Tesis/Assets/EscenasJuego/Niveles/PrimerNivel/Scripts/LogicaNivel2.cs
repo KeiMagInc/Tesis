@@ -45,6 +45,9 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     public AudioClip audioDatoInfo;
     public AudioClip audioLigaAbierta;
     public AudioClip audioFinalNivel;
+    public AudioClip audioErrorKaos1;
+    public AudioClip audioErrorKaos2;
+    public AudioClip audioErrorKaos3;
     [Header("Sonidos")]
     public AudioSource fuenteAudio;
     public AudioClip sonidoSeleccionar;
@@ -109,6 +112,57 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         );
         ActualizarPuntos();
         StartCoroutine(Intro());
+    }
+    public void DesconectarEnlacePorKaos()
+    {
+        if (fase >= 3 || (pasoConexion == 0 && !cargandoAgua)) return;
+        fallosContador++;
+        UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
+        ActualizarPuntos();
+        if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
+        rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(false));
+        AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
+        if (masterSFX && sonidoError)
+            masterSFX.PlayOneShot(sonidoError);
+        if (pasoConexion == 0 && cargandoAgua)
+        {
+            cargandoAgua = false;
+            lineaAgua.positionCount = 0;
+            if (brilloHead) brilloHead.SetEncendido(true);
+            GameObject huerto = BuscarHuerto();
+            if (huerto != null) EncenderBrilloHijo(huerto, "Info", false);
+            if (andy != null)
+                andy.Decir("¡Oh no! Kaos te ha tocado y ha desconectado la manguera del INICIO.", audioErrorKaos1);
+        }
+        else if (pasoConexion == 1 && !cargandoAgua)
+        {
+            pasoConexion = 0;
+            lineaAgua.positionCount = 0;
+            if (brilloHead) brilloHead.SetEncendido(true);
+            if (managerActual != null)
+            {
+                managerActual.ResetearNodo();
+                EncenderBrilloHijo(managerActual.gameObject, "Info", false);
+                EncenderBrilloHijo(managerActual.gameObject, "Liga", false);
+            }
+            if (andy != null)
+                andy.Decir("¡Cuidado Lupi! Kaos desconectó tu manguera. Reconecta desde el INICIO.", audioErrorKaos2);
+        }
+        else if (pasoConexion == 2 && cargandoAgua)
+        {
+            pasoConexion = 1;
+            cargandoAgua = false;
+            lineaAgua.positionCount = 2;
+            lineaAgua.SetPosition(0, puntoSalidaHead.position);
+            if (managerActual != null)
+            {
+                lineaAgua.SetPosition(1, managerActual.puntoEntrada.position);
+                EncenderBrilloHijo(managerActual.gameObject, "Liga", true);
+            }
+            if (brilloNull) brilloNull.SetEncendido(false);
+            if (andy != null)
+                andy.Decir("¡Kaos soltó la manguera de salida! Vuelve a conectarla desde P.LIGA.", audioErrorKaos3);
+        }
     }
     IEnumerator AnimacionPuntos(bool esAumento)
     {

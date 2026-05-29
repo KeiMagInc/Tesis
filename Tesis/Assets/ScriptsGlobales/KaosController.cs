@@ -66,6 +66,33 @@ public class KaosController : MonoBehaviour
             imagenReaccion.transform.localScale = new Vector3(sX, sY, 1);
         }
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            if (recibiendoDano || estaAnimando || !sr.enabled) return;
+            StartCoroutine(EfectoAtaqueExitosoKaos());
+            if (LogicaNivel1.instancia != null) LogicaNivel1.instancia.DesconectarEnlacePorKaos();
+            if (LogicaNivel2.instancia != null) LogicaNivel2.instancia.DesconectarEnlacePorKaos();
+            if (LogicaNivel3.instancia != null) LogicaNivel3.instancia.DesconectarEnlacePorKaos();
+            if (LogicaNivel4.instancia != null) LogicaNivel4.instancia.DesconectarEnlacePorKaos();
+            if (LogicaNivel5.instancia != null) LogicaNivel5.instancia.DesconectarEnlacePorKaos();
+        }
+    }
+    IEnumerator EfectoAtaqueExitosoKaos()
+    {
+        estaAnimando = true;
+        MostrarEmoteAleatorio(emotesPositivos);
+        float escalaTemporal = escalaActualBase;
+        escalaActualBase = escalaTemporal * 1.2f;
+        AplicarEscalaVisual();
+        yield return new WaitForSeconds(0.1f);
+        escalaActualBase = escalaTemporal;
+        AplicarEscalaVisual();
+        yield return new WaitForSeconds(0.5f);
+        OcultarEmote();
+        estaAnimando = false;
+    }
     private void MostrarEmoteAleatorio(List<Sprite> lista)
     {
         if (imagenReaccion != null && lista.Count > 0)
@@ -182,34 +209,12 @@ public class KaosController : MonoBehaviour
         puntoA_Actual = nuevaZona.puntoA; puntoB_Actual = nuevaZona.puntoB; destinoActual = puntoA_Actual;
         if (puntoA_Actual != null) transform.position = puntoA_Actual.position;
     }
-    /*void Patrullar()
-    {
-        Vector2 posActual = transform.position; Vector2 posDestino = destinoActual.position;
-        transform.position = Vector2.MoveTowards(posActual, posDestino, velocidad * Time.deltaTime);
-        if (Vector2.Distance(transform.position, destinoActual.position) < distanciaDeFrenado)
-            destinoActual = (destinoActual == puntoA_Actual) ? puntoB_Actual : puntoA_Actual;
-        float diffX = destinoActual.position.x - transform.position.x;
-        if (Mathf.Abs(diffX) > 0.05f) AplicarEscalaVisual();
-    }*/
     void SeguirJugador()
     {
         if (lupi == null || recibiendoDano) return;
-
-        // Calculamos la distancia actual
         float distanciaActual = Vector2.Distance(transform.position, lupi.transform.position);
-
-        // LÓGICA PAC-MAN:
-        // Si el jugador se aleja más de la cuenta, Kaos avanza para alcanzarlo.
-        // Si el jugador está dentro del rango de "distanciaMinima", Kaos se detiene.
         if (distanciaActual > distanciaMinimaAlJugador)
-        {
-            // Kaos avanza hacia la posición del jugador
             transform.position = Vector2.MoveTowards(transform.position, lupi.transform.position, velocidad * Time.deltaTime);
-        }
-
-        // IMPORTANTE: No hay "else" de retroceder. 
-        // Si te acercas a él, se queda quieto y lo tocarás (recibiendo daño).
-
         AplicarEscalaVisual();
     }
     void ActualizarTamanoBase()
@@ -220,11 +225,6 @@ public class KaosController : MonoBehaviour
         if (nuevaEscalaBase < escalaActualBase) StartCoroutine(EfectoTransformacionMario(nuevaEscalaBase));
         else { escalaActualBase = nuevaEscalaBase; AplicarEscalaVisual(); }
     }
-    /*void AplicarEscalaVisual()
-    {
-        float mirandoA = (destinoActual != null && destinoActual.position.x < transform.position.x) ? -escalaActualBase : escalaActualBase;
-        transform.localScale = new Vector3(mirandoA, escalaActualBase, 1);
-    }*/
     void AplicarEscalaVisual()
     {
         if (lupi == null) return;
