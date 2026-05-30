@@ -81,6 +81,9 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     public AudioClip audioErrorKaos1;
     public AudioClip audioErrorKaos2;
     public AudioClip audioErrorKaos3;
+    public AudioClip audioErrorNullLiga;
+    public AudioClip audioErrorInicioLiga;
+    public AudioClip audioErrorLigaInicio;
     [Header("Insignias")]
     public ControladorInsignia controladorInsignia;
     public Sprite insigniaDeEsteNivel;
@@ -395,6 +398,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     void ProximoPaso()
     {
         tiempoInicioEstado = Time.time;
+        ApagarBrillosGlobales();
         if (modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal)
         {
             string[] nombres = (modoActual == ModoOperacion.InsertarInicio) ? nombresNodosInicio : nombresNodosFinal;
@@ -461,7 +465,19 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
 
     public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
     {
-        if (Time.time - ultimoTiempoClic < 0.1f) return; 
+        if (Time.time - ultimoTiempoClic < 0.1f) return;
+        if (modoActual == ModoOperacion.InsertarFinal && fase > 0 && tipo == "Head")
+        {
+            ReproducirError();
+            andy.Decir("¡Lupi, detente! Estamos insertando al final. El puntero de INICIO (P) ya está fijo y no debe modificarse.", audioErrorLigaInicio);
+            return;
+        }
+        if (cargandoAgua && tipo == "Head")
+        {
+            ReproducirError();
+            andy.Decir("¡Movimiento inválido! El puntero de Inicio (P) no puede recibir una conexión de una Liga; él es quien define dónde empieza la lista.", audioErrorNullLiga);
+            return;
+        }
         if (fuenteAudio != null && sonidoSeleccionar != null)
             fuenteAudio.PlayOneShot(sonidoSeleccionar);
         if (modoActual == ModoOperacion.InsertarInicio) LogicaInsertarInicio(tipo, objetoTocado);
@@ -479,6 +495,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             if (fase > 0 && pasoConexion == 0 && tipo == "SalidaAnterior" && objetoTocado.GetComponentInParent<NodoManager>() == nodoViejoPrimero)
             {
                 ultimoTiempoClic = Time.time;
+                ApagarBrillosGlobales(); 
                 IniciarCarga(nodoViejoPrimero.puntoSalidaAnterior, "EntradaSiguiente", managerActual.gameObject);
                 SetPalpitarVisual(nodoViejoPrimero.gameObject, "LetreroLigaIzq", false);
                 andy.Decir("Recogiste la liga de retroceso. Llévala al campo LIGADER del nuevo NODO Q para mantener la continuidad.", audioConectarASiguiente);
@@ -487,6 +504,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             else if (fase > 0 && pasoConexion == 1 && tipo == "SalidaSiguiente" && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
             {
                 ultimoTiempoClic = Time.time;
+                ApagarBrillosGlobales(); 
                 IniciarCarga(managerActual.puntoSalidaSiguiente, "EntradaAnterior", nodoViejoPrimero.gameObject);
                 SetPalpitarVisual(managerActual.gameObject, "LetreroLigaDer", false);
                 andy.Decir("Establezcamos el camino de ida. El campo LIGADER del nuevo NODO Q debe apuntar a la dirección que antes tenía P.", audioConectarSiguiente);
@@ -495,6 +513,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             else if (((fase == 0 && pasoConexion == 0) || (fase > 0 && pasoConexion == 2)) && tipo == "Head")
             {
                 ultimoTiempoClic = Time.time;
+                ApagarBrillosGlobales();
                 IniciarCarga(puntoSalidaHead, "EntradaAnterior", managerActual.gameObject);
                 if (brilloHead) brilloHead.SetEncendido(false);
                 andy.Decir("Dirección de memoria recogida. Actualiza el puntero P para que apunte al nuevo NODO Q, convirtiéndolo en la nueva cabecera.", audioMoverInicio);
@@ -518,6 +537,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                 ultimoTiempoClic = Time.time;
                 FinalizarPasoLigero(puntoOrigenActual.position, managerActual.puntoEntradaSiguiente.position, "EntradaSiguiente", managerActual.gameObject, "LetreroLigaDer");
                 pasoConexion = 1;
+                ApagarBrillosGlobales();
                 andy.Decir("¡Enlace de vuelta creado! Ahora conecta la SALIDA SIGUIENTE del nuevo NODO a la entrada de la Lista.", audioConectarSiguienteAlNodo);
                 SetPalpitarVisual(managerActual.gameObject, "LetreroLigaDer", true);
                 return;
@@ -630,18 +650,18 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                     andy.Decir("Completa la dualidad: el campo LIGADER del antiguo NODO F debe apuntar ahora hacia el nuevo NODO Q.", audioConectarSiguienteAlNuevo);
                     return;
                 }
-                else if (pasoConexion == 2 && tipo == "Head")
+                /*else if (pasoConexion == 2 && tipo == "Head")
                 {
                     ultimoTiempoClic = Time.time;
                     IniciarCarga(puntoSalidaHead, "EntradaAnterior", managerActual.gameObject);
                     return;
-                }
+                }*/
                 else if (pasoConexion == 2 && tipo == "Null")
                 {
                     ultimoTiempoClic = Time.time;
                     cargandoAgua = true;
                     puntoOrigenActual = puntoEntradaNull;
-                    if (brilloNull) brilloNull.SetEncendido(false);
+                    ApagarBrillosGlobales();
                     EncenderBrilloEnNodo(managerActual.gameObject, "EntradaSiguiente", true);
                     SetPalpitarVisual(managerActual.gameObject, "LetreroLigaDer", true);
                     andy.Decir("Recoge la dirección NULL y asígnala al LIGADER del NODO Q para terminar con la inserción al final.", audioDeNullANodo);
@@ -651,6 +671,12 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         }
         else 
         {
+            if (puntoOrigenActual == puntoSalidaHead && tipo == "EntradaSiguiente")
+            {
+                ReproducirError();
+                andy.Decir("¡Error de lógica! El puntero de Inicio (P) define el comienzo de la lista, debe conectarse a la LIGA IZQUIERDA del primer nodo.", audioErrorInicioLiga);
+                return;
+            }
             if (fase == 0)
             {
                 if (pasoConexion == 0 && tipo == "EntradaAnterior")
@@ -675,7 +701,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             }
             else
             {
-                if (pasoConexion == 0 && tipo == "EntradaSiguiente")
+                if (pasoConexion == 0 && tipo == "EntradaSiguiente" && objetoTocado.GetComponentInParent<NodoManager>() == nodoViejoUltimo)
                 {
                     ultimoTiempoClic = Time.time;
                     if (enlaceActualAlNull != null) Destroy(enlaceActualAlNull.gameObject);
@@ -685,7 +711,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                     SetPalpitarVisual(nodoViejoUltimo.gameObject, "LetreroLigaDer", true);
                     return;
                 }
-                else if (pasoConexion == 1 && tipo == "EntradaAnterior")
+                else if (pasoConexion == 1 && tipo == "EntradaAnterior" && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
                 {
                     ultimoTiempoClic = Time.time;
                     FinalizarPasoLigero(puntoOrigenActual.position, managerActual.puntoEntradaAnterior.position, "EntradaAnterior", managerActual.gameObject, "LetreroLigaIzq");
@@ -695,7 +721,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                     if (brilloNull) brilloNull.SetEncendido(true);
                     return;
                 }
-                else if (pasoConexion == 2 && tipo == "EntradaSiguiente") 
+                else if (pasoConexion == 2 && tipo == "EntradaSiguiente" && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
                 {
                     ultimoTiempoClic = Time.time;
                     FinalizarPasoLigero(puntoOrigenActual.position, managerActual.puntoEntradaSiguiente.position, "EntradaSiguiente", managerActual.gameObject, "LetreroLigaDer");
@@ -1074,7 +1100,19 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     {
         if (brilloHead) brilloHead.SetEncendido(false);
         if (brilloNull) brilloNull.SetEncendido(false);
-        foreach (var ef in Object.FindObjectsByType<EfectoLetrero>(FindObjectsSortMode.None)) ef.SetEncendido(false);
+        EfectoLetrero[] todosLosBrillos = Object.FindObjectsByType<EfectoLetrero>(FindObjectsSortMode.None);
+        foreach (var ef in todosLosBrillos)
+        {
+            ef.SetEncendido(false);
+        }
+    }
+    private bool EsConexionValida(string tipoDestino)
+    {
+        if (cargandoAgua && tipoDestino == "Head")
+        {
+            return false;
+        }
+        return true;
     }
     void SetPalpitarVisual(GameObject n, string nombreLetrero, bool estado)
     {

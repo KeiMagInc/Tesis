@@ -52719,11 +52719,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.5
+      value: -10.52
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.5
+      value: 16.72
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -98387,6 +98387,9 @@ MonoBehaviour:
   audioErrorKaos1: {fileID: 8300000, guid: c7b3f19a2d9c8a94699f8361090ace00, type: 3}
   audioErrorKaos2: {fileID: 8300000, guid: 174d075a26a09934bb20168c77cfae72, type: 3}
   audioErrorKaos3: {fileID: 8300000, guid: 4a226e1126229a641895f45cd7912cce, type: 3}
+  audioErrorNullLiga: {fileID: 8300000, guid: 5d7448dc12fb8e4488d9a2b0560d6ebd, type: 3}
+  audioErrorInicioLiga: {fileID: 8300000, guid: c42602bd00d754f46a8460567f2c3b20, type: 3}
+  audioErrorLigaInicio: {fileID: 8300000, guid: 683de764e84f01b4cb4243d97378ab07, type: 3}
   controladorInsignia: {fileID: 216550761}
   insigniaDeEsteNivel: {fileID: -5931077577829324559, guid: 0f28a8c58a1ee8b4fadc6e22b6c6d976, type: 3}
   checkpointFinal: {fileID: 1594470652}
