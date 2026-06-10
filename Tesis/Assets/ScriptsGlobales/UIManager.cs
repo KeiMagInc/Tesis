@@ -103,7 +103,6 @@ public class UIManager : MonoBehaviour
         if (puntosGlobales <= 0)
             puntosGlobales = 0;
     }
-    // Cambia este método en UIManager.cs
     private void MostrarGameOver(int aciertos, int fallos)
     {
         if (panelGameOver != null && !panelGameOver.activeSelf)
@@ -111,7 +110,12 @@ public class UIManager : MonoBehaviour
             panelGameOver.SetActive(true);
             if (textoAciertosGameOver != null) textoAciertosGameOver.text = aciertos.ToString();
             if (textoFallosGameOver != null) textoFallosGameOver.text = fallos.ToString();
-            panelGameOver.SetActive(true);
+            if (fuenteVozAndy != null)
+            {
+                fuenteVozAndy.Stop();
+                if (sonidoGameOver != null)
+                    fuenteVozAndy.PlayOneShot(sonidoGameOver);
+            }
             CanvasGroup cg = panelGameOver.GetComponent<CanvasGroup>();
             if (cg != null)
             {
@@ -119,7 +123,7 @@ public class UIManager : MonoBehaviour
                 cg.blocksRaycasts = true;
             }
             Time.timeScale = 0f;
-            AudioListener.pause = true;
+            AudioListener.pause = false;
         }
     }
     public void RevisarDerrotaPorPorcentaje(int aciertos, int fallos)

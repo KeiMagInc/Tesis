@@ -363,7 +363,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &13696421
 RectTransform:
   m_ObjectHideFlags: 0
@@ -92558,6 +92558,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e052d37768fffb74bb505247621ccdc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  panelDerrota: {fileID: 13696420}
+  textoAciertosDerrota: {fileID: 1200311286}
+  textoFallosDerrota: {fileID: 716271360}
   prefabBurbuja: {fileID: 10061019977776553, guid: 90e09882a54cf3545a1bb7cd4b178ac8, type: 3}
   nombreDelNivel: "Creaci\xF3n y Referencia"
   operacionDelNivel: "Identificar la direcci\xF3n f\xEDsica y l\xF3gica"
@@ -94254,6 +94257,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d46c787d74e8d4642a9a94299dafc4fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  panelDerrota: {fileID: 13696420}
+  textoAciertosDerrota: {fileID: 1200311286}
+  textoFallosDerrota: {fileID: 716271360}
   prefabBurbuja: {fileID: 10061019977776553, guid: 90e09882a54cf3545a1bb7cd4b178ac8, type: 3}
   nombreDelNivel: Listas Simples
   puntoInicioNivel: {fileID: 1971239978}
@@ -99358,6 +99364,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6307189b7081ca94c9b26f812fa8bb09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  panelDerrota: {fileID: 13696420}
+  textoAciertosDerrota: {fileID: 1200311286}
+  textoFallosDerrota: {fileID: 716271360}
   prefabBurbuja: {fileID: 10061019977776553, guid: 90e09882a54cf3545a1bb7cd4b178ac8, type: 3}
   nombreDelNivel: Listas Dobles
   puntoInicioNivel: {fileID: 1701411699}
@@ -100154,6 +100163,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0976d74c87dbcc8488da2c02840c663d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  panelDerrota: {fileID: 13696420}
+  textoAciertosDerrota: {fileID: 1200311286}
+  textoFallosDerrota: {fileID: 716271360}
   sonidoCodorniz: {fileID: 8300000, guid: a8769f8b2957de740a0de0eaf0ef2da2, type: 3}
   sonidoGallina: {fileID: 8300000, guid: 275619b82d2fcf74ab23e6b03b46f12f, type: 3}
   sonidoCerdo: {fileID: 8300000, guid: 97b745fc39e483342afa2a84f738dfe4, type: 3}

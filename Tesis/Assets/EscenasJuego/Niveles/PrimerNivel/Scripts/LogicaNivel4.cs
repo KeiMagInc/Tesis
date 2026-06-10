@@ -751,9 +751,14 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     }
     void ReproducirError()
     {
+        fallosContador++;
         if (UIManager.instancia != null)
             UIManager.instancia.RevisarDerrotaPorPorcentaje(aciertosContador, fallosContador);
-        fallosContador++;
+        if (Time.timeScale == 0f)
+        {
+            CongelarLupi(true);
+            return;
+        }        
         AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
         if (masterSFX && sonidoError)
             masterSFX.PlayOneShot(sonidoError);
