@@ -6,6 +6,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Pantalla Derrota")]
+    public GameObject panelDerrota;
+    public TextMeshProUGUI textoAciertosDerrota;
+    public TextMeshProUGUI textoFallosDerrota;
     private float tiempoUltimaAccion = 0f;
     [Header("Efectos Burbuja")]
     public GameObject prefabBurbuja;
@@ -953,8 +957,8 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     void EncenderBrilloEnNodo(GameObject nodo, string parte, bool encender) { if (nodo == null) return; foreach (var b in nodo.GetComponentsInChildren<EfectoLetrero>(true)) if (b.gameObject.name.ToUpper().Contains(parte.ToUpper())) b.SetEncendido(encender); }
     void SumarPuntos(int cant, bool silencioso = false)
     {
+        aciertosContador++;
         if (KaosController.nivelesTerminados.Contains("ListasSimples")) return;
-
         if (prefabBurbuja != null)
         {
             Vector3 posicionAparicion = Vector3.zero;
@@ -986,7 +990,6 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 }
             }
         }
-        aciertosContador++;
         UIManager.puntosGlobales += cant;
         if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();
         if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
@@ -997,9 +1000,22 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             if (sonidoCuy) UIManager.instancia.fuenteVozAndy.PlayOneShot(sonidoCuy);
         }
     }
+    public void MostrarDerrota()
+    {
+        if (panelFinal != null)
+        {
+            panelFinal.SetActive(true);
+            if (textoAciertos) textoAciertos.text = aciertosContador.ToString();
+            if (textoFallos) textoFallos.text = fallosContador.ToString();
+            Time.timeScale = 0f;
+            AudioListener.pause = true;
+        }
+    }
     void ReproducirError()
     {
         fallosContador++;
+        if (UIManager.instancia != null)
+            UIManager.instancia.RevisarDerrotaPorPorcentaje(aciertosContador, fallosContador);
         AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
         if (masterSFX && sonidoError)
             masterSFX.PlayOneShot(sonidoError);

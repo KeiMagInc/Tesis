@@ -7,6 +7,11 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement; 
 public class UIManager : MonoBehaviour
 {
+    [Header("Pantalla Game Over")]
+    public GameObject panelGameOver;
+    public TextMeshProUGUI textoAciertosGameOver;
+    public TextMeshProUGUI textoFallosGameOver;
+    public AudioClip sonidoGameOver;
     private bool mochilaHabilitada = true;
     public CanvasGroup groupNombreNivel;
     private PlayerController lupiController;
@@ -57,6 +62,7 @@ public class UIManager : MonoBehaviour
     void Awake()
     {
         instancia = this;
+        if (panelGameOver != null) panelGameOver.SetActive(false);
         ColorUtility.TryParseHtmlString("#028A0F", out colorVerdeMilitar);
         nombresLogicosActuales = new string[botonesSemillas.Length];
         prefabsActuales = new GameObject[botonesSemillas.Length];
@@ -90,6 +96,59 @@ public class UIManager : MonoBehaviour
         fuenteVozAndy.mute = false;
         fuenteVozAndy.ignoreListenerPause = true;
         ActualizarIconos();
+    }
+    public void RestarPuntos(int cantidad)
+    {
+        puntosGlobales -= cantidad;
+        if (puntosGlobales <= 0)
+            puntosGlobales = 0;
+    }
+    // Cambia este método en UIManager.cs
+    private void MostrarGameOver(int aciertos, int fallos)
+    {
+        if (panelGameOver != null && !panelGameOver.activeSelf)
+        {
+            panelGameOver.SetActive(true);
+            if (textoAciertosGameOver != null) textoAciertosGameOver.text = aciertos.ToString();
+            if (textoFallosGameOver != null) textoFallosGameOver.text = fallos.ToString();
+            panelGameOver.SetActive(true);
+            CanvasGroup cg = panelGameOver.GetComponent<CanvasGroup>();
+            if (cg != null)
+            {
+                cg.interactable = true;
+                cg.blocksRaycasts = true;
+            }
+            Time.timeScale = 0f;
+            AudioListener.pause = true;
+        }
+    }
+    public void RevisarDerrotaPorPorcentaje(int aciertos, int fallos)
+    {
+        int totalIntentos = aciertos + fallos;
+        if (totalIntentos >= 3)
+        {
+            float porcentajeErrores = (float)fallos / totalIntentos;
+            if (porcentajeErrores >= 0.70f)
+                MostrarGameOver(aciertos, fallos);
+        }
+    }
+    public void RegresarNivelAnterior()
+    {
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+        if (panelGameOver != null) panelGameOver.SetActive(false);
+        int escenaActual = SceneManager.GetActiveScene().buildIndex;
+        int escenaAnterior = escenaActual - 1;
+        if (escenaAnterior > 0)
+        {
+            puntosGlobales = PlayerPrefs.GetInt("PuntosInicioNivel_" + escenaAnterior, 0);
+            SceneManager.LoadScene(escenaAnterior);
+        }
+        else
+        {
+            puntosGlobales = PlayerPrefs.GetInt("PuntosInicioNivel_" + escenaActual, 0);
+            SceneManager.LoadScene(escenaActual);
+        }
     }
     public void SetMochilaHabilitada(bool habilitada)
     {
@@ -128,9 +187,11 @@ public class UIManager : MonoBehaviour
     }
     public void ConfigurarCabeceraNivel(string nombreNivel, string operacion)
     {
+        int escenaActual = SceneManager.GetActiveScene().buildIndex;
+        PlayerPrefs.SetInt("PuntosInicioNivel_" + escenaActual, puntosGlobales);
+        PlayerPrefs.Save();
         if (textoNombreNivel != null)
-            textoNombreNivel.text = nombreNivel; 
-
+            textoNombreNivel.text = nombreNivel;
         if (textoNombreOperacion != null)
             textoNombreOperacion.text = operacion;
         if (groupNombreNivel != null)
@@ -143,7 +204,6 @@ public class UIManager : MonoBehaviour
             bool esNivelAnatomia = nombreNivel.Contains("Anatomía y Componentes");
             panelControles.SetActive(esNivelAnatomia);
             controlesYaOcultos = !esNivelAnatomia;
-            Debug.Log("El nivel actual es: " + nombreNivel);
         }
     }
     public void MostrarInterfaz(bool mostrar)

@@ -7,6 +7,10 @@ using UnityEngine.SceneManagement;
 
 public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Pantalla Derrota")]
+    public GameObject panelDerrota;
+    public TextMeshProUGUI textoAciertosDerrota;
+    public TextMeshProUGUI textoFallosDerrota;
     [Header("Audios Animales")]
     public AudioClip sonidoCodorniz;
     public AudioClip sonidoGallina;
@@ -693,6 +697,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     }
     void SumarPuntos(int cant, bool silencioso = false)
     {
+        aciertosContador++;
         if (KaosController.nivelesTerminados.Contains("ListasCirculares")) return;
         if (prefabBurbuja != null)
         {
@@ -723,7 +728,6 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                 }
             }
         }
-        aciertosContador++;
         UIManager.puntosGlobales += cant; 
         if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();
         if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
@@ -734,8 +738,21 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
             if (sonidoCuy) UIManager.instancia.fuenteVozAndy.PlayOneShot(sonidoCuy);
         }
     }
+    public void MostrarDerrota()
+    {
+        if (panelFinal != null)
+        {
+            panelFinal.SetActive(true);
+            if (textoAciertos) textoAciertos.text = aciertosContador.ToString();
+            if (textoFallos) textoFallos.text = fallosContador.ToString();
+            Time.timeScale = 0f;
+            AudioListener.pause = true;
+        }
+    }
     void ReproducirError()
     {
+        if (UIManager.instancia != null)
+            UIManager.instancia.RevisarDerrotaPorPorcentaje(aciertosContador, fallosContador);
         fallosContador++;
         AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
         if (masterSFX && sonidoError)

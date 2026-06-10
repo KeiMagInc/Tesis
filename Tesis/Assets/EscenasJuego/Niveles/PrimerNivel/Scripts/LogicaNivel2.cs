@@ -5,6 +5,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Pantalla Derrota")]
+    public GameObject panelDerrota;
+    public TextMeshProUGUI textoAciertosDerrota;
+    public TextMeshProUGUI textoFallosDerrota;
     private float tiempoUltimaAccion = 0f;
     [Header("Efectos Burbuja")]
     public GameObject prefabBurbuja;
@@ -402,9 +406,22 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                 break;            
         }
     }
+    public void MostrarDerrota()
+    {
+        if (panelFinal != null)
+        {
+            panelFinal.SetActive(true);
+            if (textoAciertos) textoAciertos.text = aciertosContador.ToString();
+            if (textoFallos) textoFallos.text = fallosContador.ToString();
+            Time.timeScale = 0f;
+            AudioListener.pause = true;
+        }
+    }
     void ReproducirError()
     {
         fallosContador++;
+        if (UIManager.instancia != null)
+            UIManager.instancia.RevisarDerrotaPorPorcentaje(aciertosContador, fallosContador);
         AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
         if (masterSFX && sonidoError)
             masterSFX.PlayOneShot(sonidoError);
@@ -428,6 +445,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     }
     void SumarPuntos(int cant, bool silencioso = false)
     {
+        aciertosContador++;
         if (KaosController.nivelesTerminados.Contains("CreacionReferencias")) return;
         if (prefabBurbuja != null && managerActual != null)
         {
@@ -439,8 +457,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                 efecto.Configurar(cant);
                 Debug.Log($"[Nivel 2] Burbuja creada sobre {managerActual.name} con +{cant} puntos.");
             }
-        }
-        aciertosContador++;
+        }        
         UIManager.puntosGlobales += cant;
         ActualizarPuntos();
         if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);

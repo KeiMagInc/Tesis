@@ -68,6 +68,7 @@ public class KaosController : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (Time.timeScale == 0) return;
         if (collision.CompareTag("Player"))
         {
             if (recibiendoDano || estaAnimando || !sr.enabled) return;

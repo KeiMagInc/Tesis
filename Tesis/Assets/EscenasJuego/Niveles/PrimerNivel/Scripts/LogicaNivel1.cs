@@ -5,6 +5,15 @@ using TMPro;
 using UnityEngine.SceneManagement;
 public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Pantalla Victoria")]
+    public GameObject panelVictoria;
+    public TextMeshProUGUI textoAciertosVictoria;
+    public TextMeshProUGUI textoFallosVictoria;
+    public TextMeshProUGUI textoPuntajeVictoria;
+    [Header("Pantalla Derrota")]
+    public GameObject panelDerrota;
+    public TextMeshProUGUI textoAciertosDerrota;
+    public TextMeshProUGUI textoFallosDerrota;
     [Header("Efectos Burbuja")]
     public GameObject prefabBurbuja;
     public Transform puntoCentroHuerto;
@@ -16,11 +25,6 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     private Coroutine rutinaEfectoPuntos;
     [Header("Posicionamiento")]
     public Transform puntoInicioNivel;
-    [Header("Pantalla Final")]
-    public GameObject panelFinal;
-    public TextMeshProUGUI textoPuntajeFinal;
-    public TextMeshProUGUI textoAciertos;
-    public TextMeshProUGUI textoFallos;
     private int aciertosContador = 0;
     private int fallosContador = 0;
     private int puntosAlIniciarNivel;
@@ -111,6 +115,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         fallosContador++;
         UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
         ActualizarPuntos();
+        UIManager.instancia.RevisarDerrotaPorPorcentaje(aciertosContador, fallosContador);
         if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
         rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(false));
         AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
@@ -154,22 +159,26 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         textoPuntos.transform.localScale = escalaOriginalPuntos;
         textoPuntos.color = colorOriginalPuntos;
     }
-    IEnumerator MostrarResumenFinal()
+    IEnumerator MostrarResumenFinal(bool esVictoria)
     {
-        yield return new WaitForSeconds(3.5f);
-        if (panelFinal != null)
+        yield return new WaitForSeconds(1.0f);
+        GameObject panelAActivar = esVictoria ? panelVictoria : panelDerrota;
+        if (panelAActivar != null)
         {
-            panelFinal.SetActive(true);            
+            panelAActivar.SetActive(true);
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
-            if (textoPuntajeFinal) textoPuntajeFinal.text = UIManager.puntosGlobales.ToString();
-            if (textoAciertos) textoAciertos.text = aciertosContador.ToString();
-            if (textoFallos) textoFallos.text = fallosContador.ToString();
-            Debug.Log("Panel Final activado y Lupi congelado.");
-        }
-        else
-        {
-            Debug.LogError("¡No has asignado el Panel Final en el Inspector!");
+            if (esVictoria)
+            {
+                if (textoPuntajeVictoria) textoPuntajeVictoria.text = UIManager.puntosGlobales.ToString();
+                if (textoAciertosVictoria) textoAciertosVictoria.text = aciertosContador.ToString();
+                if (textoFallosVictoria) textoFallosVictoria.text = fallosContador.ToString();
+            }
+            else
+            {
+                if (textoAciertosDerrota) textoAciertosDerrota.text = aciertosContador.ToString();
+                if (textoFallosDerrota) textoFallosDerrota.text = fallosContador.ToString();
+            }
         }
     }
     void CongelarLupi(bool congelar)
@@ -185,6 +194,8 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     }
     public void BotonReintentar()
     {
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
         StopAllCoroutines();
         UIManager.puntosGlobales = puntosAlIniciarNivel;
         ActualizarPuntos();
@@ -196,7 +207,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
             barreraSiguiente.Cerrar();
         if (controladorInsignia != null)
             controladorInsignia.ResetearInsignia();
-        if (panelFinal != null) panelFinal.SetActive(false);
+        if (panelVictoria != null) panelVictoria.SetActive(false);
         CongelarLupi(false);
         ResetearNivel();
         if (lupi != null && puntoInicioNivel != null)
@@ -204,7 +215,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     }
     public void BotonSiguiente()
     {
-        if (panelFinal != null) panelFinal.SetActive(false);
+        if (panelVictoria != null) panelVictoria.SetActive(false);
         if (lupi != null)
         {
             var controlMovimiento = lupi.GetComponent<PlayerController>();
@@ -224,7 +235,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         estado = 0;
         aciertosContador = 0;
         fallosContador = 0;
-        if (panelFinal) panelFinal.SetActive(false);
+        if (panelVictoria) panelVictoria.SetActive(false);
         tiempoInicioEstado = Time.time;
         if (lineaAgua != null) lineaAgua.positionCount = 0;
         if (huertoScript != null) huertoScript.ResetearNodo();
@@ -322,7 +333,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
             CongelarLupi(true);
             ReproducirNivelCompleto();
             andy.Decir("¡Excelente, Analista de estructuras! Has creado un NODO perfecto. Su P.INFO guarda un dato (int o string) y su P.LIGA (de tipo NODO) apunta a NULL. ¡Sin fugas de memoria!", audioCosechaASalvo); 
-            StartCoroutine(MostrarResumenFinal());
+            StartCoroutine(MostrarResumenFinal(true));
         }
         else if (estado < 3)
         {
@@ -346,6 +357,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         {
             UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
             ActualizarPuntos();
+            UIManager.instancia.RevisarDerrotaPorPorcentaje(aciertosContador, fallosContador);
             if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
             rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(false));
             if (KaosController.instancia != null)
@@ -354,6 +366,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     }
     void SumarPuntos(int cant, bool silencioso = false)
     {
+        aciertosContador++;
         if (KaosController.nivelesTerminados.Contains("AnatomiaComponentes")) return;
         if (prefabBurbuja != null)
         {
@@ -392,7 +405,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     }
     void Update()
     {
-        if (panelFinal != null && panelFinal.activeSelf)
+        if (panelVictoria != null && panelVictoria.activeSelf)
         {
             if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
                 BotonSiguiente();

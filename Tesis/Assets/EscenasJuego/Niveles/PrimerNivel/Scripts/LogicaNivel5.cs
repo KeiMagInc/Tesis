@@ -7,6 +7,10 @@ using UnityEngine.SceneManagement;
 
 public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
 {
+    [Header("Pantalla Derrota")]
+    public GameObject panelDerrota;
+    public TextMeshProUGUI textoAciertosDerrota;
+    public TextMeshProUGUI textoFallosDerrota;
     [Header("Efectos Burbuja")]
     public GameObject prefabBurbuja;
     private bool esperandoCierreNivel = false;
@@ -990,9 +994,22 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             if (sonidoCuy != null) masterSFX.PlayOneShot(sonidoCuy);
         }
     }
+    public void MostrarDerrota()
+    {
+        if (panelFinal != null)
+        {
+            panelFinal.SetActive(true);
+            if (textoAciertos) textoAciertos.text = aciertosContador.ToString();
+            if (textoFallos) textoFallos.text = fallosContador.ToString();
+            Time.timeScale = 0f;
+            AudioListener.pause = true;
+        }
+    }
     void ReproducirError()
     {
         fallosContador++;
+        if (UIManager.instancia != null)
+            UIManager.instancia.RevisarDerrotaPorPorcentaje(aciertosContador, fallosContador);
         AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
         if (masterSFX && sonidoError)
             masterSFX.PlayOneShot(sonidoError);
@@ -1128,6 +1145,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     }
     void SumarPuntos(int cant, bool silencioso = false)
     {
+        aciertosContador++;
         if (KaosController.nivelesTerminados.Contains("ListasDobles")) return;
         if (prefabBurbuja != null)
         {
@@ -1165,7 +1183,6 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                 }
             }
         }
-        aciertosContador++;
         UIManager.puntosGlobales += cant;
         if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
         rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(true));
