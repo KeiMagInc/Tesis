@@ -23,9 +23,7 @@ public class HistorietaManager : MonoBehaviour
             for (int i = 0; i < botonesParaAnimar.Length; i++)
             {
                 if (botonesParaAnimar[i] != null)
-                {
                     escalasBase[i] = botonesParaAnimar[i].localScale;
-                }
             }
         }
         if (buttonSaltar != null) buttonSaltar.onClick.AddListener(CargarEscenaSiguiente);
@@ -41,9 +39,7 @@ public class HistorietaManager : MonoBehaviour
         for (int i = 0; i < botonesParaAnimar.Length; i++)
         {
             if (botonesParaAnimar[i] != null)
-            {
                 botonesParaAnimar[i].localScale = escalasBase[i] * factor;
-            }
         }
     }
     public void CargarEscenaSiguiente()

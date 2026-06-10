@@ -368,6 +368,7 @@ public class UIManager : MonoBehaviour
     }
     public void SalirDelJuego()
     {
+        puntosGlobales = 0;
         PlayerPrefs.SetInt("MusicaMute", 0);
         PlayerPrefs.SetInt("AndyMute", 0);
         PlayerPrefs.Save();

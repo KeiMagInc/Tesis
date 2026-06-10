@@ -93,6 +93,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     }
     void OnEnable()
     {
+        UIManager.puntosGlobales = 0;
         UIManager.instancia.ConfigurarCabeceraNivel(nombreDelNivel, operacionDelNivel);
         if (UIManager.instancia == null) return;
         puntosAlIniciarNivel = UIManager.puntosGlobales;
@@ -235,15 +236,15 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         estado = 0;
         aciertosContador = 0;
         fallosContador = 0;
+        if (KaosController.instancia != null)
+            KaosController.instancia.ResetearEstadoNivel("AnatomiaComponentes");
         if (panelVictoria) panelVictoria.SetActive(false);
         tiempoInicioEstado = Time.time;
         if (lineaAgua != null) lineaAgua.positionCount = 0;
         if (huertoScript != null) huertoScript.ResetearNodo();
         ActualizarBrillos(true, false, false, false);
         if (andy != null)
-        {
             andy.Decir("¡Bienvenido Lupi! Identifica las partes del NODO, ve al poste INICIO. Usa 'E' para obtener la dirección de memoria del primer objeto de tipo NODO.", audioBienvenida);
-        }
         ActualizarPuntos();
     }
     public void ResetearNivelSilencioso()
