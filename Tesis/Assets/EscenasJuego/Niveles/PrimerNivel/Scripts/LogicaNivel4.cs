@@ -170,10 +170,23 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     public void DesconectarEnlacePorKaos()
     {
         if (esModoRepaso) return;
+        bool debePenalizar = false;
+        if (modoActual == ModoOperacion.Insertar && subPaso > 0) debePenalizar = true;
+        if (modoActual == ModoOperacion.Eliminar && cargandoAgua) debePenalizar = true;
+        if (!debePenalizar) return;
         if (fase >= nombresNodos.Length && modoActual == ModoOperacion.Insertar) return;
-        if (!cargandoAgua && subPaso == 0) return;
         fallosContador++;
-        UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
+        int puntosARestar = 5;
+        if (UIManager.puntosTemporales >= puntosARestar)
+        {
+            UIManager.puntosTemporales -= puntosARestar;
+        }
+        else
+        {
+            puntosARestar -= UIManager.puntosTemporales;
+            UIManager.puntosTemporales = 0;
+            UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - puntosARestar);
+        }
         ActualizarPuntos();
         if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
         rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(false));
@@ -181,31 +194,40 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         if (masterSFX && sonidoError) masterSFX.PlayOneShot(sonidoError);
         if (modoActual == ModoOperacion.Insertar)
         {
-            if (subPaso == 1 && cargandoAgua)
+            cargandoAgua = false;
+            lineaAgua.positionCount = 0;
+            ApagarBrillos();
+            if (subPaso == 2)
             {
-                cargandoAgua = false;
-                ApagarBrillos();
-                if (fase == 0) brilloRio.SetEncendido(true);
-                else EncenderBrilloHijo(listaNodos[fase - 1].gameObject, "Liga", true);
-                if (andy != null) andy.Decir("¡Oh no! Kaos ha interrumpido la conexión del bebedero. Vuelve al origen.", audioErrorKaos1);
+                subPaso = 1;
+                if (nodoActual != null)
+                {
+                    nodoActual.ResetearNodo();
+                    EncenderBrilloHijo(nodoActual.gameObject, "Info", false);
+                    EncenderBrilloHijo(nodoActual.gameObject, "Liga", false);
+                }
+                if (puntosConfirmados.Count > (fase == 0 ? 1 : fase * 2))
+                {
+                    puntosConfirmados.RemoveAt(puntosConfirmados.Count - 1);
+                    DibujarLineaFija();
+                }
+                if (andy != null)
+                    andy.Decir("¡Cuidado Lupi! Kaos desconectó tu manguera. Reconecta desde el origen.", audioErrorKaos1);
             }
-            else if (subPaso == 2 && cargandoAgua)
+            else if (subPaso == 1)
             {
-                cargandoAgua = false;
-                ApagarBrillos();
-                if (nodoActual != null) EncenderBrilloHijo(nodoActual.gameObject, "Liga", true);
-                if (andy != null) andy.Decir("¡Cuidado Lupi! Kaos soltó el retorno circular. Activa la válvula P.LIGA de nuevo.", audioErrorKaos2);
+                if (andy != null)
+                    andy.Decir("¡Oh no! Kaos ha interrumpido la conexión del bebedero. Vuelve al origen.", audioErrorKaos1);
             }
+            if (fase == 0) brilloRio.SetEncendido(true);
+            else EncenderBrilloHijo(listaNodos[fase - 1].gameObject, "Liga", true);
         }
         else if (modoActual == ModoOperacion.Eliminar)
         {
-            if (cargandoAgua)
-            {
-                cargandoAgua = false;
-                ApagarBrillos();
-                ProximoPasoEliminar();
-                if (andy != null) andy.Decir("¡Emergencia! Kaos saboteó la eliminación. Intenta reasignar el ciclo otra vez.", audioErrorKaos3);
-            }
+            cargandoAgua = false;
+            ApagarBrillos();
+            ProximoPasoEliminar();
+            if (andy != null) andy.Decir("¡Emergencia! Kaos saboteó la eliminación. Intenta reasignar el ciclo otra vez.", audioErrorKaos3);
         }
     }
     void ActualizarCabeceraNivel4()

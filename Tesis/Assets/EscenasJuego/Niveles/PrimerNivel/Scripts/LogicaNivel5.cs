@@ -9,6 +9,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
 {
     private bool esModoRepaso = false;
     private bool nivelCompletado = false;
+    private bool completandoNodo = false;
     [Header("Pantalla Derrota")]
     public GameObject panelDerrota;
     public TextMeshProUGUI textoAciertosDerrota;
@@ -153,6 +154,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         UIManager.instancia.DesactivarTodoPostNivel();
         esModoRepaso = KaosController.nivelesTerminados.Contains("ListasDobles");
         nivelCompletado = false;
+        completandoNodo = false;
         if (!esModoRepaso)
         {
             puntosAlIniciarNivel = UIManager.puntosGlobales;
@@ -161,7 +163,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             if (kaos != null)
             {
                 kaos.gameObject.SetActive(true);
-                kaos.ResetearEstadoNivel("ListasCirculares");
+                kaos.ResetearEstadoNivel("ListasDobles");
             }
         }
         else
@@ -192,9 +194,24 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     public void DesconectarEnlacePorKaos()
     {
         if (esModoRepaso) return;
-        if (fase >= 3 || (!cargandoAgua && pasoConexion == 0 && modoActual != ModoOperacion.EliminarInicio && modoActual != ModoOperacion.EliminarFinal)) return;
+        if (completandoNodo) return;
+        bool debePenalizar = false;
+        if ((modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal) && managerActual != null) debePenalizar = true;
+        if ((modoActual == ModoOperacion.EliminarInicio || modoActual == ModoOperacion.EliminarFinal) && cargandoAgua) debePenalizar = true;
+        if (!debePenalizar) return;
+        if (fase >= 3) return;
         fallosContador++;
-        UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
+        int puntosARestar = 5;
+        if (UIManager.puntosTemporales >= puntosARestar)
+        {
+            UIManager.puntosTemporales -= puntosARestar;
+        }
+        else
+        {
+            puntosARestar -= UIManager.puntosTemporales;
+            UIManager.puntosTemporales = 0;
+            UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - puntosARestar);
+        }
         ActualizarPuntos();
         if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
         rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(false));
@@ -202,49 +219,58 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         if (masterSFX && sonidoError) masterSFX.PlayOneShot(sonidoError);
         if (modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal)
         {
-            if (cargandoAgua)
+            cargandoAgua = false;
+            lineaAgua.positionCount = 0;
+            ApagarBrillosGlobales();
+            pasoConexion = 0;
+            if (managerActual != null)
             {
-                cargandoAgua = false;
-                lineaAgua.positionCount = 0;
-                if (puntoOrigenActual == puntoSalidaHead)
+                managerActual.ResetearNodo();
+                EncenderBrilloEnNodo(managerActual.gameObject, "EntradaAnterior", false);
+                EncenderBrilloEnNodo(managerActual.gameObject, "EntradaSiguiente", false);
+                SetPalpitarVisual(managerActual.gameObject, "LetreroLigaIzq", false);
+                SetPalpitarVisual(managerActual.gameObject, "LetreroLigaDer", false);
+            }
+            int limiteLineas = fase * 2;
+            while (lineasFijasActivas.Count > limiteLineas)
+            {
+                LineRenderer ultima = lineasFijasActivas[lineasFijasActivas.Count - 1];
+                lineasFijasActivas.RemoveAt(lineasFijasActivas.Count - 1);
+                if (ultima != null) Destroy(ultima.gameObject);
+            }
+            if (modoActual == ModoOperacion.InsertarInicio)
+            {
+                if (fase == 0)
                 {
                     if (brilloHead) brilloHead.SetEncendido(true);
                 }
-                else if (puntoOrigenActual == puntoEntradaNull)
+                else
                 {
-                    if (brilloNull) brilloNull.SetEncendido(true);
-                    SetPalpitarVisual(puntoEntradaNull.parent.gameObject, "LetreroNull", true);
+                    EncenderBrilloEnNodo(listaNodos[0].gameObject, "SalidaAnterior", true);
+                    SetPalpitarVisual(listaNodos[0].gameObject, "LetreroLigaIzq", true);
                 }
-                else if (managerActual != null)
-                {
-                    if (puntoOrigenActual == managerActual.puntoSalidaAnterior)
-                        SetPalpitarVisual(managerActual.gameObject, "LetreroLigaIzq", true);
-                    else if (puntoOrigenActual == managerActual.puntoSalidaSiguiente)
-                        SetPalpitarVisual(managerActual.gameObject, "LetreroLigaDer", true);
-                }
-                if (andy != null) andy.Decir("¡Puntero desconectado! Kaos saboteó el enlace bidireccional.", audioErrorKaos1);
             }
-            else if (pasoConexion > 0)
+            else if (modoActual == ModoOperacion.InsertarFinal)
             {
-                pasoConexion--;
-                if (lineasFijasActivas.Count > 0)
+                if (fase == 0)
                 {
-                    LineRenderer ultima = lineasFijasActivas[lineasFijasActivas.Count - 1];
-                    lineasFijasActivas.RemoveAt(lineasFijasActivas.Count - 1);
-                    Destroy(ultima.gameObject);
+                    if (brilloHead) brilloHead.SetEncendido(true);
                 }
-                if (andy != null) andy.Decir("¡Cuidado! El golpe de Kaos rompió la secuencia. Debes rehacer el último paso.", audioErrorKaos2);
+                else
+                {
+                    EncenderBrilloEnNodo(managerActual.gameObject, "SalidaAnterior", true);
+                    SetPalpitarVisual(managerActual.gameObject, "LetreroLigaIzq", true);
+                }
             }
+            if (andy != null)
+                andy.Decir("¡Cuidado! El golpe de Kaos rompió la secuencia. Debes rehacer el último paso.", audioErrorKaos2);
         }
         else
         {
-            if (cargandoAgua)
-            {
-                cargandoAgua = false;
-                ApagarBrillosGlobales();
-                ProximoPaso();
-                if (andy != null) andy.Decir("¡Kaos interrumpió la purificación! Intenta reasignar los enlaces de nuevo.", audioErrorKaos3);
-            }
+            cargandoAgua = false;
+            ApagarBrillosGlobales();
+            ProximoPaso();
+            if (andy != null) andy.Decir("¡Kaos interrumpió la purificación! Intenta reasignar los enlaces de nuevo.", audioErrorKaos3);
         }
     }
     void ActualizarCabeceraNivel5()
@@ -377,6 +403,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     }
     void ConfigurarUIParaModoActual()
     {
+        if (UIManager.instancia == null) return;
         if (modoActual == ModoOperacion.InsertarInicio)
         {
             UIManager.instancia.SetPrefabs(prefabOveja, prefabCerdo, prefabVaca);
@@ -610,6 +637,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                     }
                     else
                     {
+                        completandoNodo = true;
                         andy.Decir("¡Inserción completa Lupi! El NODO Q es ahora el primer elemento (P) de nuestra Lista Doblemente Ligada.", audioExitoInicio);
                         StartCoroutine(EsperarYFinalizar(true, audioExitoInicio.length));
                     }
@@ -620,6 +648,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             {
                 ultimoTiempoClic = Time.time;
                 FinalizarPasoLigero(puntoOrigenActual.position, puntoEntradaNull.position, "", null, "");
+                completandoNodo = true;
                 andy.Decir("¡Lista Doble creada!  El flujo bidireccional entre P y NULL está en perfecta armonía técnica.", audioExitoTotalInicio);
                 StartCoroutine(EsperarYFinalizar(true, audioExitoTotalInicio.length));
                 return;
@@ -737,6 +766,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                     ultimoTiempoClic = Time.time;
                     if (brilloNull) brilloNull.SetEncendido(false);
                     FinalizarPasoLigero(puntoOrigenActual.position, puntoEntradaNull.position, "", null, "");
+                    completandoNodo = true;
                     andy.Decir("¡LupiFantástico! La lista doble ha sido inicializada con P y F apuntando al mismo NODO.", audioExitoFinal);
                     StartCoroutine(EsperarYFinalizar(false, audioExitoFinal.length));
                     return;
@@ -768,6 +798,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                 {
                     ultimoTiempoClic = Time.time;
                     FinalizarPasoLigero(puntoOrigenActual.position, managerActual.puntoEntradaSiguiente.position, "EntradaSiguiente", managerActual.gameObject, "LetreroLigaDer");
+                    completandoNodo = true;
                     andy.Decir("¡Inserción al final completada! El puntero F se ha desplazado y el campo LIGADER del predecesor ha sido actualizado.", audioExitoInsercionFinal);
                     StartCoroutine(EsperarYFinalizar(false, audioExitoInsercionFinal.length));
                     return;
@@ -920,6 +951,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     }
     void FinalizarNodoCompleto(bool insertarAlInicio)
     {
+        completandoNodo = false;
         cargandoAgua = false;
         if (modoActual != ModoOperacion.InsertarFinal)
         {

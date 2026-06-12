@@ -188,9 +188,23 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     public void DesconectarEnlacePorKaos()
     {
         if (esModoRepaso) return;
-        if (fase >= 3 || (!cargandoAgua && pasoConexion == 0 && modoActual != ModoOperacion.EliminarInicio && modoActual != ModoOperacion.EliminarFinal)) return;
+        bool debePenalizar = false;
+        if ((modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal) && managerActual != null) debePenalizar = true;
+        if ((modoActual == ModoOperacion.EliminarInicio || modoActual == ModoOperacion.EliminarFinal) && cargandoAgua) debePenalizar = true;
+        if (!debePenalizar) return;
+        if (fase >= 3) return;
         fallosContador++;
-        UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
+        int puntosARestar = 5;
+        if (UIManager.puntosTemporales >= puntosARestar)
+        {
+            UIManager.puntosTemporales -= puntosARestar;
+        }
+        else
+        {
+            puntosARestar -= UIManager.puntosTemporales;
+            UIManager.puntosTemporales = 0;
+            UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - puntosARestar);
+        }
         ActualizarPuntos();
         if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
         rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(false));
@@ -198,40 +212,41 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         if (masterSFX && sonidoError) masterSFX.PlayOneShot(sonidoError);
         if (modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal)
         {
-            if (pasoConexion == 0 && cargandoAgua)
+            cargandoAgua = false;
+            lineaAgua.positionCount = 0;
+            ApagarBrillosGlobales();
+            pasoConexion = 0;
+            if (managerActual != null)
             {
-                cargandoAgua = false;
-                if (fase == 0) brilloHead.SetEncendido(true);
-                else if (modoActual == ModoOperacion.InsertarFinal) EncenderBrilloEnNodo(managerAnterior.gameObject, "Liga", true);
-                if (andy != null) andy.Decir("¡Oh no! Kaos te ha tocado y ha desconectado la manguera.", audioErrorKaos1);
+                managerActual.ResetearNodo();
+                EncenderBrilloEnNodo(managerActual.gameObject, "Info", false);
+                EncenderBrilloEnNodo(managerActual.gameObject, "Liga", false);
             }
-            else if (pasoConexion == 1)
+            if (modoActual == ModoOperacion.InsertarInicio)
             {
-                pasoConexion = 0;
-                cargandoAgua = false;
-                if (managerActual != null) managerActual.ResetearNodo();
-                ApagarBrillosGlobales();
-                if (fase == 0) brilloHead.SetEncendido(true);
-                if (andy != null) andy.Decir("¡Cuidado Lupi! Kaos desconectó tu manguera. Reconecta desde el origen.", audioErrorKaos2);
+                if (brilloHead) brilloHead.SetEncendido(true);
             }
-            else if (pasoConexion == 2 && cargandoAgua)
+            else if (modoActual == ModoOperacion.InsertarFinal)
             {
-                pasoConexion = 1;
-                cargandoAgua = false;
-                if (managerActual != null) EncenderBrilloEnNodo(managerActual.gameObject, "Liga", true);
-                brilloNull.SetEncendido(false);
-                if (andy != null) andy.Decir("¡Kaos soltó la manguera de salida! Vuelve a conectarla.", audioErrorKaos3);
+                if (fase == 0)
+                {
+                    if (brilloHead) brilloHead.SetEncendido(true);
+                }
+                else
+                {
+                    EncenderBrilloEnNodo(managerAnterior.gameObject, "Liga", true);
+                }
             }
+            if (andy != null)
+                andy.Decir("¡Cuidado Lupi! Kaos desconectó tu manguera. Reconecta desde el origen.", audioErrorKaos2);
         }
         else if (modoActual == ModoOperacion.EliminarInicio || modoActual == ModoOperacion.EliminarFinal)
         {
-            if (cargandoAgua)
-            {
-                cargandoAgua = false;
-                ApagarBrillosGlobales();
-                ProximoPaso();
-                if (andy != null) andy.Decir("¡Cuidado! Kaos interrumpió la eliminación. Inténtalo de nuevo.", audioErrorKaos4);
-            }
+            cargandoAgua = false;
+            ApagarBrillosGlobales();
+            ProximoPaso();
+            if (andy != null)
+                andy.Decir("¡Cuidado! Kaos interrumpió la eliminación. Inténtalo de nuevo.", audioErrorKaos4);
         }
     }
     void ActualizarCabeceraSegunModo()
