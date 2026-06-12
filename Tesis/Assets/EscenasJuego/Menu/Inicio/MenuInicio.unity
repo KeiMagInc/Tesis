@@ -1619,6 +1619,7 @@ MonoBehaviour:
   - {fileID: 819817787}
   intensidadPalpito: 0.05
   velocidadPalpito: 5
+  sonidoClick: {fileID: 8300000, guid: c6c1850c3a0ce6a4fa741c4f46815c78, type: 3}
 --- !u!114 &1541153802
 MonoBehaviour:
   m_ObjectHideFlags: 0

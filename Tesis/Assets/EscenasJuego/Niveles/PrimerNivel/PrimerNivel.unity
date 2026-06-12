@@ -52967,11 +52967,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -10
+      value: -5.23
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 16.23
+      value: 3.77
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -63481,7 +63481,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerLupi: {fileID: 191083641}
-  puntoInicioNivel1: {fileID: 46022617}
+  puntoInicio: {fileID: 46022617}
 --- !u!4 &460843556
 Transform:
   m_ObjectHideFlags: 0

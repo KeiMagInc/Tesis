@@ -41,6 +41,7 @@ public class UIManager : MonoBehaviour
     public static UIManager instancia;
     public ILogicaNivel logicaActiva;
     public static int puntosGlobales = 0;
+    public static int puntosTemporales = 0;
     [Header("Referencias de UI")]
     public CanvasGroup groupChecklist;
     public CanvasGroup groupIconoMochila;
@@ -94,8 +95,17 @@ public class UIManager : MonoBehaviour
         }
         fuenteMusicaFondo.mute = false;
         fuenteVozAndy.mute = false;
-        fuenteVozAndy.ignoreListenerPause = true;
+        fuenteVozAndy.ignoreListenerPause = false;
         ActualizarIconos();
+    }
+    public static void ConfirmarPuntos()
+    {
+        puntosGlobales += puntosTemporales;
+        puntosTemporales = 0;
+    }
+    public static void DescartarPuntos()
+    {
+        puntosTemporales = 0;
     }
     public void RestarPuntos(int cantidad)
     {
@@ -360,8 +370,17 @@ public class UIManager : MonoBehaviour
     public void AlternarPausa()
     {
         estaPausado = !estaPausado;
-        if (fuenteVozAndy != null && sonidoPausa != null)
-            fuenteVozAndy.PlayOneShot(sonidoPausa);
+        if (sonidoPausa != null)
+        {
+            GameObject sonidoTemp = new GameObject("SonidoUI_Pausa");
+            AudioSource fuenteTemp = sonidoTemp.AddComponent<AudioSource>();
+            fuenteTemp.clip = sonidoPausa;
+            fuenteTemp.ignoreListenerPause = true;
+            if (fuenteVozAndy != null)
+                fuenteTemp.volume = fuenteVozAndy.volume;
+            fuenteTemp.Play();
+            Destroy(sonidoTemp, sonidoPausa.length);
+        }
         if (panelPausa) panelPausa.SetActive(estaPausado);
         Time.timeScale = estaPausado ? 0f : 1f;
         AudioListener.pause = estaPausado;
@@ -369,6 +388,9 @@ public class UIManager : MonoBehaviour
     public void SalirDelJuego()
     {
         puntosGlobales = 0;
+        puntosTemporales = 0;
+        if (KaosController.nivelesTerminados != null)
+            KaosController.nivelesTerminados.Clear(); 
         PlayerPrefs.SetInt("MusicaMute", 0);
         PlayerPrefs.SetInt("AndyMute", 0);
         PlayerPrefs.Save();

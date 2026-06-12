@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 
 public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
 {
+    private bool esModoRepaso = false;
+    private bool nivelCompletado = false;
     [Header("Pantalla Derrota")]
     public GameObject panelDerrota;
     public TextMeshProUGUI textoAciertosDerrota;
@@ -149,16 +151,47 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     {
         if (UIManager.instancia == null) return;
         UIManager.instancia.DesactivarTodoPostNivel();
-        puntosAlIniciarNivel = UIManager.puntosGlobales;
+        esModoRepaso = KaosController.nivelesTerminados.Contains("ListasDobles");
+        nivelCompletado = false;
+        if (!esModoRepaso)
+        {
+            puntosAlIniciarNivel = UIManager.puntosGlobales;
+            UIManager.puntosTemporales = 0;
+            KaosController kaos = Object.FindFirstObjectByType<KaosController>(FindObjectsInactive.Include);
+            if (kaos != null)
+            {
+                kaos.gameObject.SetActive(true);
+                kaos.ResetearEstadoNivel("ListasCirculares");
+            }
+        }
+        else
+        {
+            Debug.Log("Modo Repaso Nivel 5: Puntaje protegido.");
+            KaosController kaos = Object.FindFirstObjectByType<KaosController>(FindObjectsInactive.Include);
+            if (kaos != null) kaos.gameObject.SetActive(false);
+        }
         instancia = this;
         UIManager.instancia.logicaActiva = this;
         ResetearNivel();
         ActualizarCabeceraNivel5();
         UIManager.instancia.SetMochilaHabilitada(true);
+        ActualizarPuntos();
         StartCoroutine(Intro());
+    }
+    void OnDisable()
+    {
+        if (UIManager.instancia != null && UIManager.instancia.logicaActiva == (ILogicaNivel)this)
+            UIManager.instancia.logicaActiva = null;
+        if (!esModoRepaso && !nivelCompletado)
+        {
+            UIManager.puntosGlobales = puntosAlIniciarNivel;
+            UIManager.puntosTemporales = 0;
+        }
+        ResetearNivel();
     }
     public void DesconectarEnlacePorKaos()
     {
+        if (esModoRepaso) return;
         if (fase >= 3 || (!cargandoAgua && pasoConexion == 0 && modoActual != ModoOperacion.EliminarInicio && modoActual != ModoOperacion.EliminarFinal)) return;
         fallosContador++;
         UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
@@ -272,10 +305,12 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     }
     public void BotonReintentar()
     {
+        UIManager.DescartarPuntos();
         StopAllCoroutines();
-        UIManager.puntosGlobales = puntosAlIniciarNivel;
+        if (!esModoRepaso)
+            UIManager.puntosGlobales = puntosAlIniciarNivel;
         ActualizarPuntos();
-        if (KaosController.instancia != null)
+        if (KaosController.instancia != null && !esModoRepaso)
             KaosController.instancia.ResetearEstadoNivel("ListasDobles");
         if (checkpointFinal != null)
             checkpointFinal.ResetearCheckpoint();
@@ -302,7 +337,11 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         }
         Debug.Log("Lupi descongelado, puede avanzar al siguiente nivel en la misma escena.");
     }
-    void ActualizarPuntos() { if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString(); }
+    void ActualizarPuntos()
+    {
+        if (textoPuntos)
+            textoPuntos.text = (UIManager.puntosGlobales + UIManager.puntosTemporales).ToString();
+    }
     int CalcularPuntosDinamicos()
     {
         float tiempoTranscurrido = Time.time - tiempoInicioEstado;
@@ -955,9 +994,9 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         if (modoActual == ModoOperacion.EliminarInicio)
         {
             andy.Decir("¡La Vaca ha sido purificada y su memoria liberada! Ahora eliminaremos el NODO en F para sanar el final de la lista.", audioFelicidadesEliminarInicio);
-            if (audioFelicidadesEliminarInicio != null) 
+            if (audioFelicidadesEliminarInicio != null)
                 yield return new WaitForSeconds(audioFelicidadesEliminarInicio.length + 0.8f);
-            else 
+            else
                 yield return new WaitForSeconds(4f);
             modoActual = ModoOperacion.EliminarFinal;
             if (fuenteAudio != null && sonidoAlerta != null)
@@ -970,15 +1009,20 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         }
         else
         {
+            nivelCompletado = true;
             UIManager.instancia.DesactivarTodoPostNivel();
-            if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null && KaosController.instancia != null)
+            if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null)
             {
                 barreraSiguiente.Abrir();
                 checkpointFinal.AparecerYActivar();
                 controladorInsignia.MostrarInsignia(insigniaDeEsteNivel);
-                KaosController.instancia.RecibirDanoYDesaparecer("ListasDobles");
+                if (!esModoRepaso && KaosController.instancia != null)
+                    KaosController.instancia.RecibirDanoYDesaparecer("ListasDobles");
                 esperandoCierreNivel = true;
             }
+            if (!esModoRepaso)
+                UIManager.ConfirmarPuntos();
+            ActualizarPuntos();
             CongelarLupi(true);
             ReproducirNivelCompleto();
             andy.Decir("¡Victoria total Técnico de Caminos Dobles! Eres un maestro del flujo Bidireccional.", audioFelicidadesFinalNivel);
@@ -1018,7 +1062,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
         if (masterSFX && sonidoError)
             masterSFX.PlayOneShot(sonidoError);
-        if (!KaosController.nivelesTerminados.Contains("ListasDobles"))
+        if (!esModoRepaso)
         {
             UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
             ActualizarPuntos();
@@ -1027,6 +1071,50 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             if (KaosController.instancia != null)
                 KaosController.instancia.ReaccionarAError();
         }
+    }
+    void SumarPuntos(int cant, bool silencioso = false)
+    {
+        aciertosContador++;
+        if (!esModoRepaso)
+            UIManager.puntosTemporales += cant;
+        ActualizarPuntos();
+        if (prefabBurbuja != null)
+        {
+            Vector3 posicionAparicion = Vector3.zero;
+            bool hayObjetivo = false;
+            if (managerActual != null)
+            {
+                posicionAparicion = managerActual.transform.position;
+                hayObjetivo = true;
+            }
+            else if (modoActual == ModoOperacion.EliminarInicio && listaNodos.Count > 0)
+            {
+                if (listaNodos[0] != null)
+                {
+                    posicionAparicion = listaNodos[0].transform.position;
+                    hayObjetivo = true;
+                }
+            }
+            else if (modoActual == ModoOperacion.EliminarFinal && listaNodos.Count > 2)
+            {
+                if (listaNodos[2] != null)
+                {
+                    posicionAparicion = listaNodos[2].transform.position;
+                    hayObjetivo = true;
+                }
+            }
+            if (hayObjetivo)
+            {
+                posicionAparicion.z = -1f;
+                GameObject nuevaBurbuja = Instantiate(prefabBurbuja, posicionAparicion, Quaternion.identity);
+                if (nuevaBurbuja.TryGetComponent<EfectoBurbuja>(out var efecto))
+                {
+                    efecto.Configurar(esModoRepaso ? 0 : cant);
+                    Debug.Log($"[Nivel 5] Burbuja +{(esModoRepaso ? 0 : cant)} en {modoActual}");
+                }
+            }
+        }
+        ReproducirAcierto();
     }
     void ReproducirNivelCompleto()
     {
@@ -1147,53 +1235,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                 if (ef != null) ef.SetEncendido(estado);
             }
         }
-    }
-    void SumarPuntos(int cant, bool silencioso = false)
-    {
-        aciertosContador++;
-        if (KaosController.nivelesTerminados.Contains("ListasDobles")) return;
-        if (prefabBurbuja != null)
-        {
-            Vector3 posicionAparicion = Vector3.zero;
-            bool hayObjetivo = false;
-            if (managerActual != null)
-            {
-                posicionAparicion = managerActual.transform.position;
-                hayObjetivo = true;
-            }
-            else if (modoActual == ModoOperacion.EliminarInicio && listaNodos.Count > 0)
-            {
-                if (listaNodos[0] != null)
-                {
-                    posicionAparicion = listaNodos[0].transform.position;
-                    hayObjetivo = true;
-                }
-            }
-            else if (modoActual == ModoOperacion.EliminarFinal && listaNodos.Count > 2)
-            {
-                if (listaNodos[2] != null)
-                {
-                    posicionAparicion = listaNodos[2].transform.position;
-                    hayObjetivo = true;
-                }
-            }
-            if (hayObjetivo)
-            {
-                posicionAparicion.z = -1f;
-                GameObject nuevaBurbuja = Instantiate(prefabBurbuja, posicionAparicion, Quaternion.identity);
-                if (nuevaBurbuja.TryGetComponent<EfectoBurbuja>(out var efecto))
-                {
-                    efecto.Configurar(cant);
-                    Debug.Log($"[Nivel 5] Burbuja +{cant} en {modoActual}");
-                }
-            }
-        }
-        UIManager.puntosGlobales += cant;
-        if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
-        rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(true));
-        if (textoPuntos) textoPuntos.text = UIManager.puntosGlobales.ToString();
-        ReproducirAcierto();
-    }
+    }    
     void LimpiarNodosEscena()
     {
         foreach (var n in Object.FindObjectsByType<NodoManager>(FindObjectsInactive.Include, FindObjectsSortMode.None))

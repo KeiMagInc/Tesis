@@ -537,14 +537,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buttonSaltar: {fileID: 654847992}
   buttonRegresar: {fileID: 671925661}
+  buttonSalir: {fileID: 0}
   escenaSiguiente: PrimerNivel
   escenaAnterior: MenuInicio
-  musicaFondo: {fileID: 0}
   botonesParaAnimar:
   - {fileID: 654847990}
   - {fileID: 671925659}
   intensidadPalpito: 0.05
   velocidadPalpito: 5
+  sonidoClick: {fileID: 8300000, guid: c6c1850c3a0ce6a4fa741c4f46815c78, type: 3}
 --- !u!4 &616222174
 Transform:
   m_ObjectHideFlags: 0

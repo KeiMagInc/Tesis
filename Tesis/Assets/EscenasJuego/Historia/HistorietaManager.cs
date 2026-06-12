@@ -15,6 +15,8 @@ public class HistorietaManager : MonoBehaviour
     public float intensidadPalpito = 0.05f;
     public float velocidadPalpito = 5f;
     private Vector3[] escalasBase;
+    [Header("Sonidos")]
+    public AudioClip sonidoClick;
     void Start()
     {
         if (botonesParaAnimar != null)
@@ -28,6 +30,7 @@ public class HistorietaManager : MonoBehaviour
         }
         if (buttonSaltar != null) buttonSaltar.onClick.AddListener(CargarEscenaSiguiente);
         if (buttonRegresar != null) buttonRegresar.onClick.AddListener(CargarEscenaAnterior);
+        if (buttonSalir != null) buttonSalir.onClick.AddListener(SalirDelJuego);
     }
     void Update()
     {
@@ -42,16 +45,37 @@ public class HistorietaManager : MonoBehaviour
                 botonesParaAnimar[i].localScale = escalasBase[i] * factor;
         }
     }
+    private void ReproducirSonidoBoton()
+    {
+        if (sonidoClick != null)
+        {
+            GameObject sonidoTemp = new GameObject("SonidoClick_UI");
+            DontDestroyOnLoad(sonidoTemp);
+            AudioSource fuenteTemp = sonidoTemp.AddComponent<AudioSource>();
+            fuenteTemp.clip = sonidoClick;
+            fuenteTemp.Play();
+            Destroy(sonidoTemp, sonidoClick.length);
+        }
+    }
     public void CargarEscenaSiguiente()
     {
-        if (!string.IsNullOrEmpty(escenaSiguiente)) SceneManager.LoadScene(escenaSiguiente);
+        ReproducirSonidoBoton();
+        if (!string.IsNullOrEmpty(escenaSiguiente))
+        {
+            PlayerPrefs.SetInt("EsPartidaNueva", 1);
+            PlayerPrefs.Save();
+            SceneManager.LoadScene(escenaSiguiente);
+        }
     }
     public void CargarEscenaAnterior()
     {
-        if (!string.IsNullOrEmpty(escenaAnterior)) SceneManager.LoadScene(escenaAnterior);
+        ReproducirSonidoBoton();
+        if (!string.IsNullOrEmpty(escenaAnterior))
+            SceneManager.LoadScene(escenaAnterior);
     }
     public void SalirDelJuego()
     {
+        ReproducirSonidoBoton();
         Application.Quit();
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
