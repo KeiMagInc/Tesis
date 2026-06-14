@@ -513,6 +513,8 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             }
             if (UIManager.instancia != null)
                 UIManager.instancia.MarcarTareaEnProgreso(1);
+            if (listaNodos.Count > 0 && listaNodos[0] != null)
+                listaNodos[0].InfectarNodo();
         }
         else if (modoActual == ModoOperacion.EliminarFinal)
         {
@@ -521,6 +523,8 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             SetPalpitarVisual(puntoEntradaNull.parent.gameObject, "LetreroNull", true);
             if (UIManager.instancia != null)
                 UIManager.instancia.MarcarTareaEnProgreso(2);
+            if (listaNodos.Count > 2 && listaNodos[2] != null)
+                listaNodos[2].InfectarNodo();
         }
     }
     public void AvanceSiembraExitosa()

@@ -434,6 +434,8 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             clipReproducido = audioIntroEliminarInicio;
             andy.Decir("¡Alerta! El Kaos ha infectado el primer NODO. Debemos realizar una ELIMINACIÓN para proteger el resto de la estructura.", clipReproducido);
             UIManager.instancia.SetMochilaHabilitada(false);
+            if (listaNodos.Count > 0 && listaNodos[0] != null)
+                listaNodos[0].InfectarNodo();
         }
         if (clipReproducido != null)
             yield return new WaitForSeconds(clipReproducido.length + 0.5f);
@@ -494,6 +496,8 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             EncenderBrilloEnNodo(listaNodos[1].gameObject, "Liga", true);
             if (UIManager.instancia != null)
                 UIManager.instancia.MarcarTareaEnProgreso(3);
+            if (listaNodos.Count > 2 && listaNodos[2] != null)
+                listaNodos[2].InfectarNodo();
         }
         pasoConexion = 0;
     }

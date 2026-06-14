@@ -23,7 +23,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     [Header("Efectos Burbuja")]
     public GameObject prefabBurbuja;
     [Header("Información del Nivel UI")]
-    public string nombreDelNivel = "Listas Ciculares";
+    public string nombreDelNivel = "Listas Circulares";
     private Color colorOriginalPuntos;
     private Vector3 escalaOriginalPuntos;
     private Coroutine rutinaEfectoPuntos;
@@ -615,6 +615,8 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                 ""
             );
         UIManager.instancia.SetMochilaHabilitada(false);
+        if (listaNodos.Count > 4 && listaNodos[4] != null)
+            listaNodos[4].InfectarNodo();
         ProximoPasoEliminar();
     }
     void ProximoPasoEliminar()
@@ -635,6 +637,8 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
             EncenderBrilloHijo(listaNodos[3].gameObject, "Liga", true);
             if (UIManager.instancia != null)
                 UIManager.instancia.MarcarTareaEnProgreso(3);
+            if (listaNodos.Count > 0 && listaNodos[0] != null)
+                listaNodos[0].InfectarNodo();
         }
     }
     void LogicaEliminar(string tipo, GameObject objetoTocado)
@@ -719,7 +723,6 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         pts.Add(puntoRio.position);
         if (indiceAEliminar == 4)
         {
-            pts.Add(listaNodos[0].puntoEntrada.position);
             for (int i = 0; i <= 3; i++)
             {
                 pts.Add(listaNodos[i].puntoEntrada.position);
@@ -729,7 +732,6 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         }
         else if (indiceAEliminar == 0)
         {
-            pts.Add(listaNodos[1].puntoEntrada.position);
             for (int i = 1; i <= 3; i++)
             {
                 pts.Add(listaNodos[i].puntoEntrada.position);

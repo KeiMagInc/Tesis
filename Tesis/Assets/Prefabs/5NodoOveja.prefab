@@ -222,6 +222,7 @@ MonoBehaviour:
   escalaMaxima: {x: 6, y: 6, z: 0}
   escalaNormal: {x: 3, y: 3, z: 0}
   velocidadEscala: 0.7
+  colorAguaEliminar: {r: 0.85, g: 0.15, b: 0.15, a: 1}
   retrasoEntreSembrios: 0.3
   spriteSeco: {fileID: 6792788541964517201, guid: 376ac2832fc9c05428caf8f767a362f5, type: 3}
   spriteVivo: {fileID: -2894447196254621924, guid: 376ac2832fc9c05428caf8f767a362f5, type: 3}
