@@ -192,7 +192,21 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     }
     IEnumerator MostrarResumenFinal(bool esVictoria)
     {
-        yield return new WaitForSeconds(1.0f);
+        if (esVictoria)
+        {
+            if (audioCosechaASalvo != null)
+            {
+                yield return new WaitForSeconds(audioCosechaASalvo.length + 0.8f);
+            }
+            else
+            {
+                yield return new WaitForSeconds(4.0f);
+            }
+        }
+        else
+        {
+            yield return new WaitForSeconds(1.5f);
+        }
         GameObject panelAActivar = esVictoria ? panelVictoria : panelDerrota;
         if (panelAActivar != null)
         {
