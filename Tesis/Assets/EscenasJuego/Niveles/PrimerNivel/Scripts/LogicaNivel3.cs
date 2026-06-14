@@ -116,9 +116,9 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     private enum ModoOperacion { InsertarInicio, InsertarFinal, EliminarInicio, EliminarFinal }
     private ModoOperacion modoActual = ModoOperacion.InsertarInicio;
     [Header("Prefabs Específicos Nivel 3")]
-    public GameObject prefabPapaN3;
-    public GameObject prefabTrigoN3;
-    public GameObject prefabCalabazaN3;
+    public GameObject prefabPapa;
+    public GameObject prefabTrigo;
+    public GameObject prefabCalabaza;
     [Header("Conexiones y Brillos Fijos")]
     public Transform puntoSalidaHead;
     public Transform puntoEntradaNull;
@@ -147,11 +147,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         if (UIManager.instancia == null) return;
         UIManager.instancia.DesactivarTodoPostNivel();
         UIManager.instancia.logicaActiva = this;
-        UIManager.instancia.SetPrefabs(prefabPapaN3, prefabTrigoN3, prefabCalabazaN3);
         UIManager.instancia.SetSounds(sonidoSembrar, sonidoSembrar, sonidoSembrar);
-        Sprite[] imagenes = { spritePapa, spriteTrigo, spriteCalabaza };
-        string[] nombres = { "Papa", "Trigo", "Calabaza" };
-        UIManager.instancia.ConfigurarBotonesUI(imagenes, nombres);
         esModoRepaso = KaosController.nivelesTerminados.Contains("ListasSimples");
         nivelCompletado = false;
         if (!esModoRepaso)
@@ -173,6 +169,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         UIManager.puntosTemporales = 0;
         ResetearNivel();
         ActualizarCabeceraSegunModo();
+        ConfigurarMochilaSegunModo();
         UIManager.instancia.SetMochilaHabilitada(modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal);
         ActualizarPuntos();
         StartCoroutine(Intro());
@@ -327,6 +324,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         CongelarLupi(false);
         ResetearNivel();
         ActualizarCabeceraSegunModo();
+        ConfigurarMochilaSegunModo();
         UIManager.instancia.SetMochilaHabilitada(modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal);
         if (lupi != null && puntoInicioNivel != null)
             lupi.position = puntoInicioNivel.position;
@@ -495,6 +493,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             ActualizarCabeceraSegunModo();
             LimpiarEscenaParaSiguienteAlgoritmo();
             ActualizarTextosChecklistSegunAlgoritmo();
+            ConfigurarMochilaSegunModo();
             UIManager.instancia.SetMochilaHabilitada(true);
             StartCoroutine(Intro());
         }
@@ -1118,4 +1117,23 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         if (andy != null && lupi != null) andy.CambiarObjetivo(lupi);
     }
     IEnumerator EsperarSiguiente() { yield return new WaitForSeconds(2f); ProximoPaso(); }
+    void ConfigurarMochilaSegunModo()
+    {
+        if (UIManager.instancia == null) return;
+
+        if (modoActual == ModoOperacion.InsertarInicio)
+        {
+            UIManager.instancia.SetPrefabs(prefabPapa, prefabTrigo, prefabCalabaza);
+            Sprite[] imagenes = { spritePapa, spriteTrigo, spriteCalabaza };
+            string[] nombres = { "Papa", "Trigo", "Calabaza" };
+            UIManager.instancia.ConfigurarBotonesUI(imagenes, nombres);
+        }
+        else if (modoActual == ModoOperacion.InsertarFinal)
+        {
+            UIManager.instancia.SetPrefabs(prefabCalabaza, prefabTrigo, prefabPapa);
+            Sprite[] imagenes = { spriteCalabaza, spriteTrigo, spritePapa };
+            string[] nombres = { "Calabaza", "Trigo", "Papa" };
+            UIManager.instancia.ConfigurarBotonesUI(imagenes, nombres);
+        }
+    }
 }
