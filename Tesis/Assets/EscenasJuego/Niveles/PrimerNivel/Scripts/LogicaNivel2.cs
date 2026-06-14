@@ -212,14 +212,26 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     IEnumerator AnimacionPuntos(bool esAumento)
     {
         textoPuntos.color = esAumento ? Color.green : Color.red;
-        float tiempoPaso = 0.07f;
-        Vector3 escalaFlash = escalaOriginalPuntos * 1.3f;
-        for (int i = 0; i < 3; i++)
+        Vector3 escalaMax = escalaOriginalPuntos * 1.5f;
+        float tiempo = 0f;
+        float duracionPop = 0.08f;
+        while (tiempo < duracionPop)
         {
-            textoPuntos.transform.localScale = escalaFlash;
-            yield return new WaitForSeconds(tiempoPaso);
-            textoPuntos.transform.localScale = escalaOriginalPuntos;
-            yield return new WaitForSeconds(tiempoPaso);
+            textoPuntos.transform.localScale = Vector3.Lerp(escalaOriginalPuntos, escalaMax, tiempo / duracionPop);
+            tiempo += Time.deltaTime;
+            yield return null;
+        }
+        textoPuntos.transform.localScale = escalaMax;
+        tiempo = 0f;
+        float duracionRetorno = 0.18f;
+        Color colorInicialEfecto = textoPuntos.color;
+        while (tiempo < duracionRetorno)
+        {
+            float t = tiempo / duracionRetorno;
+            textoPuntos.transform.localScale = Vector3.Lerp(escalaMax, escalaOriginalPuntos, t);
+            textoPuntos.color = Color.Lerp(colorInicialEfecto, colorOriginalPuntos, t);
+            tiempo += Time.deltaTime;
+            yield return null;
         }
         textoPuntos.transform.localScale = escalaOriginalPuntos;
         textoPuntos.color = colorOriginalPuntos;
@@ -343,6 +355,8 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         string semillaActual = nombresNodos[fase];
         UIManager.instancia.SetSemillaPalpitar(semillaActual);
         andy.Decir("Planta el huerto. Recuerda que cada huerto es un NODO que necesita un valor en su P.INFO.", audioInstruccionSiembra);
+        if (UIManager.instancia != null)
+            UIManager.instancia.MarcarTareaEnProgreso(mapaIndicesUI[fase]);
         pasoConexion = 0;
         lineaAgua.positionCount = 0;
         tiempoInicioEstado = Time.time;
@@ -508,6 +522,11 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         if (!esModoRepaso)
             UIManager.puntosTemporales += cant;
         ActualizarPuntos();
+        if (textoPuntos != null)
+        {
+            if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
+            rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(true));
+        }
         if (prefabBurbuja != null && managerActual != null)
         {
             Vector3 spawnPos = managerActual.transform.position;

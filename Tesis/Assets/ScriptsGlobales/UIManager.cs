@@ -7,6 +7,9 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement; 
 public class UIManager : MonoBehaviour
 {
+    [Header("Colores del Checklist")]
+    [Tooltip("Color de alta legibilidad para las tareas completadas.")]
+    public Color colorTareaCompletada = new Color32(13, 110, 25, 255);
     [Header("Pantalla Game Over")]
     public GameObject panelGameOver;
     public TextMeshProUGUI textoAciertosGameOver;
@@ -47,6 +50,7 @@ public class UIManager : MonoBehaviour
     public CanvasGroup groupIconoMochila;
     public GameObject panelParcelas;
     public AndyController andy;
+    public TextMeshProUGUI textoPuntos;
     [Header("Mochila (Arrastra los 6 botones aquí)")]
     public Button[] botonesSemillas;
     [Header("Checklist")]
@@ -97,11 +101,17 @@ public class UIManager : MonoBehaviour
         fuenteVozAndy.mute = false;
         fuenteVozAndy.ignoreListenerPause = false;
         ActualizarIconos();
+        if (textoPuntos != null) textoPuntos.text = puntosGlobales.ToString();
     }
     public static void ConfirmarPuntos()
     {
+        int ganancia = puntosTemporales;
         puntosGlobales += puntosTemporales;
         puntosTemporales = 0;
+        if (instancia != null && ganancia > 0)
+        {
+            instancia.ActualizarPuntosVisual(puntosGlobales, true);
+        }
     }
     public static void DescartarPuntos()
     {
@@ -112,6 +122,45 @@ public class UIManager : MonoBehaviour
         puntosGlobales -= cantidad;
         if (puntosGlobales <= 0)
             puntosGlobales = 0;
+        ActualizarPuntosVisual(puntosGlobales, false);
+    }
+    public void ActualizarPuntosVisual(int nuevosPuntos, bool esGanancia)
+    {
+        if (textoPuntos != null)
+        {
+            textoPuntos.text = nuevosPuntos.ToString();
+            Color colorEfecto = esGanancia ? Color.green : Color.red;
+            StopCoroutine("EfectoPopPuntos");
+            StartCoroutine(EfectoPopPuntos(colorEfecto));
+        }
+    }
+    private IEnumerator EfectoPopPuntos(Color colorEfecto)
+    {
+        Vector3 escalaOriginal = Vector3.one;
+        Color colorOriginal = Color.white;
+        textoPuntos.color = colorEfecto;
+        float tiempo = 0f;
+        float duracionPop = 0.1f;
+        Vector3 escalaMax = escalaOriginal * 1.5f;
+        while (tiempo < duracionPop)
+        {
+            textoPuntos.transform.localScale = Vector3.Lerp(escalaOriginal, escalaMax, tiempo / duracionPop);
+            tiempo += Time.deltaTime;
+            yield return null;
+        }
+        textoPuntos.transform.localScale = escalaMax;
+        tiempo = 0f;
+        float duracionRetorno = 0.2f;
+        while (tiempo < duracionRetorno)
+        {
+            float t = tiempo / duracionRetorno;
+            textoPuntos.transform.localScale = Vector3.Lerp(escalaMax, escalaOriginal, t);
+            textoPuntos.color = Color.Lerp(colorEfecto, colorOriginal, t);
+            tiempo += Time.deltaTime;
+            yield return null;
+        }
+        textoPuntos.transform.localScale = escalaOriginal;
+        textoPuntos.color = colorOriginal;
     }
     private void MostrarGameOver(int aciertos, int fallos)
     {
@@ -330,7 +379,8 @@ public class UIManager : MonoBehaviour
             {
                 itemsChecklist[i].text = "";
                 itemsChecklist[i].color = Color.black;
-                itemsChecklist[i].gameObject.SetActive(false); 
+                itemsChecklist[i].gameObject.SetActive(false);
+                itemsChecklist[i].transform.localScale = Vector3.one;
             }
         }
         for (int i = 0; i < textos.Length && i < itemsChecklist.Length; i++)
@@ -339,6 +389,7 @@ public class UIManager : MonoBehaviour
             {
                 itemsChecklist[i].gameObject.SetActive(true);
                 itemsChecklist[i].text = textos[i];
+                itemsChecklist[i].color = Color.black;
                 itemsChecklist[i].text = itemsChecklist[i].text.Replace(" [OK]", "");
                 Debug.Log($"Checklist: Encendiendo Slot {i} con texto: {textos[i]}");
             }
@@ -355,16 +406,43 @@ public class UIManager : MonoBehaviour
             controlesYaOcultos = true;
         }
     }
+    public void MarcarTareaEnProgreso(int indice)
+    {
+        if (indice >= 0 && indice < itemsChecklist.Length && itemsChecklist[indice] != null)
+        {
+            itemsChecklist[indice].color = Color.blue;
+        }
+    }
     public void MarcarTareaCompletada(int indice)
     {
         if (indice >= 0 && indice < itemsChecklist.Length && itemsChecklist[indice] != null)
         {
-            if (!itemsChecklist[indice].text.Contains("[OK]"))
-            {
-                itemsChecklist[indice].text += " [OK]";
-                itemsChecklist[indice].color = colorVerdeMilitar;
-            }
+            StartCoroutine(EfectoPopTexto(itemsChecklist[indice], colorTareaCompletada));
         }
+    }
+    private IEnumerator EfectoPopTexto(TextMeshProUGUI texto, Color colorObjetivo)
+    {
+        texto.color = colorObjetivo;
+        Vector3 escalaOriginal = Vector3.one;
+        float tiempo = 0f;
+        float duracionPop = 0.12f;
+        Vector3 escalaMax = escalaOriginal * 1.35f;
+        while (tiempo < duracionPop)
+        {
+            texto.transform.localScale = Vector3.Lerp(escalaOriginal, escalaMax, tiempo / duracionPop);
+            tiempo += Time.deltaTime;
+            yield return null;
+        }
+        texto.transform.localScale = escalaMax;
+        tiempo = 0f;
+        float duracionRetorno = 0.15f;
+        while (tiempo < duracionRetorno)
+        {
+            texto.transform.localScale = Vector3.Lerp(escalaMax, escalaOriginal, tiempo / duracionRetorno);
+            tiempo += Time.deltaTime;
+            yield return null;
+        }
+        texto.transform.localScale = escalaOriginal;
     }
     public void SetSemillaPalpitar(string tipo) => semillaActiva = tipo;
     public void AlternarPausa()

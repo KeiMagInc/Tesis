@@ -297,14 +297,26 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     IEnumerator AnimacionPuntos(bool esAumento)
     {
         textoPuntos.color = esAumento ? Color.green : Color.red;
-        float tiempoPaso = 0.07f;
-        Vector3 escalaFlash = escalaOriginalPuntos * 1.3f;
-        for (int i = 0; i < 3; i++)
+        Vector3 escalaMax = escalaOriginalPuntos * 1.5f;
+        float tiempo = 0f;
+        float duracionPop = 0.08f;
+        while (tiempo < duracionPop)
         {
-            textoPuntos.transform.localScale = escalaFlash;
-            yield return new WaitForSeconds(tiempoPaso);
-            textoPuntos.transform.localScale = escalaOriginalPuntos;
-            yield return new WaitForSeconds(tiempoPaso);
+            textoPuntos.transform.localScale = Vector3.Lerp(escalaOriginalPuntos, escalaMax, tiempo / duracionPop);
+            tiempo += Time.deltaTime;
+            yield return null;
+        }
+        textoPuntos.transform.localScale = escalaMax;
+        tiempo = 0f;
+        float duracionRetorno = 0.18f;
+        Color colorInicialEfecto = textoPuntos.color;
+        while (tiempo < duracionRetorno)
+        {
+            float t = tiempo / duracionRetorno;
+            textoPuntos.transform.localScale = Vector3.Lerp(escalaMax, escalaOriginalPuntos, t);
+            textoPuntos.color = Color.Lerp(colorInicialEfecto, colorOriginalPuntos, t);
+            tiempo += Time.deltaTime;
+            yield return null;
         }
         textoPuntos.transform.localScale = escalaOriginalPuntos;
         textoPuntos.color = colorOriginalPuntos;
@@ -484,6 +496,8 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             {
                 andy.Decir("¡Lupi! Crea el NODO Q y define su campo INFO con el animal indicado.", audioSiembraInstruccion);
                 UIManager.instancia.SetSemillaPalpitar(nombres[fase]);
+                if (UIManager.instancia != null)
+                    UIManager.instancia.MarcarTareaEnProgreso(fase * 2);
                 pasoConexion = 0;
             }
         }
@@ -497,12 +511,16 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                 brilloHead.SetEncendido(true);
                 if (andy != null) andy.CambiarObjetivo(brilloHead.transform);
             }
+            if (UIManager.instancia != null)
+                UIManager.instancia.MarcarTareaEnProgreso(1);
         }
         else if (modoActual == ModoOperacion.EliminarFinal)
         {
             andy.Decir("Sanaremos el final. El campo LIGADER de la Oveja debe apuntar a NULL para desvincular al Cerdo infectado en F.", audioEliminarFinal);
             EncenderBrilloEnNodo(puntoEntradaNull.parent.gameObject, "Null", true);
             SetPalpitarVisual(puntoEntradaNull.parent.gameObject, "LetreroNull", true);
+            if (UIManager.instancia != null)
+                UIManager.instancia.MarcarTareaEnProgreso(2);
         }
     }
     public void AvanceSiembraExitosa()
@@ -1136,6 +1154,11 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         if (!esModoRepaso)
             UIManager.puntosTemporales += cant;
         ActualizarPuntos();
+        if (textoPuntos != null)
+        {
+            if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
+            rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(true));
+        }
         if (prefabBurbuja != null)
         {
             Vector3 posicionAparicion = Vector3.zero;

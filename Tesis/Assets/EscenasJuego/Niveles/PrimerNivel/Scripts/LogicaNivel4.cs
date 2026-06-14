@@ -257,14 +257,26 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     IEnumerator AnimacionPuntos(bool esAumento)
     {
         textoPuntos.color = esAumento ? Color.green : Color.red;
-        float tiempoPaso = 0.07f;
-        Vector3 escalaFlash = escalaOriginalPuntos * 1.3f;
-        for (int i = 0; i < 3; i++)
+        Vector3 escalaMax = escalaOriginalPuntos * 1.5f;
+        float tiempo = 0f;
+        float duracionPop = 0.08f;
+        while (tiempo < duracionPop)
         {
-            textoPuntos.transform.localScale = escalaFlash;
-            yield return new WaitForSeconds(tiempoPaso);
-            textoPuntos.transform.localScale = escalaOriginalPuntos;
-            yield return new WaitForSeconds(tiempoPaso);
+            textoPuntos.transform.localScale = Vector3.Lerp(escalaOriginalPuntos, escalaMax, tiempo / duracionPop);
+            tiempo += Time.deltaTime;
+            yield return null;
+        }
+        textoPuntos.transform.localScale = escalaMax;
+        tiempo = 0f;
+        float duracionRetorno = 0.18f;
+        Color colorInicialEfecto = textoPuntos.color;
+        while (tiempo < duracionRetorno)
+        {
+            float t = tiempo / duracionRetorno;
+            textoPuntos.transform.localScale = Vector3.Lerp(escalaMax, escalaOriginalPuntos, t);
+            textoPuntos.color = Color.Lerp(colorInicialEfecto, colorOriginalPuntos, t);
+            tiempo += Time.deltaTime;
+            yield return null;
         }
         textoPuntos.transform.localScale = escalaOriginalPuntos;
         textoPuntos.color = colorOriginalPuntos;
@@ -395,7 +407,9 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         {
             UIManager.instancia.SetSemillaPalpitar(nombresNodos[fase]);
             andy.Decir("Lleva al animal a su lugar en el ciclo. Su presencia definirá el campo Q^.INFO", audioSembrar);
-            subPaso = 0; 
+            subPaso = 0;
+            if (UIManager.instancia != null)
+                UIManager.instancia.MarcarTareaEnProgreso(fase);
         }
     }
     public void AvanceSiembraExitosa()
@@ -612,11 +626,15 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         {
             andy.Decir("La vaca se ha retirado. Usa el puntero auxiliar T para que la LIGA de la oveja apunte de regreso a las codornices (P)", audioEliminarFinal);
             EncenderBrilloHijo(listaNodos[3].gameObject, "Liga", true);
+            if (UIManager.instancia != null)
+                UIManager.instancia.MarcarTareaEnProgreso(1);
         }
         else
         {
             andy.Decir("¡Emergencia! El primer animal (P) ha sido infectado. Debemos reasignar el acceso de la lista al siguiente animal antes de borrarlo.", audioEliminarInicio);
             EncenderBrilloHijo(listaNodos[3].gameObject, "Liga", true);
+            if (UIManager.instancia != null)
+                UIManager.instancia.MarcarTareaEnProgreso(3);
         }
     }
     void LogicaEliminar(string tipo, GameObject objetoTocado)
@@ -809,6 +827,11 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         if (!esModoRepaso)
             UIManager.puntosTemporales += cant;
         ActualizarPuntos();
+        if (textoPuntos != null)
+        {
+            if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
+            rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(true));
+        }
         if (prefabBurbuja != null)
         {
             Vector3 posicionAparicion = Vector3.zero;
