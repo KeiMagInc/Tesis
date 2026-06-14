@@ -11,8 +11,17 @@ namespace Mundo2
         private Coroutine rutinaEscribir;
         [Header("Configuración de Seguimiento")]
         public Transform objetivo;
-        public Vector3 offset = new Vector3(0f, 1.3f, 0f); 
-        public float suavidad = 7f;
+        public Vector3 offset = new Vector3(0f, 1.3f, 0f);
+        [Header("Ajustes de Velocidad Dinámica")]
+        [Tooltip("Velocidad de seguimiento (suavidad) cuando está con Lupi")]
+        public float suavidadLupi = 7f;
+        [Tooltip("Velocidad de desplazamiento (suavidad) al viajar hacia un letrero o entre letreros")]
+        public float suavidadLetrero = 2f;
+        [Header("Ajustes de Altura Dinámica")]
+        [Tooltip("Distancia en Y cuando el objetivo es Lupi (Jugador)")]
+        public float offsetYLupi = 2.2f;
+        [Tooltip("Distancia en Y cuando el objetivo es un Letrero u otro objeto")]
+        public float offsetYLetrero = 0.5f;
         [Header("Interfaz de Diálogo")]
         public GameObject panelDialogo;
         public TextMeshProUGUI textoMensaje;
@@ -33,9 +42,12 @@ namespace Mundo2
         {
             if (objetivo != null)
             {
-                Vector3 posicionDeseada = objetivo.position + offset;
+                bool esLupi = objetivo.CompareTag("Player");
+                float offsetYActual = esLupi ? offsetYLupi : offsetYLetrero;
+                float suavidadActual = esLupi ? suavidadLupi : suavidadLetrero;
+                Vector3 posicionDeseada = objetivo.position + new Vector3(offset.x, offsetYActual, offset.z);
                 posicionDeseada.y += Mathf.Sin(Time.time * 2f) * 0.1f;
-                transform.position = Vector3.Lerp(transform.position, posicionDeseada, suavidad * Time.deltaTime);
+                transform.position = Vector3.Lerp(transform.position, posicionDeseada, suavidadActual * Time.deltaTime);
                 ActualizarGiro();
                 if (anim != null && anim.runtimeAnimatorController != null)
                 {
@@ -47,13 +59,31 @@ namespace Mundo2
         void ActualizarGiro()
         {
             bool mirandoIzquierda = false;
-
-            if (objetivo.localScale.x < 0)
-                mirandoIzquierda = true;
-            else if (spriteLupi != null && spriteLupi.flipX)
-                mirandoIzquierda = true;
+            if (spriteLupi != null)
+            {
+                if (objetivo.localScale.x < 0)
+                    mirandoIzquierda = true;
+                else if (spriteLupi.flipX)
+                    mirandoIzquierda = true;
+            }
+            else if (objetivo != null)
+            {
+                mirandoIzquierda = objetivo.position.x < transform.position.x;
+            }
             float nuevoGiro = mirandoIzquierda ? -escalaOriginalX : escalaOriginalX;
             transform.localScale = new Vector3(nuevoGiro, transform.localScale.y, transform.localScale.z);
+        }
+        public void CambiarObjetivo(Transform nuevoObjetivo)
+        {
+            objetivo = nuevoObjetivo;
+            if (objetivo != null)
+            {
+                spriteLupi = objetivo.GetComponent<SpriteRenderer>();
+            }
+            else
+            {
+                spriteLupi = null;
+            }
         }
         public void Decir(string mensaje, AudioClip clipVoz = null)
         {
@@ -66,7 +96,7 @@ namespace Mundo2
                     if (clipVoz != null)
                     {
                         fuenteVoz.clip = clipVoz;
-                        fuenteVoz.Play(); 
+                        fuenteVoz.Play();
                     }
                 }
                 rutinaEscribir = StartCoroutine(EscribirTexto(mensaje));

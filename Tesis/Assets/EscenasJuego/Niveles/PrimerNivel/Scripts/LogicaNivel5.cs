@@ -242,7 +242,11 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             {
                 if (fase == 0)
                 {
-                    if (brilloHead) brilloHead.SetEncendido(true);
+                    if (brilloHead)
+                    {
+                        brilloHead.SetEncendido(true);
+                        if (andy != null) andy.CambiarObjetivo(brilloHead.transform);
+                    }
                 }
                 else
                 {
@@ -254,7 +258,11 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             {
                 if (fase == 0)
                 {
-                    if (brilloHead) brilloHead.SetEncendido(true);
+                    if (brilloHead)
+                    {
+                        brilloHead.SetEncendido(true);
+                        if (andy != null) andy.CambiarObjetivo(brilloHead.transform);
+                    }
                 }
                 else
                 {
@@ -484,7 +492,11 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             if (fuenteAudio != null && sonidoAlerta != null)
                 fuenteAudio.PlayOneShot(sonidoAlerta);
             andy.Decir("¡La Vaca en P está infectada! Recoge la dirección de P; debemos reasignar la cabecera al Cerdo para aislar el NODO corrupto.", audioEliminarInicio);
-            if (brilloHead) brilloHead.SetEncendido(true);
+            if (brilloHead)
+            {
+                brilloHead.SetEncendido(true);
+                if (andy != null) andy.CambiarObjetivo(brilloHead.transform);
+            }
         }
         else if (modoActual == ModoOperacion.EliminarFinal)
         {
@@ -508,7 +520,11 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             if (fase == 0)
             {
                 andy.Decir("Al ser el primer NODO de la lista, el puntero P debe apuntar a Q, y su campo LIGAIZQ debe inicializarse en NULL.", audioPrimerNodoDoble);
-                if (brilloHead) brilloHead.SetEncendido(true);
+                if (brilloHead)
+                {
+                    brilloHead.SetEncendido(true);
+                    if (andy != null) andy.CambiarObjetivo(brilloHead.transform);
+                }
             }
             else
             {
@@ -522,7 +538,11 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             if (fase == 0)
             {
                 andy.Decir("Iniciemos la lista doble. El puntero P y el puntero F deben apuntar a este primer NODO Q.", audioPrimerNodoDobleInicio);
-                if (brilloHead) brilloHead.SetEncendido(true);
+                if (brilloHead)
+                {
+                    brilloHead.SetEncendido(true);
+                    if (andy != null) andy.CambiarObjetivo(brilloHead.transform);
+                }
             }
             else
             {
@@ -595,7 +615,11 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                 SetPalpitarVisual(managerActual.gameObject, "LetreroLigaDer", false);
                 cargandoAgua = true;
                 puntoOrigenActual = managerActual.puntoSalidaSiguiente;
-                if (brilloNull) brilloNull.SetEncendido(true);
+                if (brilloNull)
+                {
+                    brilloNull.SetEncendido(true);
+                    if (andy != null) andy.CambiarObjetivo(brilloNull.transform);
+                }
                 andy.Decir("Como solo existe el NODO Q en la lista, su campo LIGADER debe apuntar a NULL para indicar el fin de la estructura.", audioCerrarConNull);
                 return;
             }
@@ -619,7 +643,11 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                 FinalizarPasoLigero(puntoOrigenActual.position, nodoViejoPrimero.puntoEntradaAnterior.position, "EntradaAnterior", nodoViejoPrimero.gameObject, "LetreroLigaIzq");
                 pasoConexion = 2;
                 andy.Decir("¡Excelente equilibrio Lupi! Los NODOS están vinculados por LIGADER y LIGAIZQ. Finalmente, mueve el puntero P a nuestra nueva cabecera.", audioMoverInicioACabecera);
-                if (brilloHead) brilloHead.SetEncendido(true);
+                if (brilloHead)
+                {
+                    brilloHead.SetEncendido(true);
+                    if (andy != null) andy.CambiarObjetivo(brilloHead.transform);
+                }
                 return;
             }
             else if (tipo == "EntradaAnterior" && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
@@ -722,12 +750,6 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                     andy.Decir("Completa la dualidad: el campo LIGADER del antiguo NODO F debe apuntar ahora hacia el nuevo NODO Q.", audioConectarSiguienteAlNuevo);
                     return;
                 }
-                /*else if (pasoConexion == 2 && tipo == "Head")
-                {
-                    ultimoTiempoClic = Time.time;
-                    IniciarCarga(puntoSalidaHead, "EntradaAnterior", managerActual.gameObject);
-                    return;
-                }*/
                 else if (pasoConexion == 2 && tipo == "Null")
                 {
                     ultimoTiempoClic = Time.time;
@@ -791,7 +813,11 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                     managerActual.ActivarHuerto();
                     pasoConexion = 2;
                     andy.Decir("Finalmente, el campo LIGADER del nuevo NODO Q debe apuntar a NULL, y actualizaremos F hacia este nuevo final.", audioActualizarNull);
-                    if (brilloNull) brilloNull.SetEncendido(true);
+                    if (brilloNull)
+                    {
+                        brilloNull.SetEncendido(true);
+                        if (andy != null) andy.CambiarObjetivo(brilloNull.transform);
+                    }
                     return;
                 }
                 else if (pasoConexion == 2 && tipo == "EntradaSiguiente" && objetoTocado.GetComponentInParent<NodoManager>() == managerActual)
@@ -1234,7 +1260,12 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             if (t.identificador.Equals(identificadorBuscado, System.StringComparison.OrdinalIgnoreCase))
             {
                 EfectoLetrero ef = t.GetComponent<EfectoLetrero>();
-                if (ef != null) ef.SetEncendido(estado);
+                if (ef != null)
+                {
+                    ef.SetEncendido(estado);
+                    if (estado && andy != null)
+                        andy.CambiarObjetivo(ef.transform);
+                }
             }
         }
     }
@@ -1244,9 +1275,8 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         if (brilloNull) brilloNull.SetEncendido(false);
         EfectoLetrero[] todosLosBrillos = Object.FindObjectsByType<EfectoLetrero>(FindObjectsSortMode.None);
         foreach (var ef in todosLosBrillos)
-        {
             ef.SetEncendido(false);
-        }
+        if (andy != null && lupi != null) andy.CambiarObjetivo(lupi);
     }
     private bool EsConexionValida(string tipoDestino)
     {
@@ -1264,10 +1294,15 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             if (hijo.name.Contains(nombreLetrero))
             {
                 EfectoLetrero ef = hijo.GetComponent<EfectoLetrero>();
-                if (ef != null) ef.SetEncendido(estado);
+                if (ef != null)
+                {
+                    ef.SetEncendido(estado);
+                    if (estado && andy != null)
+                        andy.CambiarObjetivo(ef.transform);
+                }
             }
         }
-    }    
+    }
     void LimpiarNodosEscena()
     {
         foreach (var n in Object.FindObjectsByType<NodoManager>(FindObjectsInactive.Include, FindObjectsSortMode.None))

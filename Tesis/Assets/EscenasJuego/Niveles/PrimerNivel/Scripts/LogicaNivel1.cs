@@ -438,6 +438,29 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         if (brilloInfo) brilloInfo.SetEncendido(dat);
         if (brilloLiga) brilloLiga.SetEncendido(pun);
         if (brilloNull) brilloNull.SetEncendido(nul);
+        if (andy != null)
+        {
+            if (ini && brilloInicio != null)
+            {
+                andy.CambiarObjetivo(brilloInicio.transform);
+            }
+            else if (dat && brilloInfo != null)
+            {
+                andy.CambiarObjetivo(brilloInfo.transform);
+            }
+            else if (pun && brilloLiga != null)
+            {
+                andy.CambiarObjetivo(brilloLiga.transform);
+            }
+            else if (nul && brilloNull != null)
+            {
+                andy.CambiarObjetivo(brilloNull.transform);
+            }
+            else if (lupi != null)
+            {
+                andy.CambiarObjetivo(lupi);
+            }
+        }
     }
     void Update()
     {

@@ -219,8 +219,15 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                 if (andy != null)
                     andy.Decir("¡Oh no! Kaos ha interrumpido la conexión del bebedero. Vuelve al origen.", audioErrorKaos1);
             }
-            if (fase == 0) brilloRio.SetEncendido(true);
-            else EncenderBrilloHijo(listaNodos[fase - 1].gameObject, "Liga", true);
+            if (fase == 0)
+            {
+                brilloRio.SetEncendido(true);
+                if (andy != null && brilloRio != null) andy.CambiarObjetivo(brilloRio.transform);
+            }
+            else
+            {
+                EncenderBrilloHijo(listaNodos[fase - 1].gameObject, "Liga", true);
+            }
         }
         else if (modoActual == ModoOperacion.Eliminar)
         {
@@ -398,7 +405,6 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     }
     void AsignarNodoInmediato()
     {
-        // Buscamos el nodo recién clonado
         foreach (var nm in Object.FindObjectsByType<NodoManager>(FindObjectsSortMode.None))
         {
             if (nm.name.Contains("(Clone)") && !listaNodos.Contains(nm))
@@ -407,13 +413,13 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                 break;
             }
         }
-
         if (nodoActual != null)
         {
             subPaso = 1;
             if (fase == 0)
             {
                 brilloRio.SetEncendido(true);
+                if (andy != null && brilloRio != null) andy.CambiarObjetivo(brilloRio.transform);
                 andy.Decir("Al ser el primer animal, el puntero de acceso P debe inicializarse apuntando a sí mismo: P^.LIGA = P", audioPrimerNodoCircular);
             }
             else
@@ -440,6 +446,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
             if (fase == 0)
             {
                 brilloRio.SetEncendido(true);
+                if (andy != null && brilloRio != null) andy.CambiarObjetivo(brilloRio.transform);
                 andy.Decir("Al ser el primer animal, el puntero de acceso P debe inicializarse apuntando a sí mismo: P^.LIGA = P", audioPrimerNodoCircular);
             }
             else
@@ -655,6 +662,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                     else 
                     {
                         nivelCompletado = true;
+                        if (andy != null && lupi != null) andy.CambiarObjetivo(lupi);
                         UIManager.instancia.DesactivarTodoPostNivel();
                         if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null)
                         {
@@ -746,13 +754,21 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     {
         if (n == null) return;
         foreach (var b in n.GetComponentsInChildren<EfectoLetrero>(true))
-            if (b.name.ToUpper().Contains(parte.ToUpper())) b.SetEncendido(activar);
+        {
+            if (b.name.ToUpper().Contains(parte.ToUpper()))
+            {
+                b.SetEncendido(activar);
+                if (activar && andy != null)
+                    andy.CambiarObjetivo(b.transform);
+            }
+        }
     }
     void ApagarBrillos()
     {
         if (brilloRio) brilloRio.SetEncendido(false);
         foreach (var b in Object.FindObjectsByType<EfectoLetrero>(FindObjectsSortMode.None)) b.SetEncendido(false);
-    }    
+        if (andy != null && lupi != null) andy.CambiarObjetivo(lupi);
+    }
     public void MostrarDerrota()
     {
         if (panelFinal != null)

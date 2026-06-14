@@ -143,6 +143,16 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
             UIManager.puntosTemporales = 0;
         }
     }
+    Transform ObtenerTransformBrilloHijo(GameObject parentObj, string namePart)
+    {
+        if (!parentObj) return null;
+        foreach (var b in parentObj.GetComponentsInChildren<EfectoLetrero>(true))
+        {
+            if (b.gameObject.name.ToUpper().Contains(namePart.ToUpper()))
+                return b.transform;
+        }
+        return null;
+    }
     public void DesconectarEnlacePorKaos()
     {
         if (esModoRepaso) return;
@@ -162,6 +172,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
             if (brilloHead) brilloHead.SetEncendido(true);
             GameObject huerto = BuscarHuerto();
             if (huerto != null) EncenderBrilloHijo(huerto, "Info", false);
+            if (andy != null && brilloHead != null) andy.CambiarObjetivo(brilloHead.transform);
             if (andy != null)
                 andy.Decir("¡Oh no! Kaos te ha tocado y ha desconectado la manguera del INICIO.", audioErrorKaos1);
         }
@@ -176,6 +187,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                 EncenderBrilloHijo(managerActual.gameObject, "Info", false);
                 EncenderBrilloHijo(managerActual.gameObject, "Liga", false);
             }
+            if (andy != null && brilloHead != null) andy.CambiarObjetivo(brilloHead.transform);
             if (andy != null)
                 andy.Decir("¡Cuidado Lupi! Kaos desconectó tu manguera. Reconecta desde el INICIO.", audioErrorKaos2);
         }
@@ -189,6 +201,8 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
             {
                 lineaAgua.SetPosition(1, managerActual.puntoEntrada.position);
                 EncenderBrilloHijo(managerActual.gameObject, "Liga", true);
+                Transform tLiga = ObtenerTransformBrilloHijo(managerActual.gameObject, "Liga");
+                if (andy != null) andy.CambiarObjetivo(tLiga != null ? tLiga : managerActual.transform);
             }
             if (brilloNull) brilloNull.SetEncendido(false);
             if (andy != null)
@@ -304,6 +318,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         ZonaPlantado[] zonas = Object.FindObjectsByType<ZonaPlantado>(FindObjectsSortMode.None);
         foreach (var z in zonas) z.ResetearZona();
         foreach (var p in GameObject.FindGameObjectsWithTag("Planta")) Destroy(p);
+        if (andy != null && lupi != null) andy.CambiarObjetivo(lupi);
     }
     IEnumerator Intro()
     {
@@ -337,6 +352,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         UIManager.instancia.SetSemillaPalpitar("");
         andy.Decir("¡Huerto listo! Ahora busca el poste de INICIO para obtener la dirección de memoria inicial.", audioHuertoListo);
         brilloHead.SetEncendido(true);
+        if (andy != null && brilloHead != null) andy.CambiarObjetivo(brilloHead.transform);
     }
     public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
     {
@@ -356,6 +372,8 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                     andy.Decir("¡Dirección obtenida! Conecta la manguera de luz a P.INFO para asignar el dato al NODO actual.", audioDireccionHead);
                     GameObject huerto = BuscarHuerto();
                     if (huerto != null) EncenderBrilloHijo(huerto, "Info", true);
+                    Transform tInfo = ObtenerTransformBrilloHijo(huerto, "Info");
+                    if (andy != null) andy.CambiarObjetivo(tInfo != null ? tInfo : huerto.transform);
                 }
                 break;
             case "EntradaHuerto":
@@ -372,6 +390,8 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                     EncenderBrilloHijo(managerActual.gameObject, "Info", false);
                     EncenderBrilloHijo(managerActual.gameObject, "Liga", true);
                     andy.Decir("Dato guardado con éxito. Ahora abre la válvula P.LIGA, este canal de riego es el puntero que conectará con el siguiente destino.", audioDatoInfo);
+                    Transform tLiga = ObtenerTransformBrilloHijo(managerActual.gameObject, "Liga");
+                    if (andy != null) andy.CambiarObjetivo(tLiga != null ? tLiga : managerActual.transform);
                 }
                 else if (!cargandoAgua && pasoConexion == 0) ReproducirError();
                 break;
@@ -392,6 +412,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                     andy.Decir("El canal está abierto. Arrastra el enlace hasta el pozo NULL para finalizar esta secuencia.", audioLigaAbierta);
                     brilloNull.SetEncendido(true);
                     pasoConexion = 2;
+                    if (andy != null && brilloNull != null) andy.CambiarObjetivo(brilloNull.transform);
                 }
                 else if (pasoConexion < 1) ReproducirError();
                 break;
@@ -405,6 +426,7 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
                         managerActual.DrenarAgua();
                     lineaAgua.SetPosition(3, puntoEntradaNull.position);
                     brilloNull.SetEncendido(false);
+                    if (andy != null && lupi != null) andy.CambiarObjetivo(lupi);
                     UIManager.instancia.MarcarTareaCompletada(mapaIndicesUI[fase]);
                     fase++;
                     if (fase < 3)
@@ -533,6 +555,9 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         if (masterSFX && sonidoCompletado)
             masterSFX.PlayOneShot(sonidoCompletado);
     }
-    void ApagarBrillos() { if (brilloHead) brilloHead.SetEncendido(false); if (brilloNull) brilloNull.SetEncendido(false); }
+    void ApagarBrillos() { 
+        if (brilloHead) brilloHead.SetEncendido(false); 
+        if (brilloNull) brilloNull.SetEncendido(false); 
+    }
     IEnumerator EsperarSiguiente() { yield return new WaitForSeconds(2f); ProximoPaso(); }
 }

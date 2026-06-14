@@ -52967,11 +52967,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.3
+      value: -7.32
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.6
+      value: 17.42
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -100467,8 +100467,11 @@ MonoBehaviour:
   fuenteVoz: {fileID: 1873500767}
   velocidadTexto: 0.03
   objetivo: {fileID: 191083641}
-  offset: {x: 0, y: 2.2, z: 0}
-  suavidad: 7
+  offset: {x: 0, y: 0.5, z: 0}
+  suavidadLupi: 7
+  suavidadLetrero: 2
+  offsetYLupi: 2.2
+  offsetYLetrero: 0.5
   panelDialogo: {fileID: 136482958}
   textoMensaje: {fileID: 2122660507}
   distanciaParaVolar: 0.2

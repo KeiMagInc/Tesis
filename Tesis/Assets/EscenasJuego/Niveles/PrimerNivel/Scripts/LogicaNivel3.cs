@@ -225,12 +225,14 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             if (modoActual == ModoOperacion.InsertarInicio)
             {
                 if (brilloHead) brilloHead.SetEncendido(true);
+                if (andy != null && brilloHead != null) andy.CambiarObjetivo(brilloHead.transform);
             }
             else if (modoActual == ModoOperacion.InsertarFinal)
             {
                 if (fase == 0)
                 {
                     if (brilloHead) brilloHead.SetEncendido(true);
+                    if (andy != null && brilloHead != null) andy.CambiarObjetivo(brilloHead.transform);
                 }
                 else
                 {
@@ -468,6 +470,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         {
             andy.Decir("Enlaza el poste inicial P. Vamos a redirigir el puntero hacia P^.LIGA para liberar el NODO corrupto.", audioEliminarInicioP);
             brilloHead.SetEncendido(true);
+            if (andy != null && brilloHead != null) andy.CambiarObjetivo(brilloHead.transform);
         }
         else if (modoActual == ModoOperacion.EliminarFinal)
         {
@@ -544,6 +547,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 EncenderBrilloEnNodo(listaNodos[1].gameObject, "Liga", false);
                 cargandoAgua = true;
                 brilloNull.SetEncendido(true);
+                if (andy != null && brilloNull != null) andy.CambiarObjetivo(brilloNull.transform);
                 andy.Decir("Hemos recorrido la lista hasta que Q es el último y T el penúltimo. Ahora, para desconectar a Q, haz que T^.LIGA apunte a NULL.", audioApuntaNullEliminar);
             }
             else { ReproducirError(); }
@@ -863,6 +867,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 if (fase == 0)
                 {
                     brilloNull.SetEncendido(true);
+                    if (andy != null && brilloNull != null) andy.CambiarObjetivo(brilloNull.transform);
                     andy.Decir("Como es el primer elemento de la estructura, su campo P.LIGA debe apuntar hacia NULL.", audioLlevaLigaANull);
                 }
                 else
@@ -943,6 +948,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 cargandoAgua = true;
                 pasoConexion = 2;
                 brilloNull.SetEncendido(true);
+                if (andy != null && brilloNull != null) andy.CambiarObjetivo(brilloNull.transform);
                 if (fase == 0)
                     andy.Decir("Este es el final actual. Lleva la conexión al pozo NULL.", audioLlevaPANull);
                 else
@@ -966,6 +972,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             if (modoActual == ModoOperacion.InsertarInicio || (modoActual == ModoOperacion.InsertarFinal && fase == 0))
             {
                 brilloHead.SetEncendido(true);
+                if (andy != null && brilloHead != null) andy.CambiarObjetivo(brilloHead.transform);
                 if (fase == 0)
                 {
                     andy.Decir("¡Estructura física de la cabecera P lista! Ahora recupera la dirección desde el poste para inicializar la Lista.", audioNodoListoPInicio);
@@ -980,6 +987,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 if (fase == 0)
                 {
                     brilloHead.SetEncendido(true);
+                    if (andy != null && brilloHead != null) andy.CambiarObjetivo(brilloHead.transform);
                     andy.Decir("¡Estructura física de la cabecera P lista! Recupera la dirección desde el poste de inicio.", audioNodoListoPFinal);
                 }
                 else
@@ -1010,7 +1018,21 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         }
         return null;
     }
-    void EncenderBrilloEnNodo(GameObject nodo, string parte, bool encender) { if (nodo == null) return; foreach (var b in nodo.GetComponentsInChildren<EfectoLetrero>(true)) if (b.gameObject.name.ToUpper().Contains(parte.ToUpper())) b.SetEncendido(encender); }
+    void EncenderBrilloEnNodo(GameObject nodo, string parte, bool encender)
+    {
+        if (nodo == null) return;
+        foreach (var b in nodo.GetComponentsInChildren<EfectoLetrero>(true))
+        {
+            if (b.gameObject.name.ToUpper().Contains(parte.ToUpper()))
+            {
+                b.SetEncendido(encender);
+                if (encender && andy != null)
+                {
+                    andy.CambiarObjetivo(b.transform);
+                }
+            }
+        }
+    }
     public void MostrarDerrota()
     {
         if (panelFinal != null)
@@ -1087,6 +1109,13 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             if (sonidoCuy) UIManager.instancia.fuenteVozAndy.PlayOneShot(sonidoCuy);
         }
     }
-    void ApagarBrillosGlobales() { if (brilloHead) brilloHead.SetEncendido(false); if (brilloNull) brilloNull.SetEncendido(false); EfectoLetrero[] todos = Object.FindObjectsByType<EfectoLetrero>(FindObjectsSortMode.None); foreach (var b in todos) b.SetEncendido(false); }
+    void ApagarBrillosGlobales()
+    {
+        if (brilloHead) brilloHead.SetEncendido(false);
+        if (brilloNull) brilloNull.SetEncendido(false);
+        EfectoLetrero[] todos = Object.FindObjectsByType<EfectoLetrero>(FindObjectsSortMode.None);
+        foreach (var b in todos) b.SetEncendido(false);
+        if (andy != null && lupi != null) andy.CambiarObjetivo(lupi);
+    }
     IEnumerator EsperarSiguiente() { yield return new WaitForSeconds(2f); ProximoPaso(); }
 }
