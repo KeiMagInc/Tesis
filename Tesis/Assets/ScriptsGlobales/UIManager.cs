@@ -23,6 +23,7 @@ public class UIManager : MonoBehaviour
     public AudioSource fuenteVozAndy;
     public AudioClip sonidoPausa;
     public AudioClip sonidoMochila;
+    public AudioClip sonidoClick;
     public Image iconoMusica;
     public Image iconoAudio;    
     public Sprite spriteSonidoOn, spriteSonidoOff;
@@ -102,6 +103,11 @@ public class UIManager : MonoBehaviour
         fuenteVozAndy.ignoreListenerPause = false;
         ActualizarIconos();
         if (textoPuntos != null) textoPuntos.text = puntosGlobales.ToString();
+    }
+    public void ReproducirSonidoClick()
+    {
+        if (fuenteVozAndy != null && sonidoClick != null)
+            fuenteVozAndy.PlayOneShot(sonidoClick);
     }
     public static void ConfirmarPuntos()
     {

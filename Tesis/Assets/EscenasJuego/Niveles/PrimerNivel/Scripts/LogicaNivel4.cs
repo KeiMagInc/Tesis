@@ -37,6 +37,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     private int aciertosContador = 0;
     private int fallosContador = 0;
     private int puntosAlIniciarNivel;
+    public AudioClip sonidoFinDelJuego;
     [Header("Configuración de Tiempo")]
     public int puntosMaximos = 10;
     public int puntosMinimos = 0;
@@ -76,6 +77,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     public AudioClip sonidoAlerta;
     public AudioClip sonidoAcierto;
     public AudioClip sonidoError;
+    public AudioClip sonidoInsignia;
     public AudioClip sonidoCompletado;
     public AudioClip sonidoCuy;
     [Header("Progreso")]
@@ -283,12 +285,21 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     }
     IEnumerator MostrarResumenFinal()
     {
-        yield return new WaitForSeconds(3.5f);
+        if (audioExitoTotal != null)
+        {
+            yield return new WaitForSeconds(audioExitoTotal.length + 0.8f);
+        }
+        else
+        {
+            yield return new WaitForSeconds(3.5f);
+        }
         if (panelFinal != null)
         {
             panelFinal.SetActive(true);
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
+            if (fuenteAudio != null && sonidoFinDelJuego != null)
+                fuenteAudio.PlayOneShot(sonidoFinDelJuego);
             if (textoPuntajeFinal) textoPuntajeFinal.text = UIManager.puntosGlobales.ToString();
             if (textoAciertos) textoAciertos.text = aciertosContador.ToString();
             if (textoFallos) textoFallos.text = fallosContador.ToString();
@@ -369,7 +380,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         listaNodos.Clear();
         nodoActual = null;
         puntosConfirmados.Clear();
-        if (UIManager.instancia != null)
+        if (UIManager.instancia != null && UIManager.instancia.logicaActiva == (ILogicaNivel)this)
         {
             UIManager.instancia.ResetBotones();
             UIManager.instancia.ConfigurarTextosChecklist(
@@ -686,21 +697,11 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                         nivelCompletado = true;
                         if (andy != null && lupi != null) andy.CambiarObjetivo(lupi);
                         UIManager.instancia.DesactivarTodoPostNivel();
-                        if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null)
-                        {
-                            barreraSiguiente.Abrir();
-                            checkpointFinal.AparecerYActivar();
-                            controladorInsignia.MostrarInsignia(insigniaDeEsteNivel);
-                            if (!esModoRepaso && KaosController.instancia != null)
-                                KaosController.instancia.RecibirDanoYDesaparecer("ListasCirculares");
-                        }
                         if (!esModoRepaso)
                             UIManager.ConfirmarPuntos();
                         ActualizarPuntos();
                         CongelarLupi(true);
-                        ReproducirNivelCompleto();
-                        andy.Decir("¡Victoria Supervisor de Flujo Circular! Has gestionado los punteros P, Q y T perfectamente. ¡La memoria de Tahuantindata está a salvo!", audioExitoTotal);
-                        StartCoroutine(MostrarResumenFinal());
+                        StartCoroutine(SecuenciaFinNivel());
                     }
                 }
                 else
@@ -711,11 +712,33 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
             }
         }
     }
+    IEnumerator SecuenciaFinNivel()
+    {
+        if (UIManager.instancia != null && UIManager.instancia.fuenteVozAndy != null)
+        {
+            while (UIManager.instancia.fuenteVozAndy.isPlaying)
+                yield return null; 
+        }
+        if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null)
+        {
+            barreraSiguiente.Abrir();
+            checkpointFinal.AparecerYActivar();
+            controladorInsignia.MostrarInsignia(insigniaDeEsteNivel); 
+            if (fuenteAudio != null && sonidoInsignia != null)
+                fuenteAudio.PlayOneShot(sonidoInsignia); 
+            if (!esModoRepaso && KaosController.instancia != null)
+                KaosController.instancia.RecibirDanoYDesaparecer("ListasCirculares");
+        }
+        float tiempoEsperaMedalla = (sonidoInsignia != null) ? sonidoInsignia.length : 2.0f;
+        yield return new WaitForSeconds(tiempoEsperaMedalla);
+        if (andy != null)
+            andy.Decir("¡Victoria Supervisor de Flujo Circular! Has gestionado los punteros P, Q y T perfectamente. ¡La memoria de Tahuantindata está a salvo!", audioExitoTotal);
+        StartCoroutine(MostrarResumenFinal());
+    }
     void ReproducirNivelCompleto()
     {
-        AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
-        if (masterSFX && sonidoCompletado)
-            masterSFX.PlayOneShot(sonidoCompletado);
+        if (fuenteAudio != null && sonidoCompletado != null)
+            fuenteAudio.PlayOneShot(sonidoCompletado);
     }
     void ActualizarLineaFijaPostEliminacion()
     {

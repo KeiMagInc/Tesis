@@ -30,6 +30,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     private int aciertosContador = 0;
     private int fallosContador = 0;
     private int puntosAlIniciarNivel;
+    public AudioClip sonidoFinDelJuego;
     [Header("Configuración de Tiempo")]
     public int puntosMaximos = 10;
     public int puntosMinimos = 0;
@@ -101,6 +102,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     public AudioClip sonidoAlerta;
     public AudioClip sonidoAcierto;
     public AudioClip sonidoError;
+    public AudioClip sonidoInsignia;
     public AudioClip sonidoCompletado;
     public AudioClip sonidoCuy;
     [Header("Sprites UI Originales")]
@@ -290,12 +292,21 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     }
     IEnumerator MostrarResumenFinal()
     {
-        yield return new WaitForSeconds(3.5f);
+        if (audioExitoTotalNivel != null)
+        {
+            yield return new WaitForSeconds(audioExitoTotalNivel.length + 0.8f);
+        }
+        else
+        {
+            yield return new WaitForSeconds(3.5f);
+        }
         if (panelFinal != null)
         {
             panelFinal.SetActive(true);
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
+            if (fuenteAudio != null && sonidoFinDelJuego != null)
+                fuenteAudio.PlayOneShot(sonidoFinDelJuego);
             if (textoPuntajeFinal) textoPuntajeFinal.text = UIManager.puntosGlobales.ToString();
             if (textoAciertos) textoAciertos.text = aciertosContador.ToString();
             if (textoFallos) textoFallos.text = fallosContador.ToString();
@@ -610,32 +621,41 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         else
         {
             nivelCompletado = true;
-            UIManager.instancia.DesactivarTodoPostNivel();
-            if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null)
-            {
-                barreraSiguiente.Abrir();
-                checkpointFinal.AparecerYActivar();
-                controladorInsignia.MostrarInsignia(insigniaDeEsteNivel);
-
-                if (!esModoRepaso && KaosController.instancia != null)
-                    KaosController.instancia.RecibirDanoYDesaparecer("ListasSimples");
-            }
+            UIManager.instancia.DesactivarTodoPostNivel();            
             if (!esModoRepaso)
                 UIManager.ConfirmarPuntos();
             ActualizarPuntos();
             CongelarLupi(true);
-            ReproducirNivelCompleto();
-            andy.Decir("¡Excelente Analista de Enlaces Simples! Has dominado las operaciones de INSERCIÓN y ELIMINACIÓN en Listas Simples. El valle está a salvo.", audioExitoTotalNivel);
-            if (audioExitoTotalNivel != null)
-                yield return new WaitForSeconds(audioExitoTotalNivel.length + 0.5f);
-            StartCoroutine(MostrarResumenFinal());
+            StartCoroutine(SecuenciaFinNivel());
         }
+    }
+    IEnumerator SecuenciaFinNivel()
+    {
+        if (UIManager.instancia != null && UIManager.instancia.fuenteVozAndy != null)
+        {
+            while (UIManager.instancia.fuenteVozAndy.isPlaying)
+                yield return null;
+        }
+        if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null)
+        {
+            barreraSiguiente.Abrir();
+            checkpointFinal.AparecerYActivar();
+            controladorInsignia.MostrarInsignia(insigniaDeEsteNivel);
+            if (fuenteAudio != null && sonidoInsignia != null)
+                fuenteAudio.PlayOneShot(sonidoInsignia); 
+            if (!esModoRepaso && KaosController.instancia != null)
+                KaosController.instancia.RecibirDanoYDesaparecer("ListasSimples");
+        }
+        float tiempoEsperaMedalla = (sonidoInsignia != null) ? sonidoInsignia.length : 2.0f;
+        yield return new WaitForSeconds(tiempoEsperaMedalla);
+        if (andy != null)
+            andy.Decir("¡Excelente Analista de Enlaces Simples! Has dominado las operaciones de INSERCIÓN y ELIMINACIÓN en Listas Simples. El valle está a salvo.", audioExitoTotalNivel);
+        StartCoroutine(MostrarResumenFinal());
     }
     void ReproducirNivelCompleto()
     {
-        AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
-        if (masterSFX && sonidoCompletado)
-            masterSFX.PlayOneShot(sonidoCompletado);
+        if (fuenteAudio != null && sonidoCompletado != null)
+            fuenteAudio.PlayOneShot(sonidoCompletado);
     }
     void LimpiarEscenaParaSiguienteAlgoritmo()
     {

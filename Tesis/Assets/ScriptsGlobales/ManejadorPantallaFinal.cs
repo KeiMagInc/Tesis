@@ -5,6 +5,8 @@ public class ManejadorPantallaFinal : MonoBehaviour
     public GameObject panelPropio;
     public void ClickReintentar()
     {
+        if (UIManager.instancia != null)
+            UIManager.instancia.ReproducirSonidoClick();
         Time.timeScale = 1f;
         AudioListener.pause = false;
         if (panelPropio != null)
@@ -16,7 +18,9 @@ public class ManejadorPantallaFinal : MonoBehaviour
     }
     public void ClickSiguiente()
     {
-        if (UIManager.instancia.logicaActiva != null)
+        if (UIManager.instancia != null)
+            UIManager.instancia.ReproducirSonidoClick();
+        if (UIManager.instancia != null && UIManager.instancia.logicaActiva != null)
             UIManager.instancia.logicaActiva.BotonSiguiente();
     }
 }

@@ -32,6 +32,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     private int aciertosContador = 0;
     private int fallosContador = 0;
     private int puntosAlIniciarNivel;
+    public AudioClip sonidoFinDelJuego;
     [Header("Configuración de Tiempo")]
     public int puntosMaximos = 10;
     public int puntosMinimos = 0;
@@ -101,6 +102,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     public AudioClip sonidoAlerta;
     public AudioClip sonidoAcierto;
     public AudioClip sonidoError;
+    public AudioClip sonidoInsignia;
     public AudioClip sonidoCompletado;
     public AudioClip sonidoCuy;
     [Header("Progreso")]
@@ -323,12 +325,21 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     }
     IEnumerator MostrarResumenFinal()
     {
-        yield return new WaitForSeconds(3.5f);
+        if (audioFelicidadesFinalNivel != null)
+        {
+            yield return new WaitForSeconds(audioFelicidadesFinalNivel.length + 0.8f);
+        }
+        else
+        {
+            yield return new WaitForSeconds(3.5f);
+        }
         if (panelFinal != null)
         {
             panelFinal.SetActive(true);
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
+            if (fuenteAudio != null && sonidoFinDelJuego != null)
+                fuenteAudio.PlayOneShot(sonidoFinDelJuego);
             if (textoPuntajeFinal) textoPuntajeFinal.text = UIManager.puntosGlobales.ToString();
             if (textoAciertos) textoAciertos.text = aciertosContador.ToString();
             if (textoFallos) textoFallos.text = fallosContador.ToString();
@@ -424,6 +435,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     void ConfigurarUIParaModoActual()
     {
         if (UIManager.instancia == null) return;
+        if (UIManager.instancia.logicaActiva != (ILogicaNivel)this) return;
         if (modoActual == ModoOperacion.InsertarInicio)
         {
             UIManager.instancia.SetPrefabs(prefabOveja, prefabCerdo, prefabVaca);
@@ -1091,23 +1103,37 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         {
             nivelCompletado = true;
             UIManager.instancia.DesactivarTodoPostNivel();
-            if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null)
-            {
-                barreraSiguiente.Abrir();
-                checkpointFinal.AparecerYActivar();
-                controladorInsignia.MostrarInsignia(insigniaDeEsteNivel);
-                if (!esModoRepaso && KaosController.instancia != null)
-                    KaosController.instancia.RecibirDanoYDesaparecer("ListasDobles");
-                esperandoCierreNivel = true;
-            }
             if (!esModoRepaso)
                 UIManager.ConfirmarPuntos();
             ActualizarPuntos();
             CongelarLupi(true);
-            ReproducirNivelCompleto();
-            andy.Decir("¡Victoria total Técnico de Caminos Dobles! Eres un maestro del flujo Bidireccional.", audioFelicidadesFinalNivel);
-            StartCoroutine(MostrarResumenFinal());
+            StartCoroutine(SecuenciaFinNivel());
         }
+    }
+    IEnumerator SecuenciaFinNivel()
+    {
+        if (UIManager.instancia != null && UIManager.instancia.fuenteVozAndy != null)
+        {
+            while (UIManager.instancia.fuenteVozAndy.isPlaying)
+                yield return null;
+        }
+        if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null)
+        {
+            barreraSiguiente.Abrir();
+            checkpointFinal.AparecerYActivar();
+            controladorInsignia.MostrarInsignia(insigniaDeEsteNivel); 
+            if (fuenteAudio != null && sonidoInsignia != null)
+                fuenteAudio.PlayOneShot(sonidoInsignia);
+            if (!esModoRepaso && KaosController.instancia != null)
+                KaosController.instancia.RecibirDanoYDesaparecer("ListasDobles");
+
+            esperandoCierreNivel = true;
+        }
+        float tiempoEsperaMedalla = (sonidoInsignia != null) ? sonidoInsignia.length : 2.0f;
+        yield return new WaitForSeconds(tiempoEsperaMedalla);
+        if (andy != null)
+            andy.Decir("¡Victoria total Técnico de Caminos Dobles! Eres un maestro del flujo Bidireccional.", audioFelicidadesFinalNivel);
+        StartCoroutine(MostrarResumenFinal());
     }
     void ReproducirAcierto()
     {
@@ -1203,9 +1229,8 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     }
     void ReproducirNivelCompleto()
     {
-        AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
-        if (masterSFX && sonidoCompletado)
-            masterSFX.PlayOneShot(sonidoCompletado);
+        if (fuenteAudio != null && sonidoCompletado != null)
+            fuenteAudio.PlayOneShot(sonidoCompletado);
     }
     void CrearSegmentoFijo(Vector3 inicio, Vector3 fin)
     {

@@ -11,6 +11,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     public TextMeshProUGUI textoAciertosVictoria;
     public TextMeshProUGUI textoFallosVictoria;
     public TextMeshProUGUI textoPuntajeVictoria;
+    public AudioClip sonidoFinDelJuego;
     [Header("Pantalla Derrota")]
     public GameObject panelDerrota;
     public TextMeshProUGUI textoAciertosDerrota;
@@ -58,6 +59,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     public AudioClip sonidoSembrar; 
     public AudioClip sonidoAcierto;
     public AudioClip sonidoError;
+    public AudioClip sonidoInsignia;
     public AudioClip sonidoCompletado;
     public AudioClip sonidoCuy;
     [Header("Sprites UI Originales")]
@@ -213,6 +215,8 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
             panelAActivar.SetActive(true);
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
+            if (esVictoria && fuenteAudio != null && sonidoFinDelJuego != null)
+                fuenteAudio.PlayOneShot(sonidoFinDelJuego);
             if (esVictoria)
             {
                 if (textoPuntajeVictoria) textoPuntajeVictoria.text = UIManager.puntosGlobales.ToString();
@@ -374,23 +378,38 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
             if (!esModoRepaso)
                 UIManager.ConfirmarPuntos();
             ActualizarBrillos(false, false, false, false);
-            if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null)
-            {
-                barreraSiguiente.Abrir();
-                checkpointFinal.AparecerYActivar();
-                controladorInsignia.MostrarInsignia(insigniaDeEsteNivel);
-                if (!esModoRepaso && KaosController.instancia != null)
-                    KaosController.instancia.RecibirDanoYDesaparecer("AnatomiaComponentes");
-            }
             CongelarLupi(true);
-            ReproducirNivelCompleto();
-            andy.Decir("¡Excelente, Analista de estructuras! Has creado un NODO perfecto. Su P.INFO guarda un dato (int o string) y su P.LIGA (de tipo NODO) apunta a NULL. ¡Sin fugas de memoria!", audioCosechaASalvo); 
-            StartCoroutine(MostrarResumenFinal(true));
+            StartCoroutine(SecuenciaFinNivel());                       
         }
         else if (estado < 3)
         {
             ReproducirError("Ese es el pozo NULL. Solo debes apuntar aquí usando la válvula P.LIGA del huerto para cerrar la lista.", audioErrorNull);
         }
+    }
+    IEnumerator SecuenciaFinNivel()
+    {
+        if (UIManager.instancia != null && UIManager.instancia.fuenteVozAndy != null)
+        {
+            while (UIManager.instancia.fuenteVozAndy.isPlaying)
+            {
+                yield return null;
+            }
+        }
+        if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null)
+        {
+            barreraSiguiente.Abrir();
+            checkpointFinal.AparecerYActivar();
+            controladorInsignia.MostrarInsignia(insigniaDeEsteNivel);
+            if (fuenteAudio != null && sonidoInsignia != null)
+                fuenteAudio.PlayOneShot(sonidoInsignia);
+            if (!esModoRepaso && KaosController.instancia != null)
+                KaosController.instancia.RecibirDanoYDesaparecer("AnatomiaComponentes");
+        }
+        float tiempoEsperaMedalla = (sonidoInsignia != null) ? sonidoInsignia.length : 2.0f;
+        yield return new WaitForSeconds(tiempoEsperaMedalla);
+        if (andy != null)
+            andy.Decir("¡Excelente, Analista de estructuras! Has creado un NODO perfecto. Su P.INFO guarda un dato (int o string) y su P.LIGA (de tipo NODO) apunta a NULL. ¡Sin fugas de memoria!", audioCosechaASalvo);        
+        StartCoroutine(MostrarResumenFinal(true));
     }
     void ReproducirNivelCompleto()
     {
