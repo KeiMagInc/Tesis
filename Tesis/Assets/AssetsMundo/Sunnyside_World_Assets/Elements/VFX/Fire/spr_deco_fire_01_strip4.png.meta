@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -72,10 +72,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 16384
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -105,7 +105,7 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 20
+        width: 5
         height: 10
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -121,11 +121,77 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: spr_deco_fire_01_strip4_1
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 0
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8bb0d5abfad3bc840ab88e2eaa349fac
+      internalID: -567822459
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_deco_fire_01_strip4_2
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 0
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 36bb837d1bb934f4b8534935215862cf
+      internalID: -1153642461
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_deco_fire_01_strip4_3
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 0
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cf150f3a11e4755409e9b45a5d85db49
+      internalID: -39988160
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 92b42f336644487499dcf33c46372a22
     internalID: 0
     vertices: []
     indices: 
@@ -136,6 +202,9 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       spr_deco_fire_01_strip4_0: -2656841655875012877
+      spr_deco_fire_01_strip4_1: -567822459
+      spr_deco_fire_01_strip4_2: -1153642461
+      spr_deco_fire_01_strip4_3: -39988160
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

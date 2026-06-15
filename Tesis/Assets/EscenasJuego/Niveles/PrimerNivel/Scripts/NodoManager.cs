@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 public class NodoManager : MonoBehaviour
 {
+    [Header("Efecto Kaos")]
+    public GameObject objetoFuego;
     [Header("Conexiones Simples (Niveles 1, 2, 3 y 4)")]
     public Transform puntoEntrada;
     public Transform puntoSalida;
@@ -111,6 +113,13 @@ public class NodoManager : MonoBehaviour
         estaActivado = false;
         if (rutinaInfeccion != null) StopCoroutine(rutinaInfeccion);
         rutinaInfeccion = StartCoroutine(RutinaInfeccionProgresiva());
+        if (objetoFuego != null)
+            objetoFuego.SetActive(true);
+    }
+    public void LimpiarNodo()
+    {
+        if (objetoFuego != null)
+            objetoFuego.SetActive(false); 
     }
     private IEnumerator RutinaInfeccionProgresiva()
     {

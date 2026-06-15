@@ -600,6 +600,9 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         if (audioPrevio != null) yield return new WaitForSeconds(audioPrevio.length);
         ApagarBrillosGlobales();
         SumarPuntos(puntos, true);
+        if (listaNodos[indiceNodo].objetoFuego != null)
+            listaNodos[indiceNodo].objetoFuego.transform.localScale *= 1.5f;
+        yield return new WaitForSeconds(0.7f);
         listaNodos[indiceNodo].IniciarSecuenciaEliminacion();
         yield return new WaitForSeconds(1.5f);
         ActualizarLineaFijaPostEliminacion();
