@@ -506,7 +506,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             string[] nombres = (modoActual == ModoOperacion.InsertarInicio) ? nombresNodosInicio : nombresNodosFinal;
             if (fase < nombres.Length)
             {
-                andy.Decir("¡Lupi! Crea el NODO Q y define su campo INFO con el animal indicado.", audioSiembraInstruccion);
+                andy.Decir("¡Lupi! Crea el NODO Q and define su campo INFO con el animal indicado.", audioSiembraInstruccion);
                 UIManager.instancia.SetSemillaPalpitar(nombres[fase]);
                 if (UIManager.instancia != null)
                     UIManager.instancia.MarcarTareaEnProgreso(fase * 2);
@@ -525,8 +525,15 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             }
             if (UIManager.instancia != null)
                 UIManager.instancia.MarcarTareaEnProgreso(1);
-            if (listaNodos.Count > 0 && listaNodos[0] != null)
+            if (listaNodos != null && listaNodos.Count > 0 && listaNodos[0] != null)
+            {
+                Debug.Log($"[LogicaNivel5] Infectando primer nodo (Vaca) en P con éxito: {listaNodos[0].gameObject.name}");
                 listaNodos[0].InfectarNodo();
+            }
+            else
+            {
+                Debug.LogError($"[LogicaNivel5] ¡Error! No se pudo infectar el primer nodo (Vaca). ¿Está vacía la lista? Tamaño de listaNodos: {(listaNodos != null ? listaNodos.Count.ToString() : "NULA")}");
+            }
         }
         else if (modoActual == ModoOperacion.EliminarFinal)
         {
@@ -535,8 +542,15 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             SetPalpitarVisual(puntoEntradaNull.parent.gameObject, "LetreroNull", true);
             if (UIManager.instancia != null)
                 UIManager.instancia.MarcarTareaEnProgreso(2);
-            if (listaNodos.Count > 2 && listaNodos[2] != null)
+            if (listaNodos != null && listaNodos.Count > 2 && listaNodos[2] != null)
+            {
+                Debug.Log($"[LogicaNivel5] Infectando último nodo (Oveja) en F con éxito: {listaNodos[2].gameObject.name}");
                 listaNodos[2].InfectarNodo();
+            }
+            else
+            {
+                Debug.LogError($"[LogicaNivel5] ¡Error! No se pudo infectar el último nodo (Oveja). Tamaño de listaNodos: {(listaNodos != null ? listaNodos.Count.ToString() : "NULA")}");
+            }
         }
     }
     public void AvanceSiembraExitosa()

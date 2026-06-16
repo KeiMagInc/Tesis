@@ -421,6 +421,15 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 "new Nodo(\"Papa\");"
             );
         }
+        else if (modoActual == ModoOperacion.EliminarInicio || modoActual == ModoOperacion.EliminarFinal)
+        {
+            UIManager.instancia.ConfigurarTextosChecklist(
+                "", 
+                "delete(Nodo_Corrupto_Inicio);", 
+                "", 
+                "delete(Nodo_Corrupto_Final);", 
+                "");
+        }
     }
     IEnumerator Intro()
     {
@@ -445,28 +454,32 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             clipReproducido = audioIntroEliminarInicio;
             andy.Decir("¡Alerta! El Kaos ha infectado el primer NODO. Debemos realizar una ELIMINACIÓN para proteger el resto de la estructura.", clipReproducido);
             UIManager.instancia.SetMochilaHabilitada(false);
-            if (listaNodos.Count > 0 && listaNodos[0] != null)
+            if (listaNodos != null && listaNodos.Count > 0 && listaNodos[0] != null)
+            {
+                Debug.Log($"[LogicaNivel3] Infectando primer nodo con éxito: {listaNodos[0].gameObject.name}");
                 listaNodos[0].InfectarNodo();
+            }
+            else
+            {
+                Debug.LogError($"[LogicaNivel3] ¡Error! No se pudo infectar el primer nodo. ¿Está vacía la lista? Tamaño actual de listaNodos: {(listaNodos != null ? listaNodos.Count.ToString() : "NULA")}");
+            }
         }
         if (clipReproducido != null)
-            yield return new WaitForSeconds(clipReproducido.length + 0.5f);
+            yield return new WaitForSeconds(clipReproducido.length);
         else
-            yield return new WaitForSeconds(3.5f);
+            yield return new WaitForSeconds(1.0f);
         if (modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal)
         {
             UIManager.instancia.MostrarMochilaSolo(true);
-            yield return new WaitForSeconds(0.5f);
             andy.Decir("Primero, prepara el nuevo NODO. Abre la mochila y elije una semilla para asignar un valor al campo P.INFO de esta parcela.", audioPrepararNodo);
             yield return new WaitUntil(() => UIManager.instancia.panelParcelas.activeSelf);
             UIManager.instancia.MostrarChecklistSolo(true);
-            if (audioPrepararNodo != null)
-                yield return new WaitForSeconds(audioPrepararNodo.length + 0.2f);
-            else
-                UIManager.instancia.MostrarChecklistSolo(true);
-            yield return new WaitForSeconds(3.5f);
-            yield return new WaitUntil(() => UIManager.instancia.panelParcelas.activeSelf);
+            yield return new WaitForFixedUpdate();
         }
-        UIManager.instancia.MostrarChecklistSolo(true);
+        else
+        {
+            UIManager.instancia.MostrarChecklistSolo(true);
+        }
         ProximoPaso();
     }
     void ProximoPaso()
@@ -600,11 +613,9 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         if (audioPrevio != null) yield return new WaitForSeconds(audioPrevio.length);
         ApagarBrillosGlobales();
         SumarPuntos(puntos, true);
-        if (listaNodos[indiceNodo].objetoFuego != null)
-            listaNodos[indiceNodo].objetoFuego.transform.localScale *= 1.5f;
-        yield return new WaitForSeconds(0.7f);
+        yield return new WaitForSeconds(0.8f);
         listaNodos[indiceNodo].IniciarSecuenciaEliminacion();
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.0f);
         ActualizarLineaFijaPostEliminacion();
         UIManager.instancia.MarcarTareaCompletada((fase * 2) + 1);
         fase++;
@@ -618,15 +629,14 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 yield return new WaitForSeconds(3.5f);
             modoActual = ModoOperacion.EliminarFinal;
             ActualizarCabeceraSegunModo();
-            UIManager.instancia.SetMochilaHabilitada(false);
+            ActualizarTextosChecklistSegunAlgoritmo();
             ProximoPaso();
         }
         else
         {
             nivelCompletado = true;
-            UIManager.instancia.DesactivarTodoPostNivel();            
-            if (!esModoRepaso)
-                UIManager.ConfirmarPuntos();
+            UIManager.instancia.DesactivarTodoPostNivel();
+            if (!esModoRepaso) UIManager.ConfirmarPuntos();
             ActualizarPuntos();
             CongelarLupi(true);
             StartCoroutine(SecuenciaFinNivel());

@@ -4,7 +4,10 @@ using System.Collections.Generic;
 public class NodoManager : MonoBehaviour
 {
     [Header("Efecto Kaos")]
-    public GameObject objetoFuego;
+    private List<Vector3> escalasOriginalesFuegos = new List<Vector3>();
+    private Vector3 escalaOriginalFuego = Vector3.one;
+    public GameObject contenedorFuego;
+    private List<GameObject> listaFuegos = new List<GameObject>();
     [Header("Conexiones Simples (Niveles 1, 2, 3 y 4)")]
     public Transform puntoEntrada;
     public Transform puntoSalida;
@@ -40,10 +43,10 @@ public class NodoManager : MonoBehaviour
     private Coroutine rutinaInfeccion;
     void Awake()
     {
-        Transform contenedor = transform.Find("Sembrios");
-        if (contenedor != null)
+        Transform contenedorSembrios = transform.Find("Sembrios");
+        if (contenedorSembrios != null)
         {
-            foreach (Transform hijo in contenedor)
+            foreach (Transform hijo in contenedorSembrios)
             {
                 SpriteRenderer sr = hijo.GetComponent<SpriteRenderer>();
                 if (sr != null) renderersSembrios.Add(sr);
@@ -53,6 +56,28 @@ public class NodoManager : MonoBehaviour
                     animadoresSembrios.Add(anim);
                     anim.enabled = false;
                 }
+            }
+        }
+        if (contenedorFuego != null)
+        {
+            Vector3 scale = contenedorFuego.transform.localScale;
+            if (Mathf.Approximately(scale.z, 0f))
+            {
+                scale.z = 1f;
+                contenedorFuego.transform.localScale = scale;
+            }
+            escalaOriginalFuego = scale;
+            foreach (Transform hijo in contenedorFuego.transform)
+            {
+                listaFuegos.Add(hijo.gameObject);
+                Vector3 escalaHijo = hijo.localScale;
+                if (Mathf.Approximately(escalaHijo.z, 0f))
+                {
+                    escalaHijo.z = 1f;
+                    hijo.localScale = escalaHijo;
+                }
+                escalasOriginalesFuegos.Add(escalaHijo);
+                hijo.gameObject.SetActive(false);
             }
         }
         if (cuadroAgua != null)
@@ -68,6 +93,17 @@ public class NodoManager : MonoBehaviour
     {
         estaActivado = false;
         StopAllCoroutines();
+        for (int i = 0; i < listaFuegos.Count; i++)
+        {
+            if (i < escalasOriginalesFuegos.Count)
+                listaFuegos[i].transform.localScale = escalasOriginalesFuegos[i];
+            listaFuegos[i].SetActive(false);
+        }
+        if (contenedorFuego != null)
+        {
+            contenedorFuego.SetActive(false);
+            contenedorFuego.transform.localScale = escalaOriginalFuego;
+        }
         if (cuadroAgua != null)
         {
             cuadroAgua.transform.localScale = escalaMinima;
@@ -113,13 +149,30 @@ public class NodoManager : MonoBehaviour
         estaActivado = false;
         if (rutinaInfeccion != null) StopCoroutine(rutinaInfeccion);
         rutinaInfeccion = StartCoroutine(RutinaInfeccionProgresiva());
-        if (objetoFuego != null)
-            objetoFuego.SetActive(true);
+        StartCoroutine(EncenderFuegosSecuencialmente());
     }
     public void LimpiarNodo()
     {
-        if (objetoFuego != null)
-            objetoFuego.SetActive(false); 
+        StopCoroutine(EncenderFuegosSecuencialmente());
+        for (int i = 0; i < listaFuegos.Count; i++)
+        {
+            if (i < escalasOriginalesFuegos.Count)
+                listaFuegos[i].transform.localScale = escalasOriginalesFuegos[i];
+            listaFuegos[i].SetActive(false);
+        }
+        if (contenedorFuego != null)
+            contenedorFuego.SetActive(false);
+    }
+    private IEnumerator EncenderFuegosSecuencialmente()
+    {
+        if (contenedorFuego != null)
+            contenedorFuego.SetActive(true);
+        Debug.Log($"[NodoManager] Activando {listaFuegos.Count} fuegos secuencialmente en {gameObject.name}");
+        foreach (GameObject fuego in listaFuegos)
+        {
+            fuego.SetActive(true);
+            yield return new WaitForSeconds(0.2f);
+        }
     }
     private IEnumerator RutinaInfeccionProgresiva()
     {
@@ -155,14 +208,26 @@ public class NodoManager : MonoBehaviour
     }
     private IEnumerator RutinaMuerteNodo()
     {
+        StartCoroutine(SecuenciaCrecimiento(false));
         if (cuadroAgua != null && spriteRendererAgua != null)
             spriteRendererAgua.color = colorAguaEliminar;
-        yield return StartCoroutine(SecuenciaCrecimiento(false));
+        StopCoroutine(EncenderFuegosSecuencialmente());
+        for (int i = listaFuegos.Count - 1; i >= 0; i--)
+        {
+            if (listaFuegos[i] != null)
+            {
+                listaFuegos[i].SetActive(false);
+                yield return new WaitForSeconds(0.05f);
+            }
+        }
+        if (contenedorFuego != null)
+            contenedorFuego.SetActive(false);
         if (cuadroAgua != null)
         {
             if (rutinaEscala != null) StopCoroutine(rutinaEscala);
             velocidadEscala = velocidadAguaEliminar;
             yield return StartCoroutine(AnimarEscalaAgua(Vector3.zero));
+            cuadroAgua.SetActive(false);
         }
         float t = 0;
         Vector3 escalaInicial = transform.localScale;

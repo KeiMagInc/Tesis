@@ -626,8 +626,15 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                 ""
             );
         UIManager.instancia.SetMochilaHabilitada(false);
-        if (listaNodos.Count > 4 && listaNodos[4] != null)
+        if (listaNodos != null && listaNodos.Count > 4 && listaNodos[4] != null)
+        {
+            Debug.Log($"[LogicaNivel4] Infectando último nodo (Vaca) con éxito: {listaNodos[4].gameObject.name}");
             listaNodos[4].InfectarNodo();
+        }
+        else
+        {
+            Debug.LogError($"[LogicaNivel4] ¡Error! No se pudo infectar el último nodo (Vaca). ¿La lista está incompleta? Tamaño de listaNodos: {(listaNodos != null ? listaNodos.Count.ToString() : "NULA")}");
+        }
         ProximoPasoEliminar();
     }
     void ProximoPasoEliminar()
@@ -648,8 +655,15 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
             EncenderBrilloHijo(listaNodos[3].gameObject, "Liga", true);
             if (UIManager.instancia != null)
                 UIManager.instancia.MarcarTareaEnProgreso(3);
-            if (listaNodos.Count > 0 && listaNodos[0] != null)
+            if (listaNodos != null && listaNodos.Count > 0 && listaNodos[0] != null)
+            {
+                Debug.Log($"[LogicaNivel4] Infectando primer nodo (Codorniz) con éxito: {listaNodos[0].gameObject.name}");
                 listaNodos[0].InfectarNodo();
+            }
+            else
+            {
+                Debug.LogError($"[LogicaNivel4] ¡Error! No se pudo infectar el primer nodo (Codorniz). Tamaño de listaNodos: {(listaNodos != null ? listaNodos.Count.ToString() : "NULA")}");
+            }
         }
     }
     void LogicaEliminar(string tipo, GameObject objetoTocado)
