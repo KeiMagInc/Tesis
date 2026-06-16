@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class KaosController : MonoBehaviour
 {
+    private float puntosUltimoFrame;
     public float distanciaMinimaAlJugador = 5.0f; 
     [Header("UI de Emotes")]
     public SpriteRenderer imagenReaccion;
@@ -56,12 +57,21 @@ public class KaosController : MonoBehaviour
     }
     void Update()
     {
-        ActualizarTamanoBase();
         DetectarZonaPorLista();
         if (triggerActual != null) SeguirJugador();
+        float puntosActuales = UIManager.puntosGlobales + UIManager.puntosTemporales;
+        if (puntosActuales > puntosUltimoFrame)
+        {
+            ActualizarTamanoBase(true);
+        }
+        else if (puntosActuales < puntosUltimoFrame)
+        {
+            ActualizarTamanoBase(false);
+        }
+        puntosUltimoFrame = puntosActuales;
         if (imagenReaccion != null && imagenReaccion.gameObject.activeSelf)
         {
-            float sX = escalaFijaEmote / transform.localScale.x;
+            float sX = escalaFijaEmote / Mathf.Abs(transform.localScale.x);
             float sY = escalaFijaEmote / transform.localScale.y;
             imagenReaccion.transform.localScale = new Vector3(sX, sY, 1);
         }
@@ -84,13 +94,23 @@ public class KaosController : MonoBehaviour
     {
         estaAnimando = true;
         MostrarEmoteAleatorio(emotesPositivos);
+        if (sr != null)
+        {
+            sr.material = materialSilueta != null ? materialSilueta : materialOriginal;
+            sr.color = new Color(0f, 0.6f, 1f, 1f);
+        }
         float escalaTemporal = escalaActualBase;
         escalaActualBase = escalaTemporal * 1.2f;
         AplicarEscalaVisual();
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.15f);
         escalaActualBase = escalaTemporal;
         AplicarEscalaVisual();
         yield return new WaitForSeconds(0.5f);
+        if (sr != null)
+        {
+            sr.material = materialOriginal;
+            sr.color = Color.white;
+        }
         OcultarEmote();
         estaAnimando = false;
     }
@@ -145,31 +165,35 @@ public class KaosController : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         OcultarEmote();
         estaAnimando = false;
-        ActualizarTamanoBase();
+        ActualizarTamanoBase(false);
     }
-    System.Collections.IEnumerator EfectoTransformacionMario(float escalaFinal)
+    IEnumerator EfectoTransformacionMario(float escalaFinal)
     {
         estaAnimando = true;
         MostrarEmoteAleatorio(emotesNegativos);
-        if (sr != null && materialSilueta != null)
+        if (sr != null)
         {
-            sr.material = materialSilueta;
+            sr.material = materialSilueta != null ? materialSilueta : materialOriginal;
             sr.color = Color.red;
         }
-        float escalaTemporal = escalaActualBase;
+        float escalaAnterior = escalaActualBase;
         for (int i = 0; i < 3; i++)
         {
-            escalaActualBase = escalaTemporal * 1.2f;
+            escalaActualBase = escalaAnterior * 1.3f;
             AplicarEscalaVisual();
-            yield return new WaitForSeconds(0.07f);
-            escalaActualBase = escalaFinal;
+            yield return new WaitForSeconds(0.08f);
+            escalaActualBase = escalaAnterior;
             AplicarEscalaVisual();
-            yield return new WaitForSeconds(0.07f);
+            yield return new WaitForSeconds(0.08f);
         }
         escalaActualBase = escalaFinal;
-        sr.material = materialOriginal;
-        sr.color = Color.white;
-        yield return new WaitForSeconds(0.5f);
+        AplicarEscalaVisual();
+        if (sr != null)
+        {
+            sr.material = materialOriginal;
+            sr.color = Color.white;
+        }
+        yield return new WaitForSeconds(0.8f);
         OcultarEmote();
         estaAnimando = false;
     }
@@ -218,13 +242,20 @@ public class KaosController : MonoBehaviour
             transform.position = Vector2.MoveTowards(transform.position, lupi.transform.position, velocidad * Time.deltaTime);
         AplicarEscalaVisual();
     }
-    void ActualizarTamanoBase()
+    void ActualizarTamanoBase(bool huboGanancia)
     {
-        if (estaAnimando) return;
-        float reduccionTotal = UIManager.puntosGlobales * reduccionPorPunto;
+        float puntosTotales = UIManager.puntosGlobales + UIManager.puntosTemporales;
+        float reduccionTotal = puntosTotales * reduccionPorPunto;
         float nuevaEscalaBase = Mathf.Max(escalaMinima, escalaInicial - reduccionTotal);
-        if (nuevaEscalaBase < escalaActualBase) StartCoroutine(EfectoTransformacionMario(nuevaEscalaBase));
-        else { escalaActualBase = nuevaEscalaBase; AplicarEscalaVisual(); }
+        if (huboGanancia && !estaAnimando && !recibiendoDano)
+        {
+            StartCoroutine(EfectoTransformacionMario(nuevaEscalaBase));
+        }
+        else if (!estaAnimando)
+        {
+            escalaActualBase = nuevaEscalaBase;
+            AplicarEscalaVisual();
+        }
     }
     void AplicarEscalaVisual()
     {

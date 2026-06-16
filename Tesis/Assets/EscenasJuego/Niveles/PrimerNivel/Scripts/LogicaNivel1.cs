@@ -146,7 +146,17 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         if (esModoRepaso) return;
         if (estado >= 4 || estado == 0) return;
         fallosContador++;
-        UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
+        int puntosARestar = 5;
+        if (UIManager.puntosTemporales >= puntosARestar)
+        {
+            UIManager.puntosTemporales -= puntosARestar;
+        }
+        else
+        {
+            int sobrante = puntosARestar - UIManager.puntosTemporales;
+            UIManager.puntosTemporales = 0;
+            UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - sobrante);
+        }
         ActualizarPuntos();
         UIManager.instancia.RevisarDerrotaPorPorcentaje(aciertosContador, fallosContador);
         if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
