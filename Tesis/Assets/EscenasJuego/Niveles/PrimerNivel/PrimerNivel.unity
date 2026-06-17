@@ -52569,11 +52569,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.2
+      value: -5.26
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.5
+      value: 3.62
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -69301,7 +69301,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 05503805d4289c249b6715184070090b, type: 2}
+  - {fileID: 2100000, guid: 44a309d370e06bf4fab9a0b2a912925b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -69325,7 +69325,7 @@ LineRenderer:
   m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 1.5231978
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -71434,7 +71434,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 05503805d4289c249b6715184070090b, type: 2}
+  - {fileID: 2100000, guid: 44a309d370e06bf4fab9a0b2a912925b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -71458,7 +71458,7 @@ LineRenderer:
   m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 1.5231978
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -75595,6 +75595,7 @@ GameObject:
   - component: {fileID: 686502027}
   - component: {fileID: 686502028}
   - component: {fileID: 686502029}
+  - component: {fileID: 686502030}
   m_Layer: 0
   m_Name: Logica
   m_TagString: Untagged
@@ -75708,7 +75709,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 05503805d4289c249b6715184070090b, type: 2}
+  - {fileID: 2100000, guid: 44a309d370e06bf4fab9a0b2a912925b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -75732,7 +75733,7 @@ LineRenderer:
   m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 1.5231978
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -75789,6 +75790,20 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &686502030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686502026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cffee2434660764489ef58d5cf37a44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocidadX: -1
+  velocidadY: 0
 --- !u!1001 &695634596
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -77825,7 +77840,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 05503805d4289c249b6715184070090b, type: 2}
+  - {fileID: 2100000, guid: 44a309d370e06bf4fab9a0b2a912925b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -77849,7 +77864,7 @@ LineRenderer:
   m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 1.5231978
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -79474,7 +79489,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 05503805d4289c249b6715184070090b, type: 2}
+  - {fileID: 2100000, guid: 44a309d370e06bf4fab9a0b2a912925b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -79498,7 +79513,7 @@ LineRenderer:
   m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 1.5231978
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -98900,6 +98915,7 @@ GameObject:
   - component: {fileID: 1247828544}
   - component: {fileID: 1247828546}
   - component: {fileID: 1247828545}
+  - component: {fileID: 1247828547}
   m_Layer: 0
   m_Name: Logica
   m_TagString: Untagged
@@ -98946,7 +98962,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 05503805d4289c249b6715184070090b, type: 2}
+  - {fileID: 2100000, guid: 44a309d370e06bf4fab9a0b2a912925b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -98970,7 +98986,7 @@ LineRenderer:
   m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 1.5231978
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -99092,6 +99108,20 @@ MonoBehaviour:
   puntoEntradaNull: {fileID: 1312583796}
   brilloHead: {fileID: 885489755}
   brilloNull: {fileID: 728607478}
+--- !u!114 &1247828547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1247828543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cffee2434660764489ef58d5cf37a44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocidadX: -1
+  velocidadY: 0
 --- !u!1 &1248501153
 GameObject:
   m_ObjectHideFlags: 0
@@ -100565,6 +100595,7 @@ GameObject:
   - component: {fileID: 1370204286}
   - component: {fileID: 1370204288}
   - component: {fileID: 1370204287}
+  - component: {fileID: 1370204289}
   m_Layer: 0
   m_Name: Logica
   m_TagString: Untagged
@@ -100612,7 +100643,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 05503805d4289c249b6715184070090b, type: 2}
+  - {fileID: 2100000, guid: 44a309d370e06bf4fab9a0b2a912925b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -100636,7 +100667,7 @@ LineRenderer:
   m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 1.5231978
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -100799,6 +100830,20 @@ MonoBehaviour:
   puntoEntradaNull: {fileID: 1617781619}
   brilloHead: {fileID: 1171921629}
   brilloNull: {fileID: 1389481917}
+--- !u!114 &1370204289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1370204285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cffee2434660764489ef58d5cf37a44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocidadX: -1
+  velocidadY: 0
 --- !u!114 &1389481917 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1144294409326967538, guid: bfece54757cd41842a3c985150368365, type: 3}
@@ -104597,6 +104642,7 @@ GameObject:
   - component: {fileID: 1802465721}
   - component: {fileID: 1802465723}
   - component: {fileID: 1802465722}
+  - component: {fileID: 1802465724}
   m_Layer: 0
   m_Name: Logica
   m_TagString: Untagged
@@ -104645,7 +104691,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 05503805d4289c249b6715184070090b, type: 2}
+  - {fileID: 2100000, guid: 44a309d370e06bf4fab9a0b2a912925b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -104669,7 +104715,7 @@ LineRenderer:
   m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 1.5231978
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -104835,6 +104881,20 @@ MonoBehaviour:
   puntoEntradaNull: {fileID: 1528405447}
   brilloHead: {fileID: 501578208}
   brilloNull: {fileID: 1528405446}
+--- !u!114 &1802465724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1802465720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cffee2434660764489ef58d5cf37a44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocidadX: -1
+  velocidadY: 0
 --- !u!1001 &1809904164
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -105399,6 +105459,7 @@ GameObject:
   - component: {fileID: 1845346466}
   - component: {fileID: 1845346468}
   - component: {fileID: 1845346467}
+  - component: {fileID: 1845346469}
   m_Layer: 0
   m_Name: Logica
   m_TagString: Untagged
@@ -105446,7 +105507,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 05503805d4289c249b6715184070090b, type: 2}
+  - {fileID: 2100000, guid: 44a309d370e06bf4fab9a0b2a912925b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -105470,7 +105531,7 @@ LineRenderer:
   m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 1.5231978
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -105609,6 +105670,20 @@ MonoBehaviour:
   lupi: {fileID: 191083641}
   puntoRio: {fileID: 826578592}
   brilloRio: {fileID: 1536299284}
+--- !u!114 &1845346469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1845346465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cffee2434660764489ef58d5cf37a44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocidadX: -1
+  velocidadY: 0
 --- !u!1 &1861877062
 GameObject:
   m_ObjectHideFlags: 0

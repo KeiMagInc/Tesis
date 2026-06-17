@@ -173,7 +173,8 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     {
         if (esModoRepaso) return;
         bool debePenalizar = false;
-        if (modoActual == ModoOperacion.Insertar && subPaso > 0) debePenalizar = true;
+        if (modoActual == ModoOperacion.Insertar && (subPaso == 2 || (subPaso == 1 && cargandoAgua)))
+            debePenalizar = true;
         if (modoActual == ModoOperacion.Eliminar && cargandoAgua) debePenalizar = true;
         if (!debePenalizar) return;
         if (fase >= nombresNodos.Length && modoActual == ModoOperacion.Insertar) return;
