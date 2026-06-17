@@ -158,9 +158,19 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     public void DesconectarEnlacePorKaos()
     {
         if (esModoRepaso) return;
-        if (fase >= 3 || (pasoConexion == 0 && !cargandoAgua)) return;
+        if (fase >= 5 || (pasoConexion == 0 && !cargandoAgua)) return;
         fallosContador++;
-        UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
+        int puntosARestar = 5;
+        if (UIManager.puntosTemporales >= puntosARestar)
+        {
+            UIManager.puntosTemporales -= puntosARestar;
+        }
+        else
+        {
+            int sobrante = puntosARestar - UIManager.puntosTemporales;
+            UIManager.puntosTemporales = 0;
+            UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - sobrante);
+        }
         ActualizarPuntos();
         if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
         rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(false));
@@ -523,7 +533,17 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
             masterSFX.PlayOneShot(sonidoError);
         if (!esModoRepaso)
         {
-            UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
+            int puntosARestar = 5;
+            if (UIManager.puntosTemporales >= puntosARestar)
+            {
+                UIManager.puntosTemporales -= puntosARestar;
+            }
+            else
+            {
+                int sobrante = puntosARestar - UIManager.puntosTemporales;
+                UIManager.puntosTemporales = 0;
+                UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - sobrante);
+            }
             ActualizarPuntos();
             if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
             rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(false));
