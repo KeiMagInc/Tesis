@@ -852,7 +852,17 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
             masterSFX.PlayOneShot(sonidoError);
         if (!esModoRepaso)
         {
-            UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
+            int puntosARestar = 5;
+            if (UIManager.puntosTemporales >= puntosARestar)
+            {
+                UIManager.puntosTemporales -= puntosARestar;
+            }
+            else
+            {
+                int sobrante = puntosARestar - UIManager.puntosTemporales;
+                UIManager.puntosTemporales = 0;
+                UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - sobrante);
+            }
             ActualizarPuntos();
             if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
             rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(false));
