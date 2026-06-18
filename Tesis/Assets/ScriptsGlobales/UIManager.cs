@@ -284,9 +284,7 @@ public class UIManager : MonoBehaviour
     {
         System.Array.Clear(prefabsActuales, 0, prefabsActuales.Length);
         for (int i = 0; i < prefabs.Length && i < prefabsActuales.Length; i++)
-        {
             prefabsActuales[i] = prefabs[i];
-        }
     }
     public void ConfigurarBotonesUI(Sprite[] imgs, string[] noms)
     {
@@ -415,16 +413,12 @@ public class UIManager : MonoBehaviour
     public void MarcarTareaEnProgreso(int indice)
     {
         if (indice >= 0 && indice < itemsChecklist.Length && itemsChecklist[indice] != null)
-        {
             itemsChecklist[indice].color = Color.blue;
-        }
     }
     public void MarcarTareaCompletada(int indice)
     {
         if (indice >= 0 && indice < itemsChecklist.Length && itemsChecklist[indice] != null)
-        {
             StartCoroutine(EfectoPopTexto(itemsChecklist[indice], colorTareaCompletada));
-        }
     }
     private IEnumerator EfectoPopTexto(TextMeshProUGUI texto, Color colorObjetivo)
     {

@@ -323,7 +323,6 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         {
             var controlMovimiento = lupi.GetComponent<PlayerController>();
             if (controlMovimiento != null) controlMovimiento.enabled = !congelar;
-
             Rigidbody2D rb = lupi.GetComponent<Rigidbody2D>();
             if (rb != null) rb.linearVelocity = Vector2.zero;
         }
@@ -398,7 +397,6 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         LimpiarNodosEscena();
         ApagarBrillosGlobales();
     }
-
     void ActualizarTextosChecklistSegunAlgoritmo()
     {
         if (modoActual == ModoOperacion.InsertarInicio)
@@ -498,7 +496,6 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 {
                     andy.Decir("Siembra la semilla para definir el contenido Q^.INFO del nuevo NODO.", audioSiembraQInfo);
                 }
-
                 UIManager.instancia.SetSemillaPalpitar(nombres[fase]);
                 if (UIManager.instancia != null)
                     UIManager.instancia.MarcarTareaEnProgreso(fase * 2);
@@ -807,18 +804,12 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     void LimpiarNodosEscena()
     {
         foreach (var n in Object.FindObjectsByType<NodoManager>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-        {
             if (n.gameObject.name.Contains("(Clone)")) Destroy(n.gameObject);
-        }
         if (LogicaNivel1.instancia != null)
-        {
             LogicaNivel1.instancia.ResetearNivelSilencioso();
-        }
         ZonaPlantado[] zonas = Object.FindObjectsByType<ZonaPlantado>(FindObjectsSortMode.None);
         foreach (var z in zonas)
-        {
             z.ResetearZona();
-        }
     }
     public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
     {
@@ -907,7 +898,6 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
                 brilloHead.SetEncendido(false);
                 cargandoAgua = true;
                 EncenderBrilloEnNodo(managerActual.gameObject, "Info", true);
-
                 if (fase == 0)
                     andy.Decir("Recogiste la dirección de memoria para el puntero inicial P. Llévala al campo P^.INFO.", audioLlevaAguaAInfoP);
                 else
@@ -1063,12 +1053,8 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         string buscado = nombres[fase].ToLower();
         foreach (var nm in Object.FindObjectsByType<NodoManager>(FindObjectsSortMode.None))
         {
-            if (nm.gameObject.name.ToLower().Contains(buscado) &&
-                nm.gameObject.name.Contains("(Clone)") &&
-                !listaNodos.Contains(nm))
-            {
+            if (nm.gameObject.name.ToLower().Contains(buscado) && nm.gameObject.name.Contains("(Clone)") && !listaNodos.Contains(nm))
                 return nm;
-            }
         }
         return null;
     }
@@ -1081,9 +1067,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
             {
                 b.SetEncendido(encender);
                 if (encender && andy != null)
-                {
                     andy.CambiarObjetivo(b.transform);
-                }
             }
         }
     }
@@ -1180,7 +1164,6 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     void ConfigurarMochilaSegunModo()
     {
         if (UIManager.instancia == null) return;
-
         if (modoActual == ModoOperacion.InsertarInicio)
         {
             UIManager.instancia.SetPrefabs(prefabPapa, prefabTrigo, prefabCalabaza);

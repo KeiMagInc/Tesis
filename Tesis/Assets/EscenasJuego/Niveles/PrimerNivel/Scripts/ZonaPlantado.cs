@@ -1,5 +1,4 @@
 using UnityEngine;
-
 public class ZonaPlantado : MonoBehaviour
 {
     [Header("Configuración del Puzzle")]
@@ -11,7 +10,6 @@ public class ZonaPlantado : MonoBehaviour
         if (colPrincipal != null) colPrincipal.enabled = false;
         ActivarLimite(false);
     }
-
     public void ResetearZona()
     {
         estaOcupada = false;
@@ -19,7 +17,6 @@ public class ZonaPlantado : MonoBehaviour
         if (colPrincipal != null) colPrincipal.enabled = true;
         ActivarLimite(true);
     }
-
     private void ActivarLimite(bool estado)
     {
         foreach (Transform hijo in transform)

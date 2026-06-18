@@ -281,7 +281,6 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
         {
             var controlMovimiento = lupi.GetComponent<PlayerController>();
             if (controlMovimiento != null) controlMovimiento.enabled = !congelar;
-
             Rigidbody2D rb = lupi.GetComponent<Rigidbody2D>();
             if (rb != null) rb.linearVelocity = Vector2.zero;
         }
@@ -369,7 +368,6 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
             yield return new WaitForSeconds(2.5f); 
         ProximoPaso();
     }
-
     void ProximoPaso()
     {
         if (fase >= nombresNodos.Length) return;
@@ -611,12 +609,6 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
             if (b.gameObject.name.ToUpper().Contains(n.ToUpper()))
                 b.SetEncendido(e);
         }
-    }
-    void ReproducirNivelCompleto()
-    {
-        AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
-        if (masterSFX && sonidoCompletado)
-            masterSFX.PlayOneShot(sonidoCompletado);
     }
     void ApagarBrillos() { 
         if (brilloHead) brilloHead.SetEncendido(false); 

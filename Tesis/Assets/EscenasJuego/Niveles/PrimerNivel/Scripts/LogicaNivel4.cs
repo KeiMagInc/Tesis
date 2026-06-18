@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
 public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
 {
     private bool esModoRepaso = false;
@@ -317,7 +316,6 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         {
             var controlMovimiento = lupi.GetComponent<PlayerController>();
             if (controlMovimiento != null) controlMovimiento.enabled = !congelar;
-
             Rigidbody2D rb = lupi.GetComponent<Rigidbody2D>();
             if (rb != null) rb.linearVelocity = Vector2.zero;
         }
@@ -454,34 +452,7 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
                 andy.Decir("Para insertar a Q, actualizaremos la LIGA del animal anterior para que apunte a la dirección de memoria de este nuevo integrante.", audioInsertarIntermedio);
             }
         }
-    }
-    IEnumerator EsperarYAsignarNodo()
-    {
-        yield return new WaitForSeconds(0.1f);
-        foreach (var nm in Object.FindObjectsByType<NodoManager>(FindObjectsSortMode.None))
-        {
-            if (nm.name.Contains("(Clone)") && !listaNodos.Contains(nm))
-            {
-                nodoActual = nm;
-                break;
-            }
-        }
-        if (nodoActual != null)
-        {
-            subPaso = 1;
-            if (fase == 0)
-            {
-                brilloRio.SetEncendido(true);
-                if (andy != null && brilloRio != null) andy.CambiarObjetivo(brilloRio.transform);
-                andy.Decir("Al ser el primer animal, el puntero de acceso P debe inicializarse apuntando a sí mismo: P^.LIGA = P", audioPrimerNodoCircular);
-            }
-            else
-            {
-                EncenderBrilloHijo(listaNodos[fase - 1].gameObject, "Liga", true);
-                andy.Decir("Para insertar a Q, actualizaremos la LIGA del animal anterior para que apunte a la dirección de memoria de este nuevo integrante.", audioInsertarIntermedio);
-            }
-        }
-    }
+    }    
     public void AccionEnLetrero(string tipo, GameObject objetoTocado)
     {
         if (Time.time - tiempoUltimaAccion < 0.05f) return;
@@ -750,11 +721,6 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
             andy.Decir("¡Victoria Supervisor de Flujo Circular! Has gestionado los punteros P, Q y T perfectamente. ¡La memoria de Tahuantindata está a salvo!", audioExitoTotal);
         StartCoroutine(MostrarResumenFinal());
     }
-    void ReproducirNivelCompleto()
-    {
-        if (fuenteAudio != null && sonidoCompletado != null)
-            fuenteAudio.PlayOneShot(sonidoCompletado);
-    }
     void ActualizarLineaFijaPostEliminacion()
     {
         List<Vector3> pts = new List<Vector3>();
@@ -781,7 +747,11 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         lineaFija.SetPositions(pts.ToArray());
         puntosConfirmados.Clear();
     }
-    IEnumerator EsperarSiguienteEliminar() { yield return new WaitForSeconds(2f); ProximoPasoEliminar(); }
+    IEnumerator EsperarSiguienteEliminar() 
+    { 
+        yield return new WaitForSeconds(2f); 
+        ProximoPasoEliminar(); 
+    }
     void DibujarLineaFija()
     {
         lineaFija.positionCount = puntosConfirmados.Count;

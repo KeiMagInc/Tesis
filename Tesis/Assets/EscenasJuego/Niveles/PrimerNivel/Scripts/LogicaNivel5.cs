@@ -558,7 +558,6 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         UIManager.instancia.SetSemillaPalpitar("");
         StartCoroutine(EsperarParaAsignarNodoDoble());        
     }
-
     IEnumerator EsperarParaAsignarNodoDoble()
     {
         yield return new WaitForSeconds(0.5f);
@@ -600,7 +599,6 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             }
         }
     }
-
     public void AccionEnLetrero(string tipo, GameObject objetoTocado = null)
     {
         if (Time.time - ultimoTiempoClic < 0.1f) return;
@@ -748,9 +746,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         if (andy != null && andy.fuenteVoz != null)
         {
             while (andy.fuenteVoz.isPlaying)
-            {
                 yield return null;
-            }
         }
         yield return new WaitForSeconds(0.5f);
         FinalizarNodoCompleto(exito);
@@ -1344,14 +1340,6 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
             ef.SetEncendido(false);
         if (andy != null && lupi != null) andy.CambiarObjetivo(lupi);
     }
-    private bool EsConexionValida(string tipoDestino)
-    {
-        if (cargandoAgua && tipoDestino == "Head")
-        {
-            return false;
-        }
-        return true;
-    }
     void SetPalpitarVisual(GameObject n, string nombreLetrero, bool estado)
     {
         if (n == null) return;
@@ -1372,14 +1360,10 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     void LimpiarNodosEscena()
     {
         foreach (var n in Object.FindObjectsByType<NodoManager>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-        {
             if (n.name.Contains("(Clone)")) Destroy(n.gameObject);
-        }
         ZonaPlantado[] zonas = Object.FindObjectsByType<ZonaPlantado>(FindObjectsSortMode.None);
         foreach (var z in zonas)
-        {
-            z.ResetearZona(); 
-        }
+            z.ResetearZona();
         if (LogicaNivel1.instancia != null)
             LogicaNivel1.instancia.ResetearNivelSilencioso();
     }

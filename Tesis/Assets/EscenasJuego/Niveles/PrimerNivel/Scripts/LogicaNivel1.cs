@@ -246,7 +246,6 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         {
             var controlMovimiento = lupi.GetComponent<PlayerController>();
             if (controlMovimiento != null) controlMovimiento.enabled = !congelar;
-
             Rigidbody2D rb = lupi.GetComponent<Rigidbody2D>();
             if (rb != null) rb.linearVelocity = Vector2.zero;
         }
@@ -323,7 +322,6 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         if (fuenteAudio != null && sonidoSeleccionar != null)
             fuenteAudio.PlayOneShot(sonidoSeleccionar);
         tiempoUltimaAccion = Time.time;
-
         switch (tipo)
         {
             case "Head": AccionHead(); break;
@@ -401,9 +399,7 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         if (UIManager.instancia != null && UIManager.instancia.fuenteVozAndy != null)
         {
             while (UIManager.instancia.fuenteVozAndy.isPlaying)
-            {
                 yield return null;
-            }
         }
         if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null)
         {
@@ -420,12 +416,6 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         if (andy != null)
             andy.Decir("¡Excelente, Analista de estructuras! Has creado un NODO perfecto. Su P.INFO guarda un dato (int o string) y su P.LIGA (de tipo NODO) apunta a NULL. ¡Sin fugas de memoria!", audioCosechaASalvo);        
         StartCoroutine(MostrarResumenFinal(true));
-    }
-    void ReproducirNivelCompleto()
-    {
-        AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
-        if (masterSFX && sonidoCompletado)
-            masterSFX.PlayOneShot(sonidoCompletado);
     }
     void ReproducirError(string mensajePista, AudioClip audioExplicacion)
     {

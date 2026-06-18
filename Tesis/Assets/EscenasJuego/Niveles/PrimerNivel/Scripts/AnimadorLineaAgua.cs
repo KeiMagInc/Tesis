@@ -8,7 +8,6 @@ public class AnimadorLineaAgua : MonoBehaviour
     public float velocidadY = 0f;
     private LineRenderer lineRenderer;
     private Material materialDeLinea;
-
     void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
