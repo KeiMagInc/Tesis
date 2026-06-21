@@ -1,0 +1,936 @@
+fileFormatVersion: 2
+guid: 4fedb92a7df00264d80b404339b0d8d1
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6952440616118898260
+    second: EPN_logo_big_0
+  - first:
+      213: -1919238866569144925
+    second: EPN_logo_big_1
+  - first:
+      213: -2000351084284416733
+    second: EPN_logo_big_2
+  - first:
+      213: 4838131262585959928
+    second: EPN_logo_big_3
+  - first:
+      213: -5127369203993825853
+    second: EPN_logo_big_4
+  - first:
+      213: 8190187692972291812
+    second: EPN_logo_big_5
+  - first:
+      213: 1461010268812335362
+    second: EPN_logo_big_6
+  - first:
+      213: -6032680621489735379
+    second: EPN_logo_big_7
+  - first:
+      213: -5761828233768733190
+    second: EPN_logo_big_8
+  - first:
+      213: -195056564695476618
+    second: EPN_logo_big_9
+  - first:
+      213: -5466273874485990373
+    second: EPN_logo_big_10
+  - first:
+      213: -4363652256827212828
+    second: EPN_logo_big_11
+  - first:
+      213: -2677413242069469350
+    second: EPN_logo_big_12
+  - first:
+      213: 758104491452357431
+    second: EPN_logo_big_13
+  - first:
+      213: 5109641713038375096
+    second: EPN_logo_big_14
+  - first:
+      213: -8430896882461002644
+    second: EPN_logo_big_15
+  - first:
+      213: -1765628984857964255
+    second: EPN_logo_big_16
+  - first:
+      213: -134443864786025942
+    second: EPN_logo_big_17
+  - first:
+      213: -9092908361250285566
+    second: EPN_logo_big_18
+  - first:
+      213: 1225360738704494739
+    second: EPN_logo_big_19
+  - first:
+      213: 7821814581762214564
+    second: EPN_logo_big_20
+  - first:
+      213: -6974720672708379110
+    second: EPN_logo_big_21
+  - first:
+      213: 4445289182957211041
+    second: EPN_logo_big_22
+  - first:
+      213: 3463947637371911895
+    second: EPN_logo_big_23
+  - first:
+      213: -8282036736815258635
+    second: EPN_logo_big_24
+  - first:
+      213: 4372564377391417361
+    second: EPN_logo_big_25
+  - first:
+      213: -1792888144562132648
+    second: EPN_logo_big_26
+  - first:
+      213: -3259289820573424246
+    second: EPN_logo_big_27
+  - first:
+      213: 3584080826607778336
+    second: EPN_logo_big_28
+  - first:
+      213: 4334076363326549432
+    second: EPN_logo_big_29
+  - first:
+      213: 1962218254430746381
+    second: EPN_logo_big_30
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 16384
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: EPN_logo_big_0
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 455
+        width: 479
+        height: 221
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45ec3cd97e70c7060800000000000000
+      internalID: 6952440616118898260
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_1
+      rect:
+        serializedVersion: 2
+        x: 572
+        y: 469
+        width: 34
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a5d50f5b6e7d55e0800000000000000
+      internalID: -1919238866569144925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_2
+      rect:
+        serializedVersion: 2
+        x: 611
+        y: 468
+        width: 39
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32de82389435d34e0800000000000000
+      internalID: -2000351084284416733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_3
+      rect:
+        serializedVersion: 2
+        x: 655
+        y: 468
+        width: 55
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f5f523ffbe742340800000000000000
+      internalID: 4838131262585959928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_4
+      rect:
+        serializedVersion: 2
+        x: 718
+        y: 468
+        width: 55
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3cdababffdce7d8b0800000000000000
+      internalID: -5127369203993825853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_5
+      rect:
+        serializedVersion: 2
+        x: 786
+        y: 469
+        width: 35
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e6b363305469a170800000000000000
+      internalID: 8190187692972291812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_6
+      rect:
+        serializedVersion: 2
+        x: 830
+        y: 469
+        width: 35
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 209d1c5491d864410800000000000000
+      internalID: 1461010268812335362
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_7
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 469
+        width: 58
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d29b8b0ffec974ca0800000000000000
+      internalID: -6032680621489735379
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_8
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 99
+        width: 234
+        height: 342
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af5f565bfbfd900b0800000000000000
+      internalID: -5761828233768733190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_9
+      rect:
+        serializedVersion: 2
+        x: 298
+        y: 99
+        width: 234
+        height: 343
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 676d73e76150b4df0800000000000000
+      internalID: -195056564695476618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_10
+      rect:
+        serializedVersion: 2
+        x: 616
+        y: 362
+        width: 69
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1ca34a6fd4e324b0800000000000000
+      internalID: -5466273874485990373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_11
+      rect:
+        serializedVersion: 2
+        x: 820
+        y: 428
+        width: 23
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4eb7b7c54613173c0800000000000000
+      internalID: -4363652256827212828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_12
+      rect:
+        serializedVersion: 2
+        x: 850
+        y: 362
+        width: 55
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a57b58587dae7dad0800000000000000
+      internalID: -2677413242069469350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_13
+      rect:
+        serializedVersion: 2
+        x: 913
+        y: 362
+        width: 56
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73b55a3b404558a00800000000000000
+      internalID: 758104491452357431
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_14
+      rect:
+        serializedVersion: 2
+        x: 1002
+        y: 362
+        width: 55
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b8bb23e01819e640800000000000000
+      internalID: 5109641713038375096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_15
+      rect:
+        serializedVersion: 2
+        x: 1054
+        y: 363
+        width: 57
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c64b6f644ff6ffa80800000000000000
+      internalID: -8430896882461002644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_16
+      rect:
+        serializedVersion: 2
+        x: 572
+        y: 363
+        width: 41
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12158600bc93f77e0800000000000000
+      internalID: -1765628984857964255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_17
+      rect:
+        serializedVersion: 2
+        x: 693
+        y: 363
+        width: 36
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a22c23d640c522ef0800000000000000
+      internalID: -134443864786025942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_18
+      rect:
+        serializedVersion: 2
+        x: 737
+        y: 363
+        width: 12
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2085f7095008fc180800000000000000
+      internalID: -9092908361250285566
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_19
+      rect:
+        serializedVersion: 2
+        x: 756
+        y: 363
+        width: 48
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3901130891b510110800000000000000
+      internalID: 1225360738704494739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_20
+      rect:
+        serializedVersion: 2
+        x: 811
+        y: 363
+        width: 34
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4aa48ec9beaac8c60800000000000000
+      internalID: 7821814581762214564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_21
+      rect:
+        serializedVersion: 2
+        x: 981
+        y: 363
+        width: 12
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1eb4a77080d43f90800000000000000
+      internalID: -6974720672708379110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_22
+      rect:
+        serializedVersion: 2
+        x: 572
+        y: 257
+        width: 55
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ad0d02b5f6d0bd30800000000000000
+      internalID: 4445289182957211041
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_23
+      rect:
+        serializedVersion: 2
+        x: 632
+        y: 258
+        width: 58
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7de3b1ef50a621030800000000000000
+      internalID: 3463947637371911895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_24
+      rect:
+        serializedVersion: 2
+        x: 690
+        y: 257
+        width: 55
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f3246dc77b401d80800000000000000
+      internalID: -8282036736815258635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_25
+      rect:
+        serializedVersion: 2
+        x: 753
+        y: 258
+        width: 11
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11841f762287eac30800000000000000
+      internalID: 4372564377391417361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_26
+      rect:
+        serializedVersion: 2
+        x: 773
+        y: 257
+        width: 69
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8596d5d4bb16e17e0800000000000000
+      internalID: -1792888144562132648
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_27
+      rect:
+        serializedVersion: 2
+        x: 850
+        y: 257
+        width: 56
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a85aca83d2da4c2d0800000000000000
+      internalID: -3259289820573424246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_28
+      rect:
+        serializedVersion: 2
+        x: 911
+        y: 258
+        width: 58
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02abe34c5863db130800000000000000
+      internalID: 3584080826607778336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_29
+      rect:
+        serializedVersion: 2
+        x: 976
+        y: 258
+        width: 35
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bdee715d7bb52c30800000000000000
+      internalID: 4334076363326549432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EPN_logo_big_30
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 586
+        height: 206
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d07b12b2b133b3b10800000000000000
+      internalID: 1962218254430746381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      EPN_logo_big_0: 6952440616118898260
+      EPN_logo_big_1: -1919238866569144925
+      EPN_logo_big_10: -5466273874485990373
+      EPN_logo_big_11: -4363652256827212828
+      EPN_logo_big_12: -2677413242069469350
+      EPN_logo_big_13: 758104491452357431
+      EPN_logo_big_14: 5109641713038375096
+      EPN_logo_big_15: -8430896882461002644
+      EPN_logo_big_16: -1765628984857964255
+      EPN_logo_big_17: -134443864786025942
+      EPN_logo_big_18: -9092908361250285566
+      EPN_logo_big_19: 1225360738704494739
+      EPN_logo_big_2: -2000351084284416733
+      EPN_logo_big_20: 7821814581762214564
+      EPN_logo_big_21: -6974720672708379110
+      EPN_logo_big_22: 4445289182957211041
+      EPN_logo_big_23: 3463947637371911895
+      EPN_logo_big_24: -8282036736815258635
+      EPN_logo_big_25: 4372564377391417361
+      EPN_logo_big_26: -1792888144562132648
+      EPN_logo_big_27: -3259289820573424246
+      EPN_logo_big_28: 3584080826607778336
+      EPN_logo_big_29: 4334076363326549432
+      EPN_logo_big_3: 4838131262585959928
+      EPN_logo_big_30: 1962218254430746381
+      EPN_logo_big_4: -5127369203993825853
+      EPN_logo_big_5: 8190187692972291812
+      EPN_logo_big_6: 1461010268812335362
+      EPN_logo_big_7: -6032680621489735379
+      EPN_logo_big_8: -5761828233768733190
+      EPN_logo_big_9: -195056564695476618
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
