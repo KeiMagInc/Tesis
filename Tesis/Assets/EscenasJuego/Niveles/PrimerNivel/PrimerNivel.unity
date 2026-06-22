@@ -103516,7 +103516,7 @@ MonoBehaviour:
   distanciaDeFrenado: 0.2
   escalaInicial: 2.5
   escalaMinima: 0.2
-  puntosObjetivoPara20Porciento: 500
+  puntosObjetivoPara20Porciento: 300
 --- !u!61 &1634927762
 BoxCollider2D:
   m_ObjectHideFlags: 0
