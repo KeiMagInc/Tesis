@@ -52557,11 +52557,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.1768
+      value: 1.15
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.1768
+      value: 1.15
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalScale.z
@@ -52569,11 +52569,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.26
+      value: -5.3
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.62
+      value: 3.8
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -69255,6 +69255,7 @@ GameObject:
   m_Component:
   - component: {fileID: 276089975}
   - component: {fileID: 276089976}
+  - component: {fileID: 276089977}
   m_Layer: 0
   m_Name: LineaFija
   m_TagString: Untagged
@@ -69371,8 +69372,8 @@ LineRenderer:
       m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
-    numCapVertices: 0
+    numCornerVertices: 8
+    numCapVertices: 8
     alignment: 1
     textureMode: 0
     textureScale: {x: 1, y: 1}
@@ -69382,6 +69383,20 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &276089977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 276089974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cffee2434660764489ef58d5cf37a44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocidadX: -1
+  velocidadY: 0
 --- !u!1 &333164751
 GameObject:
   m_ObjectHideFlags: 0
@@ -71388,6 +71403,7 @@ GameObject:
   m_Component:
   - component: {fileID: 540727243}
   - component: {fileID: 540727244}
+  - component: {fileID: 540727245}
   m_Layer: 0
   m_Name: LineaFijaPrev
   m_TagString: Untagged
@@ -71504,8 +71520,8 @@ LineRenderer:
       m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
-    numCapVertices: 0
+    numCornerVertices: 8
+    numCapVertices: 8
     alignment: 1
     textureMode: 0
     textureScale: {x: 1, y: 1}
@@ -71515,6 +71531,20 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &540727245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 540727242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cffee2434660764489ef58d5cf37a44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocidadX: -1
+  velocidadY: 0
 --- !u!1 &543543946
 GameObject:
   m_ObjectHideFlags: 0
@@ -75779,8 +75809,8 @@ LineRenderer:
       m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
-    numCapVertices: 0
+    numCornerVertices: 8
+    numCapVertices: 8
     alignment: 1
     textureMode: 0
     textureScale: {x: 1, y: 1}
@@ -77794,6 +77824,7 @@ GameObject:
   m_Component:
   - component: {fileID: 903374925}
   - component: {fileID: 903374926}
+  - component: {fileID: 903374927}
   m_Layer: 0
   m_Name: LineaFija
   m_TagString: Untagged
@@ -77910,8 +77941,8 @@ LineRenderer:
       m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
-    numCapVertices: 0
+    numCornerVertices: 8
+    numCapVertices: 8
     alignment: 1
     textureMode: 0
     textureScale: {x: 1, y: 1}
@@ -77921,6 +77952,20 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &903374927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903374924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cffee2434660764489ef58d5cf37a44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocidadX: -1
+  velocidadY: 0
 --- !u!1 &910897114
 GameObject:
   m_ObjectHideFlags: 0
@@ -79443,6 +79488,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1046537632}
   - component: {fileID: 1046537633}
+  - component: {fileID: 1046537634}
   m_Layer: 0
   m_Name: LineaFija
   m_TagString: Untagged
@@ -79559,8 +79605,8 @@ LineRenderer:
       m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
-    numCapVertices: 0
+    numCornerVertices: 8
+    numCapVertices: 8
     alignment: 1
     textureMode: 0
     textureScale: {x: 1, y: 1}
@@ -79570,6 +79616,20 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &1046537634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1046537631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cffee2434660764489ef58d5cf37a44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocidadX: -1
+  velocidadY: 0
 --- !u!1 &1052738752
 GameObject:
   m_ObjectHideFlags: 0
@@ -99032,8 +99092,8 @@ LineRenderer:
       m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
-    numCapVertices: 0
+    numCornerVertices: 8
+    numCapVertices: 8
     alignment: 1
     textureMode: 0
     textureScale: {x: 1, y: 1}
@@ -100713,8 +100773,8 @@ LineRenderer:
       m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
-    numCapVertices: 0
+    numCornerVertices: 8
+    numCapVertices: 8
     alignment: 1
     textureMode: 0
     textureScale: {x: 1, y: 1}
@@ -104761,8 +104821,8 @@ LineRenderer:
       m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
-    numCapVertices: 0
+    numCornerVertices: 8
+    numCapVertices: 8
     alignment: 1
     textureMode: 0
     textureScale: {x: 1, y: 1}
@@ -105577,8 +105637,8 @@ LineRenderer:
       m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
-    numCapVertices: 0
+    numCornerVertices: 8
+    numCapVertices: 8
     alignment: 1
     textureMode: 0
     textureScale: {x: 1, y: 1}

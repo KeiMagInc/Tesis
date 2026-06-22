@@ -37,7 +37,7 @@ public class KaosController : MonoBehaviour
     [Header("Evolución (Tamaño)")]
     public float escalaInicial = 2.5f;
     public float escalaMinima = 0.2f;
-    public int puntosObjetivoPara20Porciento = 500;
+    public int puntosObjetivoPara20Porciento = 300;
     private float reduccionPorPunto;
     private Transform puntoA_Actual;
     private Transform puntoB_Actual;
