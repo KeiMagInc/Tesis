@@ -176,6 +176,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         }
         instancia = this;
         UIManager.instancia.logicaActiva = this;
+        UIManager.instancia.ResetearVariablesDerrota();
         ResetearNivel();
         ActualizarCabeceraNivel5();
         UIManager.instancia.SetMochilaHabilitada(true);
@@ -196,13 +197,11 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     public void DesconectarEnlacePorKaos()
     {
         if (esModoRepaso) return;
+        if (nivelCompletado) return;
         if (completandoNodo) return;
-        bool debePenalizar = false;
-        if ((modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal) && managerActual != null) debePenalizar = true;
-        if ((modoActual == ModoOperacion.EliminarInicio || modoActual == ModoOperacion.EliminarFinal) && cargandoAgua) debePenalizar = true;
-        if (!debePenalizar) return;
-        if (fase >= 3) return;
         fallosContador++;
+        if (UIManager.instancia != null)
+            UIManager.instancia.RegistrarToqueKaos();
         int puntosARestar = 5;
         if (UIManager.puntosTemporales >= puntosARestar)
         {
@@ -210,15 +209,24 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         }
         else
         {
-            puntosARestar -= UIManager.puntosTemporales;
+            int sobrante = puntosARestar - UIManager.puntosTemporales;
             UIManager.puntosTemporales = 0;
-            UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - puntosARestar);
+            UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - sobrante);
         }
         ActualizarPuntos();
+        if (UIManager.instancia != null)
+            UIManager.instancia.RevisarDerrotaPorPorcentaje(aciertosContador, fallosContador);
         if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
         rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(false));
-        AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
-        if (masterSFX && sonidoError) masterSFX.PlayOneShot(sonidoError);
+        AudioSource masterSFX = UIManager.instancia != null ? UIManager.instancia.fuenteVozAndy : null;
+        if (masterSFX && sonidoError)
+            masterSFX.PlayOneShot(sonidoError);
+        bool debeDesconectarManguera = false;
+        if ((modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal) && managerActual != null)
+            debeDesconectarManguera = true;
+        if ((modoActual == ModoOperacion.EliminarInicio || modoActual == ModoOperacion.EliminarFinal) && cargandoAgua)
+            debeDesconectarManguera = true;
+        if (!debeDesconectarManguera) return;
         if (modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal)
         {
             cargandoAgua = false;
@@ -363,7 +371,16 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     public void BotonReintentar()
     {
         UIManager.DescartarPuntos();
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
         StopAllCoroutines();
+        if (textoPuntos != null)
+        {
+            textoPuntos.color = colorOriginalPuntos;
+            textoPuntos.transform.localScale = escalaOriginalPuntos;
+        }
+        if (UIManager.instancia != null)
+            UIManager.instancia.ResetearVariablesDerrota();
         if (!esModoRepaso)
             UIManager.puntosGlobales = puntosAlIniciarNivel;
         ActualizarPuntos();
@@ -1168,20 +1185,30 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     void ReproducirError()
     {
         fallosContador++;
-        if (UIManager.instancia != null)
-            UIManager.instancia.RevisarDerrotaPorPorcentaje(aciertosContador, fallosContador);
         if (Time.timeScale == 0f)
         {
             CongelarLupi(true);
             return;
         }
-        AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
+        AudioSource masterSFX = UIManager.instancia != null ? UIManager.instancia.fuenteVozAndy : null;
         if (masterSFX && sonidoError)
             masterSFX.PlayOneShot(sonidoError);
         if (!esModoRepaso)
         {
-            UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
+            int puntosARestar = 5;
+            if (UIManager.puntosTemporales >= puntosARestar)
+            {
+                UIManager.puntosTemporales -= puntosARestar;
+            }
+            else
+            {
+                int sobrante = puntosARestar - UIManager.puntosTemporales;
+                UIManager.puntosTemporales = 0;
+                UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - sobrante);
+            }
             ActualizarPuntos();
+            if (UIManager.instancia != null)
+                UIManager.instancia.RevisarDerrotaPorPorcentaje(aciertosContador, fallosContador);
             if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
             rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(false));
             if (KaosController.instancia != null)
@@ -1198,6 +1225,11 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
         {
             if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
             rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(true));
+        }
+        if (UIManager.instancia != null)
+        {
+            UIManager.instancia.RegistrarPuntosGanados();
+            UIManager.instancia.ResetearToquesKaos();
         }
         if (prefabBurbuja != null)
         {

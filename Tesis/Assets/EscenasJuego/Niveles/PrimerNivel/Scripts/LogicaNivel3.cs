@@ -149,6 +149,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         if (UIManager.instancia == null) return;
         UIManager.instancia.DesactivarTodoPostNivel();
         UIManager.instancia.logicaActiva = this;
+        UIManager.instancia.ResetearVariablesDerrota();
         UIManager.instancia.SetSounds(sonidoSembrar, sonidoSembrar, sonidoSembrar);
         esModoRepaso = KaosController.nivelesTerminados.Contains("ListasSimples");
         nivelCompletado = false;
@@ -187,12 +188,10 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     public void DesconectarEnlacePorKaos()
     {
         if (esModoRepaso) return;
-        bool debePenalizar = false;
-        if ((modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal) && managerActual != null) debePenalizar = true;
-        if ((modoActual == ModoOperacion.EliminarInicio || modoActual == ModoOperacion.EliminarFinal) && cargandoAgua) debePenalizar = true;
-        if (!debePenalizar) return;
-        if (fase >= 3) return;
+        if (nivelCompletado) return;
         fallosContador++;
+        if (UIManager.instancia != null)
+            UIManager.instancia.RegistrarToqueKaos();
         int puntosARestar = 5;
         if (UIManager.puntosTemporales >= puntosARestar)
         {
@@ -200,15 +199,24 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         }
         else
         {
-            puntosARestar -= UIManager.puntosTemporales;
+            int sobrante = puntosARestar - UIManager.puntosTemporales;
             UIManager.puntosTemporales = 0;
-            UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - puntosARestar);
+            UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - sobrante);
         }
         ActualizarPuntos();
+        if (UIManager.instancia != null)
+            UIManager.instancia.RevisarDerrotaPorPorcentaje(aciertosContador, fallosContador);
         if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
         rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(false));
-        AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
-        if (masterSFX && sonidoError) masterSFX.PlayOneShot(sonidoError);
+        AudioSource masterSFX = UIManager.instancia != null ? UIManager.instancia.fuenteVozAndy : null;
+        if (masterSFX && sonidoError)
+            masterSFX.PlayOneShot(sonidoError);
+        bool debeDesconectarManguera = false;
+        if ((modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal) && managerActual != null)
+            debeDesconectarManguera = true;
+        if ((modoActual == ModoOperacion.EliminarInicio || modoActual == ModoOperacion.EliminarFinal) && cargandoAgua)
+            debeDesconectarManguera = true;
+        if (!debeDesconectarManguera) return;
         if (modoActual == ModoOperacion.InsertarInicio || modoActual == ModoOperacion.InsertarFinal)
         {
             cargandoAgua = false;
@@ -330,7 +338,16 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     public void BotonReintentar()
     {
         UIManager.DescartarPuntos();
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
         StopAllCoroutines();
+        if (textoPuntos != null)
+        {
+            textoPuntos.color = colorOriginalPuntos;
+            textoPuntos.transform.localScale = escalaOriginalPuntos;
+        }
+        if (UIManager.instancia != null)
+            UIManager.instancia.ResetearVariablesDerrota();
         if (!esModoRepaso)
             UIManager.puntosGlobales = puntosAlIniciarNivel;
         ActualizarPuntos();
@@ -423,9 +440,9 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         {
             UIManager.instancia.ConfigurarTextosChecklist(
                 "", 
-                "delete(Nodo_Corrupto_Inicio);", 
-                "", 
-                "delete(Nodo_Corrupto_Final);", 
+                "delete(Calabaza);", 
+                "",
+                "delete(Papa);", 
                 "");
         }
     }
@@ -1085,20 +1102,30 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     void ReproducirError()
     {
         fallosContador++;
-        if (UIManager.instancia != null)
-            UIManager.instancia.RevisarDerrotaPorPorcentaje(aciertosContador, fallosContador);
         if (Time.timeScale == 0f)
         {
             CongelarLupi(true);
             return;
         }
-        AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
+        AudioSource masterSFX = UIManager.instancia != null ? UIManager.instancia.fuenteVozAndy : null;
         if (masterSFX && sonidoError)
             masterSFX.PlayOneShot(sonidoError);
         if (!esModoRepaso)
         {
-            UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
+            int puntosARestar = 5;
+            if (UIManager.puntosTemporales >= puntosARestar)
+            {
+                UIManager.puntosTemporales -= puntosARestar;
+            }
+            else
+            {
+                int sobrante = puntosARestar - UIManager.puntosTemporales;
+                UIManager.puntosTemporales = 0;
+                UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - sobrante);
+            }
             ActualizarPuntos();
+            if (UIManager.instancia != null)
+                UIManager.instancia.RevisarDerrotaPorPorcentaje(aciertosContador, fallosContador);
             if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
             rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(false));
             if (KaosController.instancia != null)
@@ -1115,6 +1142,11 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         {
             if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
             rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(true));
+        }
+        if (UIManager.instancia != null)
+        {
+            UIManager.instancia.RegistrarPuntosGanados();
+            UIManager.instancia.ResetearToquesKaos();
         }
         if (prefabBurbuja != null)
         {

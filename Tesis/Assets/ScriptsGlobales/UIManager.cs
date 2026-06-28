@@ -7,6 +7,8 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement; 
 public class UIManager : MonoBehaviour
 {
+    private int toquesKaosSeguidos = 0;
+    private bool haGanadoPuntosEsteNivel = false;
     [Header("Colores del Checklist")]
     [Tooltip("Color de alta legibilidad para las tareas completadas.")]
     public Color colorTareaCompletada = new Color32(13, 110, 25, 255);
@@ -104,6 +106,24 @@ public class UIManager : MonoBehaviour
         ActualizarIconos();
         if (textoPuntos != null) textoPuntos.text = puntosGlobales.ToString();
     }
+    public void RegistrarToqueKaos()
+    {
+        toquesKaosSeguidos++;
+        Debug.Log($"Kaos tocó al jugador. Toques seguidos: {toquesKaosSeguidos}");
+    }
+    public void ResetearToquesKaos()
+    {
+        toquesKaosSeguidos = 0;
+    }
+    public void RegistrarPuntosGanados()
+    {
+        haGanadoPuntosEsteNivel = true;
+    }
+    public void ResetearVariablesDerrota()
+    {
+        toquesKaosSeguidos = 0;
+        haGanadoPuntosEsteNivel = false;
+    }
     public void ReproducirSonidoClick()
     {
         if (fuenteVozAndy != null && sonidoClick != null)
@@ -193,12 +213,31 @@ public class UIManager : MonoBehaviour
     }
     public void RevisarDerrotaPorPorcentaje(int aciertos, int fallos)
     {
+        int totalPuntos = puntosGlobales + puntosTemporales;
         int totalIntentos = aciertos + fallos;
+        int escenaActual = SceneManager.GetActiveScene().buildIndex;
+        int puntosInicio = PlayerPrefs.GetInt("PuntosInicioNivel_" + escenaActual, 0);
         if (totalIntentos >= 3)
         {
             float porcentajeErrores = (float)fallos / totalIntentos;
             if (porcentajeErrores >= 0.70f)
+            {
+                Debug.Log("Derrota activada: Tasa de errores superior al 70%.");
                 MostrarGameOver(aciertos, fallos);
+                return;
+            }
+        }
+        if (toquesKaosSeguidos >= 3)
+        {
+            Debug.Log("Derrota activada: El jugador fue tocado por Kaos 3 veces seguidas.");
+            MostrarGameOver(aciertos, fallos);
+            return;
+        }
+        if (totalPuntos <= 0 && (puntosInicio > 0 || haGanadoPuntosEsteNivel))
+        {
+            Debug.Log("Derrota activada: La puntuación del jugador llegó a 0.");
+            MostrarGameOver(aciertos, fallos);
+            return;
         }
     }
     public void RegresarNivelAnterior()
@@ -522,6 +561,7 @@ public class UIManager : MonoBehaviour
     }
     public void ResetBotones()
     {
+        ResetearVariablesDerrota();
         for (int i = 0; i < botonesSemillas.Length; i++)
         {
             if (botonesSemillas[i] != null)

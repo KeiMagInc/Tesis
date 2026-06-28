@@ -276,6 +276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a72e96f7f434e6c4997def11b319eb9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  contenedorFuego: {fileID: 0}
   puntoEntrada: {fileID: 2250400793531471313}
   puntoSalida: {fileID: 6174649838750680848}
   puntoEntradaAnterior: {fileID: 0}
@@ -289,6 +290,7 @@ MonoBehaviour:
   escalaMaxima: {x: 6, y: 6, z: 0}
   escalaNormal: {x: 3, y: 3, z: 0}
   velocidadEscala: 0.7
+  colorAguaEliminar: {r: 0.85, g: 0.15, b: 0.15, a: 0.50980395}
   retrasoEntreSembrios: 0.3
   spriteSeco: {fileID: 4378049581531813254, guid: cbc21c51be2f305408febc872344eb88, type: 3}
   spriteVivo: {fileID: 6075094999978065127, guid: dc201ca03aed7df4eb60708518c4c8a8, type: 3}

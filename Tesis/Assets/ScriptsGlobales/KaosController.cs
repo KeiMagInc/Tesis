@@ -83,11 +83,11 @@ public class KaosController : MonoBehaviour
         {
             if (recibiendoDano || estaAnimando || !sr.enabled) return;
             StartCoroutine(EfectoAtaqueExitosoKaos());
-            if (LogicaNivel1.instancia != null) LogicaNivel1.instancia.DesconectarEnlacePorKaos();
-            if (LogicaNivel2.instancia != null) LogicaNivel2.instancia.DesconectarEnlacePorKaos();
-            if (LogicaNivel3.instancia != null) LogicaNivel3.instancia.DesconectarEnlacePorKaos();
-            if (LogicaNivel4.instancia != null) LogicaNivel4.instancia.DesconectarEnlacePorKaos();
-            if (LogicaNivel5.instancia != null) LogicaNivel5.instancia.DesconectarEnlacePorKaos();
+            if (LogicaNivel1.instancia != null && LogicaNivel1.instancia.gameObject.activeInHierarchy) LogicaNivel1.instancia.DesconectarEnlacePorKaos();
+            if (LogicaNivel2.instancia != null && LogicaNivel2.instancia.gameObject.activeInHierarchy) LogicaNivel2.instancia.DesconectarEnlacePorKaos();
+            if (LogicaNivel3.instancia != null && LogicaNivel3.instancia.gameObject.activeInHierarchy) LogicaNivel3.instancia.DesconectarEnlacePorKaos();
+            if (LogicaNivel4.instancia != null && LogicaNivel4.instancia.gameObject.activeInHierarchy) LogicaNivel4.instancia.DesconectarEnlacePorKaos();
+            if (LogicaNivel5.instancia != null && LogicaNivel5.instancia.gameObject.activeInHierarchy) LogicaNivel5.instancia.DesconectarEnlacePorKaos();
         }
     }
     IEnumerator EfectoAtaqueExitosoKaos()

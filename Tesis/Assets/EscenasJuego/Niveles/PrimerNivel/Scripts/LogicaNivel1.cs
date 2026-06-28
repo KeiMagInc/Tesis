@@ -96,6 +96,16 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     }
     void OnEnable()
     {
+        if (UIManager.instancia != null)
+        {
+            UIManager.instancia.ConfigurarCabeceraNivel(nombreDelNivel, operacionDelNivel);
+            UIManager.instancia.logicaActiva = this;
+            UIManager.instancia.ResetearVariablesDerrota();
+            UIManager.instancia.SetSounds(sonidoSembrar, sonidoSembrar, sonidoSembrar);
+            UIManager.instancia.MostrarMochilaSolo(false);
+            UIManager.instancia.MostrarChecklistSolo(false);
+            UIManager.instancia.panelParcelas.SetActive(false);
+        }
         if (PlayerPrefs.GetInt("EsPartidaNueva", 0) == 1)
         {
             UIManager.puntosGlobales = 0;
@@ -103,12 +113,6 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
             if (KaosController.nivelesTerminados != null)
                 KaosController.nivelesTerminados.Clear();
         }
-        UIManager.instancia.ConfigurarCabeceraNivel(nombreDelNivel, operacionDelNivel);
-        UIManager.instancia.logicaActiva = this;
-        UIManager.instancia.SetSounds(sonidoSembrar, sonidoSembrar, sonidoSembrar);
-        UIManager.instancia.MostrarMochilaSolo(false);
-        UIManager.instancia.MostrarChecklistSolo(false);
-        UIManager.instancia.panelParcelas.SetActive(false);
         var control = lupi.GetComponent<PlayerController>();
         if (control != null) control.controlesBloqueados = false;
         esModoRepaso = KaosController.nivelesTerminados.Contains("AnatomiaComponentes");
@@ -144,8 +148,10 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     public void DesconectarEnlacePorKaos()
     {
         if (esModoRepaso) return;
-        if (estado >= 4 || estado == 0) return;
+        if (estado >= 4) return;
         fallosContador++;
+        if (UIManager.instancia != null)
+            UIManager.instancia.RegistrarToqueKaos();
         int puntosARestar = 5;
         if (UIManager.puntosTemporales >= puntosARestar)
         {
@@ -158,10 +164,11 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
             UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - sobrante);
         }
         ActualizarPuntos();
-        UIManager.instancia.RevisarDerrotaPorPorcentaje(aciertosContador, fallosContador);
+        if (UIManager.instancia != null)
+            UIManager.instancia.RevisarDerrotaPorPorcentaje(aciertosContador, fallosContador);
         if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
         rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(false));
-        AudioSource masterSFX = UIManager.instancia.fuenteVozAndy;
+        AudioSource masterSFX = UIManager.instancia != null ? UIManager.instancia.fuenteVozAndy : null;
         if (masterSFX && sonidoError)
             masterSFX.PlayOneShot(sonidoError);
         if (estado == 1)
@@ -256,6 +263,13 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         Time.timeScale = 1f;
         AudioListener.pause = false;
         StopAllCoroutines();
+        if (textoPuntos != null)
+        {
+            textoPuntos.color = colorOriginalPuntos;
+            textoPuntos.transform.localScale = escalaOriginalPuntos;
+        }
+        if (UIManager.instancia != null)
+            UIManager.instancia.ResetearVariablesDerrota();
         if (!esModoRepaso)
             UIManager.puntosGlobales = puntosAlIniciarNivel;
         ActualizarPuntos();
@@ -426,7 +440,17 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
             masterSFX.PlayOneShot(sonidoError);
         if (!esModoRepaso)
         {
-            UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - 5);
+            int puntosARestar = 5;
+            if (UIManager.puntosTemporales >= puntosARestar)
+            {
+                UIManager.puntosTemporales -= puntosARestar;
+            }
+            else
+            {
+                int sobrante = puntosARestar - UIManager.puntosTemporales;
+                UIManager.puntosTemporales = 0;
+                UIManager.puntosGlobales = Mathf.Max(0, UIManager.puntosGlobales - sobrante);
+            }
             ActualizarPuntos();
             UIManager.instancia.RevisarDerrotaPorPorcentaje(aciertosContador, fallosContador);
             if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
@@ -441,6 +465,13 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
         if (!esModoRepaso)
             UIManager.puntosTemporales += cant;
         ActualizarPuntos();
+        if (rutinaEfectoPuntos != null) StopCoroutine(rutinaEfectoPuntos);
+        rutinaEfectoPuntos = StartCoroutine(AnimacionPuntos(true));
+        if (UIManager.instancia != null)
+        {
+            UIManager.instancia.RegistrarPuntosGanados();
+            UIManager.instancia.ResetearToquesKaos();
+        }
         if (prefabBurbuja != null)
         {
             Vector3 spawnPos;
