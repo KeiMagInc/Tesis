@@ -245,8 +245,8 @@ public class KaosController : MonoBehaviour
     void ActualizarTamanoBase(bool huboGanancia)
     {
         float puntosTotales = UIManager.puntosGlobales + UIManager.puntosTemporales;
-        float reduccionTotal = puntosTotales * reduccionPorPunto;
-        float nuevaEscalaBase = Mathf.Max(escalaMinima, escalaInicial - reduccionTotal);
+        float nuevaEscalaBase = escalaInicial * Mathf.Pow(0.8f, puntosTotales / 200f);
+        nuevaEscalaBase = Mathf.Max(escalaMinima, nuevaEscalaBase);
         if (huboGanancia && !estaAnimando && !recibiendoDano)
         {
             StartCoroutine(EfectoTransformacionMario(nuevaEscalaBase));
