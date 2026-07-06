@@ -127,18 +127,18 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         if (UIManager.instancia == null) return;
         UIManager.instancia.DesactivarTodoPostNivel();
         UIManager.instancia.logicaActiva = this;
-        UIManager.instancia.ResetearVariablesDerrota(); 
+        UIManager.instancia.ResetearVariablesDerrota();
         esModoRepaso = KaosController.nivelesTerminados.Contains("ListasCirculares");
         nivelCompletado = false;
+        UIManager.instancia.SetPrefabs(prefabCodorniz, prefabGallina, prefabCerdo, prefabOveja, prefabVaca);
+        UIManager.instancia.SetSounds(sonidoCodorniz, sonidoGallina, sonidoCerdo, sonidoOveja, sonidoVaca);
+        Sprite[] imagenes = { spriteCodorniz, spriteGallina, spriteCerdo, spriteOveja, spriteVaca };
+        string[] nombres = { "Codorniz", "Gallina", "Cerdo", "Oveja", "Vaca" };
+        UIManager.instancia.ConfigurarBotonesUI(imagenes, nombres);
         if (!esModoRepaso)
         {
             puntosAlIniciarNivel = UIManager.puntosGlobales;
             UIManager.puntosTemporales = 0;
-            UIManager.instancia.SetPrefabs(prefabCodorniz, prefabGallina, prefabCerdo, prefabOveja, prefabVaca);
-            UIManager.instancia.SetSounds(sonidoCodorniz, sonidoGallina, sonidoCerdo, sonidoOveja, sonidoVaca);
-            Sprite[] imagenes = { spriteCodorniz, spriteGallina, spriteCerdo, spriteOveja, spriteVaca };
-            string[] nombres = { "Codorniz", "Gallina", "Cerdo", "Oveja", "Vaca" };
-            UIManager.instancia.ConfigurarBotonesUI(imagenes, nombres);
             KaosController kaos = Object.FindFirstObjectByType<KaosController>(FindObjectsInactive.Include);
             if (kaos != null)
             {
@@ -257,9 +257,9 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
         else
         {
             if (indiceAEliminar == 4)
-                operacionTexto = "Eliminación por el final de la lista";
+                operacionTexto = "Eliminación al final";
             else
-                operacionTexto = "Eliminación por el inicio de la lista";
+                operacionTexto = "Eliminación al inicio";
         }
         UIManager.instancia.ConfigurarCabeceraNivel(nombreDelNivel, operacionTexto);
     }

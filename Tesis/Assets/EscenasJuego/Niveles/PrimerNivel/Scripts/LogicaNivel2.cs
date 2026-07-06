@@ -15,7 +15,8 @@ public class LogicaNivel2 : MonoBehaviour, ILogicaNivel
     public GameObject prefabBurbuja;
     [Header("Información del Nivel UI")]
     public string nombreDelNivel = "Creación y Referencia";
-    public string operacionDelNivel = "Identificar la dirección física y lógica";
+    [System.NonSerialized]
+    public string operacionDelNivel = "Dirección física y lógica";
     private Color colorOriginalPuntos;
     private Vector3 escalaOriginalPuntos;
     private Coroutine rutinaEfectoPuntos;

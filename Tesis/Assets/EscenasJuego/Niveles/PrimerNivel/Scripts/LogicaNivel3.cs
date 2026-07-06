@@ -264,10 +264,10 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         string operacionTexto = "";
         switch (modoActual)
         {
-            case ModoOperacion.InsertarInicio: operacionTexto = "Inserción al inicio de la lista"; break;
-            case ModoOperacion.InsertarFinal: operacionTexto = "Inserción al final de la lista"; break;
-            case ModoOperacion.EliminarInicio: operacionTexto = "Eliminación por el inicio de la lista"; break;
-            case ModoOperacion.EliminarFinal: operacionTexto = "Eliminación por el final de la lista"; break;
+            case ModoOperacion.InsertarInicio: operacionTexto = "Inserción al inicio"; break;
+            case ModoOperacion.InsertarFinal: operacionTexto = "Inserción al final"; break;
+            case ModoOperacion.EliminarInicio: operacionTexto = "Eliminación al inicio"; break;
+            case ModoOperacion.EliminarFinal: operacionTexto = "Eliminación al final"; break;
         }
         UIManager.instancia.ConfigurarCabeceraNivel(nombreDelNivel, operacionTexto);
     }

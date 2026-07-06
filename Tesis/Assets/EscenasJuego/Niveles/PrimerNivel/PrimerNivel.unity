@@ -52573,11 +52573,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5
+      value: -5.3
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.94
+      value: 3.4
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: d206984280bbb324b838497c01fd79c7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -76255,17 +76255,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 716271358}
   m_CullTransparentMesh: 1
---- !u!114 &728607478 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1144294409326967538, guid: bfece54757cd41842a3c985150368365, type: 3}
-  m_PrefabInstance: {fileID: 575836143}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6495b2e4b1118aa4693dacdfda273ce0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &743108293
 GameObject:
   m_ObjectHideFlags: 0
@@ -77513,17 +77502,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &885489755 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7954506215568926922, guid: 0de18c0e3fab66545be3570cc35952e9, type: 3}
-  m_PrefabInstance: {fileID: 713494685}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6495b2e4b1118aa4693dacdfda273ce0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &887649436
 GameObject:
   m_ObjectHideFlags: 0
@@ -80042,17 +80020,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6106233713408255985, guid: dd33ee6db39e1be44b26de02817cd633, type: 3}
   m_PrefabInstance: {fileID: 1109282112}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1109282114 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7794707945203505619, guid: dd33ee6db39e1be44b26de02817cd633, type: 3}
-  m_PrefabInstance: {fileID: 1109282112}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a7fa7fd907482a2469152a206a983282, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1112845465
 GameObject:
   m_ObjectHideFlags: 0
@@ -98048,11 +98015,6 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
---- !u!4 &1145914797 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7626667441664156644, guid: 0de18c0e3fab66545be3570cc35952e9, type: 3}
-  m_PrefabInstance: {fileID: 713494685}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1151831951 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7954506215568926922, guid: 0de18c0e3fab66545be3570cc35952e9, type: 3}
@@ -99119,59 +99081,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e052d37768fffb74bb505247621ccdc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panelDerrota: {fileID: 13696420}
-  textoAciertosDerrota: {fileID: 1200311286}
-  textoFallosDerrota: {fileID: 716271360}
-  prefabBurbuja: {fileID: 10061019977776553, guid: 90e09882a54cf3545a1bb7cd4b178ac8, type: 3}
+  panelDerrota: {fileID: 0}
+  textoAciertosDerrota: {fileID: 0}
+  textoFallosDerrota: {fileID: 0}
+  prefabBurbuja: {fileID: 0}
   nombreDelNivel: "Creaci\xF3n y Referencia"
-  operacionDelNivel: "Identificar la direcci\xF3n f\xEDsica y l\xF3gica"
-  puntoInicioNivel: {fileID: 1609850455}
-  panelFinal: {fileID: 1954455557}
-  textoPuntajeFinal: {fileID: 910897116}
-  textoAciertos: {fileID: 1563088463}
-  textoFallos: {fileID: 1121568632}
-  sonidoFinDelJuego: {fileID: 8300000, guid: 9585c13f96cfa464f88be829fc20bdb3, type: 3}
+  puntoInicioNivel: {fileID: 0}
+  panelFinal: {fileID: 0}
+  textoPuntajeFinal: {fileID: 0}
+  textoAciertos: {fileID: 0}
+  textoFallos: {fileID: 0}
+  sonidoFinDelJuego: {fileID: 0}
   puntosMaximos: 10
-  puntosMinimos: 1
-  tiempoLimite: 60
-  controladorInsignia: {fileID: 1947875190}
-  insigniaDeEsteNivel: {fileID: -1421603152744048466, guid: e9536f9c079e8fc48b58c98ac1c3ab9c, type: 3}
-  checkpointFinal: {fileID: 1109282114}
-  barreraSiguiente: {fileID: 240218430}
-  audioErrorEntradaLiga: {fileID: 8300000, guid: 16cd2178b3797cd458fb52330be86981, type: 3}
-  audioIntroMochila: {fileID: 8300000, guid: d9d76f22bef9e364dba4e1d7432d8af5, type: 3}
-  audioIntroChecklist: {fileID: 8300000, guid: a94b377bc16d05748be24f7593c9054b, type: 3}
-  audioInstruccionSiembra: {fileID: 8300000, guid: ec3b56f64bfd7fa49ae0bbd6380370bb, type: 3}
-  audioHuertoListo: {fileID: 8300000, guid: e1897e2cb5cffc44db0a349c905ceb6c, type: 3}
-  audioDireccionHead: {fileID: 8300000, guid: 8bc8f5b97357d1f4cb928ae0ccdf68b5, type: 3}
-  audioDatoInfo: {fileID: 8300000, guid: 4aa4917800b681c40a6796fd4eeaed93, type: 3}
-  audioLigaAbierta: {fileID: 8300000, guid: 2448cf1550950c648b8b3b8480f3050a, type: 3}
-  audioFinalNivel: {fileID: 8300000, guid: 494cf6a68a2f3c94db046e8f2d77498c, type: 3}
-  audioErrorKaos1: {fileID: 8300000, guid: 3a61e5d23f9792e43b0d1b354128199a, type: 3}
-  audioErrorKaos2: {fileID: 8300000, guid: d90907e126d3d0344a48325632eaa4a4, type: 3}
-  audioErrorKaos3: {fileID: 8300000, guid: 0287032ce96dad24d9e669531d037ee3, type: 3}
-  fuenteAudio: {fileID: 1873500767}
-  sonidoSeleccionar: {fileID: 8300000, guid: 122342ede45c3b246a29c8127b91527c, type: 3}
-  sonidoSembrar: {fileID: 8300000, guid: dafca0e1d1d65b24995af4562e248413, type: 3}
-  sonidoAcierto: {fileID: 8300000, guid: 98863497d94d52b40b3ab0e2db327e07, type: 3}
-  sonidoError: {fileID: 8300000, guid: 824e3d297c0e52540852102b31c7850c, type: 3}
-  sonidoInsignia: {fileID: 8300000, guid: 88b90677b53c2574cb20d7f2f302e401, type: 3}
-  sonidoCompletado: {fileID: 8300000, guid: 9585c13f96cfa464f88be829fc20bdb3, type: 3}
-  sonidoCuy: {fileID: 8300000, guid: daf16bf3fa4531d42b7892d5903a1066, type: 3}
-  spriteTrigo: {fileID: -666870068449178133, guid: 4e52881ec9a7d9c439711e8b3dbf54a9, type: 3}
-  spritePapa: {fileID: -8837905132163604103, guid: 07f59a9d6656a4540876194e2b9269b1, type: 3}
-  spriteCalabaza: {fileID: 3530326326342318695, guid: 7c83225fb307b3f4183195fc6ac9a273, type: 3}
-  andy: {fileID: 1873500765}
-  textoPuntos: {fileID: 203448345}
-  lineaAgua: {fileID: 1247828545}
-  lupi: {fileID: 191083641}
-  prefabTrigoN2: {fileID: 839396964857267429, guid: 02863e209bb5ef34db6da53ce0b7f8bb, type: 3}
-  prefabPapaN2: {fileID: 839396964857267429, guid: 70d9e59793a7f0b42b93c51ff0ddfcda, type: 3}
-  prefabCalabazaN2: {fileID: 839396964857267429, guid: fef5901b75869e34fba6193b2305eb0e, type: 3}
-  puntoSalidaHead: {fileID: 1145914797}
-  puntoEntradaNull: {fileID: 1312583796}
-  brilloHead: {fileID: 885489755}
-  brilloNull: {fileID: 728607478}
+  puntosMinimos: 0
+  tiempoLimite: 120
+  controladorInsignia: {fileID: 0}
+  insigniaDeEsteNivel: {fileID: 0}
+  checkpointFinal: {fileID: 0}
+  barreraSiguiente: {fileID: 0}
+  audioErrorEntradaLiga: {fileID: 0}
+  audioIntroMochila: {fileID: 0}
+  audioIntroChecklist: {fileID: 0}
+  audioInstruccionSiembra: {fileID: 0}
+  audioHuertoListo: {fileID: 0}
+  audioDireccionHead: {fileID: 0}
+  audioDatoInfo: {fileID: 0}
+  audioLigaAbierta: {fileID: 0}
+  audioFinalNivel: {fileID: 0}
+  audioErrorKaos1: {fileID: 0}
+  audioErrorKaos2: {fileID: 0}
+  audioErrorKaos3: {fileID: 0}
+  fuenteAudio: {fileID: 0}
+  sonidoSeleccionar: {fileID: 0}
+  sonidoSembrar: {fileID: 0}
+  sonidoAcierto: {fileID: 0}
+  sonidoError: {fileID: 0}
+  sonidoInsignia: {fileID: 0}
+  sonidoCompletado: {fileID: 0}
+  sonidoCuy: {fileID: 0}
+  spriteTrigo: {fileID: 0}
+  spritePapa: {fileID: 0}
+  spriteCalabaza: {fileID: 0}
+  andy: {fileID: 0}
+  textoPuntos: {fileID: 0}
+  lineaAgua: {fileID: 0}
+  lupi: {fileID: 0}
+  prefabTrigoN2: {fileID: 0}
+  prefabPapaN2: {fileID: 0}
+  prefabCalabazaN2: {fileID: 0}
+  puntoSalidaHead: {fileID: 0}
+  puntoEntradaNull: {fileID: 0}
+  brilloHead: {fileID: 0}
+  brilloNull: {fileID: 0}
 --- !u!114 &1247828547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99798,11 +99759,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tipoDeSemillaPermitida: Cerdo
   estaOcupada: 0
---- !u!4 &1312583796 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5462677158706622310, guid: bfece54757cd41842a3c985150368365, type: 3}
-  m_PrefabInstance: {fileID: 575836143}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1313529246
 GameObject:
   m_ObjectHideFlags: 0
@@ -106252,17 +106208,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a72e96f7f434e6c4997def11b319eb9d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1947875190 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3141057453085426223, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
-  m_PrefabInstance: {fileID: 1395060073}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fef606e757740f848a016e4e3ac7fb4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1952406185
