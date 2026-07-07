@@ -410,11 +410,16 @@ public class LogicaNivel1 : MonoBehaviour, ILogicaNivel
     }
     IEnumerator SecuenciaFinNivel()
     {
-        if (UIManager.instancia != null && UIManager.instancia.fuenteVozAndy != null)
+        AudioSource audioSourceAndy = null;
+        if (andy != null)
         {
-            while (UIManager.instancia.fuenteVozAndy.isPlaying)
-                yield return null;
+            audioSourceAndy = andy.GetComponent<AudioSource>();
+            if (audioSourceAndy == null)
+                audioSourceAndy = andy.GetComponentInChildren<AudioSource>();
         }
+        AudioSource audioSourceUI = (UIManager.instancia != null) ? UIManager.instancia.fuenteVozAndy : null;
+        while ((audioSourceAndy != null && audioSourceAndy.isPlaying) || (audioSourceUI != null && audioSourceUI.isPlaying))
+            yield return null;
         if (barreraSiguiente != null && checkpointFinal != null && controladorInsignia != null)
         {
             barreraSiguiente.Abrir();

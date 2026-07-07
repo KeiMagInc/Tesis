@@ -100930,6 +100930,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: InterfazJugador
       objectReference: {fileID: 0}
+    - target: {fileID: 405731516883076448, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 405731516883076448, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 405731516883076448, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -75
+      objectReference: {fileID: 0}
+    - target: {fileID: 405731516883076448, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -61
+      objectReference: {fileID: 0}
     - target: {fileID: 491070265952870727, guid: e8764557f8ac9aa42a85f4fd529bba2d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
