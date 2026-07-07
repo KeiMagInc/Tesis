@@ -35,8 +35,8 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
     public AudioClip sonidoFinDelJuego;
     [Header("Configuración de Tiempo")]
     public int puntosMaximos = 10;
-    public int puntosMinimos = 0;
-    public float tiempoLimite = 120f;
+    public int puntosMinimos = 1;
+    public float tiempoLimite = 60f;
     private float tiempoInicioEstado;
     float ultimoTiempoClic;
     [Header("Audios Diálogos Andy - Nivel 5")]
@@ -850,7 +850,7 @@ public class LogicaNivel5 : MonoBehaviour, ILogicaNivel
                     if (brilloNull) brilloNull.SetEncendido(false);
                     FinalizarPasoLigero(puntoOrigenActual.position, puntoEntradaNull.position, "", null, "");
                     completandoNodo = true;
-                    andy.Decir("¡LupiFantástico! La lista doble ha sido inicializada con P y F apuntando al mismo NODO.", audioExitoFinal);
+                    andy.Decir("¡Eres grande Lupi! La lista doble ha sido inicializada con P y F apuntando al mismo NODO.", audioExitoFinal);
                     StartCoroutine(EsperarYFinalizar(false, audioExitoFinal.length));
                     return;
                 }

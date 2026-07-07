@@ -33,8 +33,8 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
     public AudioClip sonidoFinDelJuego;
     [Header("Configuración de Tiempo")]
     public int puntosMaximos = 10;
-    public int puntosMinimos = 0;
-    public float tiempoLimite = 120f;
+    public int puntosMinimos = 1;
+    public float tiempoLimite = 60f;
     private float tiempoInicioEstado;
     [Header("Audios Diálogos Andy")]
     public AudioClip audioNodoListoPInicio;
@@ -560,7 +560,7 @@ public class LogicaNivel3 : MonoBehaviour, ILogicaNivel
         else if (modoActual == ModoOperacion.InsertarFinal)
         {
             ReproducirNivelCompleto();
-            andy.Decir("¡Fantástico Lupi! Ahora el flujo recorre toda la estructura hasta el nuevo NODO final.", audioExitoFlujoFinal);
+            andy.Decir("¡Eres grande Lupi! Ahora el flujo recorre toda la estructura hasta el nuevo NODO final.", audioExitoFlujoFinal);
             if (audioExitoFlujoFinal != null)
                 yield return new WaitForSeconds(audioExitoFlujoFinal.length + 0.5f);
             else

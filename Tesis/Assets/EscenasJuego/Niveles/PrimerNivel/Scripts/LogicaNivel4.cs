@@ -39,8 +39,8 @@ public class LogicaNivel4 : MonoBehaviour, ILogicaNivel
     public AudioClip sonidoFinDelJuego;
     [Header("Configuración de Tiempo")]
     public int puntosMaximos = 10;
-    public int puntosMinimos = 0;
-    public float tiempoLimite = 120f;
+    public int puntosMinimos = 1;
+    public float tiempoLimite = 60f;
     private float tiempoInicioEstado;
     [Header("Audios de Error")]
     public AudioClip audioErrorNoRio;
